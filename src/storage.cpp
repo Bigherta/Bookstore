@@ -2,17 +2,35 @@
 #include <algorithm>
 
 template<class T>
-void storage<T>::split(Block &block, int val, int pos, int offset)
+void storage<T>::init(std::vector<std::pair<std::string, int>> &name_index_pair_)
+{
+    file.initialise("index");
+    book.initialise("book");
+    index_to_head t;
+    int start_index = 2 * sizeof(int);
+    int file_end = file.end();
+    while (start_index + sizeof(t) <= file_end)
+    {
+        file.read(t, start_index);
+        name_index_pair_.push_back(std::make_pair(t.name, start_index));
+        start_index += sizeof(t);
+    }
+}
+
+template<class T>
+void storage<T>::split(Block &block, T val, int pos, int offset)
 {
     int length = block.size + 1;
-    std::vector<int> storage;
+    std::vector<T> storage;
     storage.resize(length);
     storage[pos] = val;
     for (int i = 0; i < pos; i++)
         storage[i] = block.val[i];
     for (int i = pos + 1; i < length; i++)
         storage[i] = block.val[i - 1];
-    std::memset(block.val, 0, sizeof(block.val));
+    for (int i = 0; i < 200; i++)
+        block.val[i] = T();
+
     int left = length / 2;
     int right = length - left;
     for (int i = 0; i < left; i++)
@@ -28,15 +46,15 @@ void storage<T>::split(Block &block, int val, int pos, int offset)
     }
     int next_point = block.next_block;
     new_block.next_block = next_point;
-    block.next_block = info.write(new_block);
-    info.update(block, offset);
+    block.next_block = book.write(new_block);
+    book.update(block, offset);
 }
 // 裂块
 
 template<class T>
-bool storage<T>::insert_val(Block &temp, int value, int block_index)
+bool storage<T>::insert_val(Block &temp, T value, int block_index)
 {
-    int *pos = std::lower_bound(temp.val, temp.val + temp.size, value);
+    T *pos = std::lower_bound(temp.val, temp.val + temp.size, value);
     int pos_index = pos - temp.val;
     if (pos_index < temp.size && *pos == value)
         return true;
@@ -50,7 +68,7 @@ bool storage<T>::insert_val(Block &temp, int value, int block_index)
         }
         temp.val[pos_index] = value;
         ++temp.size;
-        info.update(temp, block_index);
+        book.update(temp, block_index);
         return true;
     }
     else
@@ -61,23 +79,19 @@ bool storage<T>::insert_val(Block &temp, int value, int block_index)
 }
 // 插入值的具体操作
 template<class T>
-void storage<T>::Insert()
+void storage<T>::Insert(T value, std::vector<std::pair<std::string, int>> &name_index_pair_)
 {
-    std::string index;
-    int value;
-    std::cin >> index >> value;
+    index_to_head t;
 
-    book t;
-
-    for (int i = 0; i < name_index_pair.size(); i++)
+    for (int i = 0; i < name_index_pair_.size(); i++)
     {
-        if (name_index_pair[i].first == index)
+        if (name_index_pair_[i].first == index_name)
         {
-            int book_pos = name_index_pair[i].second;
+            int book_pos = name_index_pair_[i].second;
             if (!file.read(t, book_pos))
                 return;
             Block temp;
-            if (!info.read(temp, t.head))
+            if (!book.read(temp, t.head))
                 return;
             int block_index = t.head;
             while (temp.next_block != -1)
@@ -87,7 +101,7 @@ void storage<T>::Insert()
                     return;
                 }
                 block_index = temp.next_block;
-                info.read(temp, temp.next_block);
+                book.read(temp, temp.next_block);
             }
             if (insert_val(temp, value, block_index))
                 return;
@@ -97,7 +111,7 @@ void storage<T>::Insert()
                 {
                     temp.val[temp.size] = value;
                     ++temp.size;
-                    info.update(temp, block_index);
+                    book.update(temp, block_index);
                     return;
                 }
                 else
@@ -108,30 +122,27 @@ void storage<T>::Insert()
             return;
         }
     }
-    t = book(index);
+    t = index_to_head(index_name);
     Block new_block;
     new_block.size = 1;
     new_block.val[0] = value;
-    t.head = info.write(new_block);
+    t.head = book.write(new_block);
     int pos = file.end();
-    name_index_pair.push_back(std::make_pair(index, pos));
+    name_index_pair_.push_back(std::make_pair(index_name, pos));
     file.write(t);
 }
 // 插入一个值
 template<class T>
-void storage<T>::Find()
+void storage<T>::Find(const std::vector<std::pair<std::string, int>> &name_index_pair_)
 {
-    std::string index;
-    std::cin >> index;
-
     int book_pos = 0;
     bool is_exist = false;
-    for (int i = 0; i < name_index_pair.size(); i++)
+    for (int i = 0; i < name_index_pair_.size(); i++)
     {
-        if (name_index_pair[i].first == index)
+        if (name_index_pair_[i].first == index_name)
         {
             is_exist = true;
-            book_pos = name_index_pair[i].second;
+            book_pos = name_index_pair_[i].second;
             break;
         }
     }
@@ -141,7 +152,7 @@ void storage<T>::Find()
         return;
     }
 
-    book t;
+    index_to_head t;
     if (!file.read(t, book_pos))
     {
         std::cout << "null\n";
@@ -152,7 +163,7 @@ void storage<T>::Find()
 
     Block temp;
 
-    info.read(temp, t.head);
+    book.read(temp, t.head);
 
     while (temp.next_block != -1)
     {
@@ -162,7 +173,7 @@ void storage<T>::Find()
         {
             std::cout << temp.val[i] << " ";
         }
-        info.read(temp, temp.next_block);
+        book.read(temp, temp.next_block);
     }
 
     if (temp.size != 0)
@@ -182,9 +193,9 @@ void storage<T>::Find()
 }
 // 查找索引
 template<class T>
-bool storage<T>::delete_val(Block &temp, int value, int block_index)
+bool storage<T>::delete_val(Block &temp, T value, int block_index)
 {
-    int *pos = std::lower_bound(temp.val, temp.val + temp.size, value);
+    T *pos = std::lower_bound(temp.val, temp.val + temp.size, value);
     if (pos == temp.val + temp.size || *pos != value)
     {
         return false;
@@ -196,9 +207,9 @@ bool storage<T>::delete_val(Block &temp, int value, int block_index)
         {
             temp.val[i] = temp.val[i + 1];
         }
-        temp.val[temp.size - 1] = 0;
+        temp.val[temp.size - 1] = T();
         --temp.size;
-        info.update(temp, block_index);
+        book.update(temp, block_index);
     }
     return true;
 }
@@ -207,9 +218,9 @@ template<class T>
 void storage<T>::merge(Block &block, int offset)
 {
     Block next_block;
-    info.read(next_block, block.next_block);
+    book.read(next_block, block.next_block);
     int length = block.size + next_block.size;
-    std::vector<int> storage;
+    std::vector<T> storage;
     storage.resize(length);
     for (int i = 0; i < block.size; i++)
     {
@@ -219,34 +230,32 @@ void storage<T>::merge(Block &block, int offset)
     {
         storage[i] = next_block.val[i - block.size];
     }
-    std::memset(block.val, 0, sizeof(block.val));
+    for (int i = 0; i < 200; i++)
+        block.val[i] = T();
+
     for (int i = 0; i < length; i++)
     {
         block.val[i] = storage[i];
     }
     block.next_block = next_block.next_block;
     block.size = length;
-    info.update(block, offset);
+    book.update(block, offset);
 }
 // 合并块
 template<class T>
-void storage<T>::Delete()
+void storage<T>::Delete(T value, std::vector<std::pair<std::string, int>> &name_index_pair_)
 {
-    std::string index;
-    int value;
-    std::cin >> index >> value;
-
-    book t;
-    for (int i = 0; i < name_index_pair.size(); i++)
+    index_to_head t;
+    for (int i = 0; i < name_index_pair_.size(); i++)
     {
-        if (name_index_pair[i].first == index)
+        if (name_index_pair_[i].first == index_name)
         {
-            int book_pos = name_index_pair[i].second;
+            int book_pos = name_index_pair_[i].second;
             if (!file.read(t, book_pos))
                 return;
             Block temp;
 
-            if (!info.read(temp, t.head))
+            if (!book.read(temp, t.head))
                 return;
             int block_index = t.head;
             while (temp.next_block != -1)
@@ -254,7 +263,7 @@ void storage<T>::Delete()
                 if (!delete_val(temp, value, block_index))
                 {
                     block_index = temp.next_block;
-                    info.read(temp, temp.next_block);
+                    book.read(temp, temp.next_block);
                 }
                 else
                 {
@@ -262,7 +271,7 @@ void storage<T>::Delete()
                     while (temp.next_block != -1)
                     {
 
-                        info.read(next, temp.next_block);
+                        book.read(next, temp.next_block);
                         if (temp.size + next.size <= 200)
                             merge(temp, block_index);
                         else

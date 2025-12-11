@@ -23,14 +23,6 @@ const std::shared_ptr<Token> TokenStream::get()
     return current;
 } // 取出当前token并前进
 
-bool TokenStream::empty() const { return cursor_ >= tokens_.size(); } // 是否为空
-
-void TokenStream::reset() { cursor_ = 0; } // 游标回到起点
-
-int TokenStream::position() const { return cursor_; } // 返回当前游标
-
 int TokenStream::size() const { return tokens_.size(); } // 总数
 
 void TokenStream::push(Token &&token) { tokens_.push_back(std::move(token)); } // 输入token
-
-const std::vector<Token> &TokenStream::data() const { return tokens_; } // 返回token的所有信息

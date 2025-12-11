@@ -98,12 +98,12 @@ public:
     }
 };
 
-struct book
+struct index_to_head
 {
     char name[65]{};
     int head = 0;
-    book() {}
-    book(std::string s)
+    index_to_head() {}
+    index_to_head(std::string s)
     {
         std::memset(name, 0, sizeof(name));
         std::strncpy(name, s.c_str(), sizeof(name) - 1);
@@ -113,7 +113,11 @@ struct book
 template<class T>
 class storage
 {
+private: 
+    std::string index_name;
 public:
+    storage(std::string s) : index_name(s) {}
+
     struct Block
     {
         int next_block; // 下一个块的索引，若不存在，则为-1
@@ -122,36 +126,22 @@ public:
         Block() : next_block(-1), size(0) {}
     };
 
-    MemoryRiver<book> file; // 记录的是书名到写入头位置的映射
-    MemoryRiver<Block> info; // 记录的是书的value
+    MemoryRiver<index_to_head> file; // 记录的是书名到写入头位置的映射
+    MemoryRiver<Block> book; // 记录的是书的value
     
-    std::vector<std::pair<std::string, int>> name_index_pair;
-    void init()
-    {
-        file.initialise("index");
-        info.initialise("information");
-        book t;
-        int start_index = 0;
-        int file_end = file.end();
-        while (start_index + sizeof(t) <= file_end)
-        {
-            file.read(t, start_index);
-            name_index_pair.push_back(std::make_pair(t.name, start_index));
-            start_index += sizeof(t);
-        }
-    }
+    void init(std::vector<std::pair<std::string, int>> &);
 
-    void Insert();
+    void Insert(T, std::vector<std::pair<std::string, int>> &);
 
-    void Find();
+    void Find(const std::vector<std::pair<std::string, int>> &);
 
-    void Delete();
+    void Delete(T, std::vector<std::pair<std::string, int>> &);
 
-    void split(Block &block, int val, int pos, int offset);
+    void split(Block &block, T val, int pos, int offset);
 
     void merge(Block &block, int offset);
 
-    bool insert_val(Block &temp, int value, int block_index);
+    bool insert_val(Block &temp, T value, int block_index);
 
-    bool delete_val(Block &temp, int value, int block_index);
+    bool delete_val(Block &temp, T value, int block_index);
 };

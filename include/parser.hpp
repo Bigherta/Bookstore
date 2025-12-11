@@ -4,10 +4,10 @@
 
 
 const std::unordered_map<std::string, TokenType> TABLE = {
-        {"su", LOGIN},        {"logout", LOGOUT},   {"register", REGISTER},
-        {"passwd", PASSWD},   {"useradd", USERADD}, {"delete", DELETEUSER},
-        {"exit", EXIT},       {"show", SHOW},       {"report", REPORT},
-        {"finance", FINANCE}, {"log", LOG}}; // 构建从字符串到枚举类的一个映射
+        {"su", LOGIN},          {"logout", LOGOUT}, {"register", REGISTER}, {"passwd", PASSWD}, {"useradd", USERADD},
+        {"delete", DELETEUSER}, {"exit", EXIT},     {"show", SHOW},         {"report", REPORT}, {"finance", FINANCE},
+        {"employee", EMPLOYEE}, {"log", LOG},       {"buy", BUY},           {"select", SELECT}, {"modify", MODIFY},
+        {"import", IMPORT}}; // 构建从字符串到枚举类的一个映射
 
 class Parser
 {

@@ -11,5 +11,6 @@ private:
     int stock;
 
 public:
-    bool operator<(const Book other) const { return strcmp(this->isbn, other.isbn) < 0; }
+    bool operator<(const Book &other) const { return strcmp(this->isbn, other.isbn) < 0; }
+    bool operator==(const Book &other) const { return strcmp(this->isbn, other.isbn) == 0; }
 };

@@ -4,13 +4,27 @@
 #include <vector>
 
 
-struct user
+class user
 {
+    public:
     std::string userID;
     std::string username;
     std::string password;
+    std::string selectedBookISBN;
     int privilegeLevel = 0; // 0: visitor, 1: customer, 3: worker, 7: manager
     bool log_status = false;
+    bool is_select_a_book = false;
+
+    bool buy_book(const std::string &book_isbn, int num);
+
+    bool select_book(const std::string &book_isbn);
+
+    bool import_book(int num, double total_price);
+    
+    user() {}
+
+    user(const std::string &userID_, const std::string &username_, const std::string &password_, int privilegeLevel_ = 0)
+        : userID(userID_), username(username_), password(password_), privilegeLevel(privilegeLevel_) {}
 };
 
 class UserManager
@@ -30,6 +44,8 @@ public:
                  const std::string &username_);
 
     bool deleteUser(const std::string &userID_);
+
+    int getPrivilegeLevel() const;
 
     
 private:

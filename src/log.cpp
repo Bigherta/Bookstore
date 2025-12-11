@@ -2,7 +2,7 @@
 #include <iomanip>
 #include "../include/parser.hpp"
 
-bool log::ShowFinance(int count_ = -1)
+bool log::ShowFinance(int count_)
 {
     // 如果指定查询交易笔数为 0，直接输出空行，表示合法指令
     if (count_ == 0)
@@ -90,96 +90,5 @@ void log::add_trading(double income, double expense)
 
     // 将新交易记录写入日志
     log_record.write(new_trade);
-}
-
-int main()
-{
-    Parser parser;
-    log log_diary;
-    std::string line;
-    while (std::getline(std::cin, line))
-    {
-        if (line.empty())
-            continue;
-        Command cmd = BLANK;
-        int column = 0;
-        while (column < line.size())
-        {
-            char ch = line[column];
-            // 如果ch是空格
-            if (std::isspace(static_cast<int>(ch)))
-            {
-                ++column;
-                continue;
-            }
-            // 如果ch是字母
-            if (std::isalpha(ch))
-            {
-                int start = column;
-                ++column;
-                while (column < line.size() && std::isalpha(line[column]))
-                {
-                    ++column;
-                }
-                std::string text = line.substr(start, column - start); // 提取首个单词
-                cmd = parser.matchkeyword(text);
-                if (cmd == FINANCE)
-                {
-                    
-                }
-                break;
-            }
-        }
-        std::string next_text;
-        bool is_more = false;
-        switch (cmd)
-        {
-            case SHOW:
-
-                while (column < line.size())
-                {
-                    char ch = line[column];
-                    if (std::isspace(static_cast<int>(ch)))
-                    {
-                        ++column;
-                        continue;
-                    }
-
-                    else if (next_text.empty())
-                    {
-                        int start = column;
-                        ++column;
-                        while (column < line.size() && !std::isspace(static_cast<int>(line[column])))
-                        {
-                            ++column;
-                        }
-                        next_text = line.substr(start, column - start); // 提取第二个单词
-                        cmd = parser.matchkeyword(next_text);
-                    }
-                    else
-                    {
-                        std::cout << "Invalid\n";
-                        is_more = true;
-                        break;
-                    }
-                }
-                if (is_more)
-                    break;
-              
-
-                break;
-
-
-            case INVALID:
-                std::cout << "Invalid\n";
-                break;
-
-            case EXIT:
-                return 0;
-
-            default:
-                break;
-        }
-    }
-    return 0;
+    
 }
