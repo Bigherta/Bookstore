@@ -8,7 +8,7 @@
 using std::fstream;
 using std::string;
 
-template<class T>
+template<class T, int info_len = 2>
 class MemoryRiver
 {
 private:
@@ -37,9 +37,34 @@ public:
         if (!is_exist)
         {
             file.open(file_name, std::ios::out | std::ios::binary);
+            int tmp = 0;
+            for (int i = 0; i < info_len; ++i)
+                file.write(reinterpret_cast<char *>(&tmp), sizeof(int));
         }
         file.close();
         file.open(file_name, std::ios::in | std::ios::out | std::ios::binary);
+    }
+
+    // 读出第n个int的值赋给tmp，1_base
+    void get_info(int &tmp, int n)
+    {
+        if (n > info_len)
+            return;
+        /* your code here */
+
+        file.seekg((n - 1) * sizeof(int));
+        file.read(reinterpret_cast<char *>(&tmp), sizeof(int));
+    }
+
+    // 将tmp写入第n个int的位置，1_base
+    void write_info(int tmp, int n)
+    {
+        if (n > info_len)
+            return;
+        /* your code here */
+
+        file.seekp((n - 1) * sizeof(int));
+        file.write(reinterpret_cast<char *>(&tmp), sizeof(int));
     }
 
     int write(T &t)

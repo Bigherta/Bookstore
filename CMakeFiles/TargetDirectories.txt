@@ -1,0 +1,3 @@
+/mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/CMakeFiles/code.dir
+/mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/CMakeFiles/edit_cache.dir
+/mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/CMakeFiles/rebuild_cache.dir

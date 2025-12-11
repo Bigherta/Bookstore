@@ -31,7 +31,7 @@ void storage<T>::split(Block &block, int val, int pos, int offset)
     block.next_block = info.write(new_block);
     info.update(block, offset);
 }
-//裂块
+// 裂块
 
 template<class T>
 bool storage<T>::insert_val(Block &temp, int value, int block_index)
@@ -59,7 +59,7 @@ bool storage<T>::insert_val(Block &temp, int value, int block_index)
         return true;
     }
 }
-//插入值的具体操作
+// 插入值的具体操作
 template<class T>
 void storage<T>::Insert()
 {
@@ -117,7 +117,7 @@ void storage<T>::Insert()
     name_index_pair.push_back(std::make_pair(index, pos));
     file.write(t);
 }
-//插入一个值
+// 插入一个值
 template<class T>
 void storage<T>::Find()
 {
@@ -180,7 +180,7 @@ void storage<T>::Find()
         std::cout << '\n';
     }
 }
-//查找索引
+// 查找索引
 template<class T>
 bool storage<T>::delete_val(Block &temp, int value, int block_index)
 {
@@ -202,7 +202,7 @@ bool storage<T>::delete_val(Block &temp, int value, int block_index)
     }
     return true;
 }
-//删除值的具体操作
+// 删除值的具体操作
 template<class T>
 void storage<T>::merge(Block &block, int offset)
 {
@@ -228,7 +228,7 @@ void storage<T>::merge(Block &block, int offset)
     block.size = length;
     info.update(block, offset);
 }
-//合并块
+// 合并块
 template<class T>
 void storage<T>::Delete()
 {
@@ -278,4 +278,4 @@ void storage<T>::Delete()
         }
     }
 }
-//删除对应索引与值
+// 删除对应索引与值
