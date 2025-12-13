@@ -12,6 +12,10 @@ int main()
     std::string line;
     while (std::getline(std::cin, line))
     {
+        if (std::cin.eof())
+        {
+            exit(0);
+        }
         parser.execute(line, userManager, Log);
     }
     return 0;

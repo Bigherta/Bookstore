@@ -1,5 +1,6 @@
 #include "../include/storage.hpp"
 #include <algorithm>
+#include <cctype>
 #include <iomanip>
 #include <string>
 #include <vector>
@@ -147,14 +148,14 @@ void storage::Show(const std::vector<std::pair<std::string, int>> &index_pos_pai
     }
     if (!is_exist)
     {
-        std::cout << "null\n";
+        std::cout << '\n';
         return;
     }
 
     index_to_head t;
     if (!file.read(t, book_pos))
     {
-        std::cout << "null\n";
+        std::cout << '\n';
         return;
     }
 
@@ -170,7 +171,7 @@ void storage::Show(const std::vector<std::pair<std::string, int>> &index_pos_pai
             is_empty = false;
         for (int i = 0; i < temp.size; i++)
         {
-            // to do
+            std::cout << temp.val[i];
         }
         book.read(temp, temp.next_block);
     }
@@ -179,15 +180,17 @@ void storage::Show(const std::vector<std::pair<std::string, int>> &index_pos_pai
         is_empty = false;
     if (is_empty)
     {
-        std::cout << "null\n";
+        std::cout << '\n';
+        return;
     }
     else
     {
         for (int i = 0; i < temp.size; i++)
         {
-            // to do
+            std::cout << temp.val[i];
         }
         std::cout << '\n';
+        return;
     }
 }
 // 显示索引对应的所有图书
@@ -236,7 +239,7 @@ void storage::SearchIsbn(const std::string &isbn)
         }
         else
         {
-            // to do
+            std::cout << *pos;
             return;
         }
     }
@@ -258,7 +261,7 @@ void storage::SearchIsbn(const std::string &isbn)
         }
         else
         {
-            // to do
+            std::cout << *pos;
             return;
         }
     }
@@ -490,20 +493,59 @@ bool storage::modify_book(TokenType type, std::string modifier, std::string isbn
     storage isbn_storage;
     std::vector<std::pair<std::string, int>> index_pos_pair_;
     isbn_storage.init(index_pos_pair_);
-    if (type == TokenType::ISBN)
+    switch (type)
     {
-        if (isbn_storage.Find(modifier))
-        {
-            return false; // New ISBN already exists
+        case ISBN: {
+            if (modifier.size() > 20)
+            {
+                return false; // exceed length limit
+            }
+            for (int i = 0; i < modifier.size(); i++)
+            {
+                if (!std::isprint(modifier[i]))
+                    return false; // contain invalid char
+            }
+            if (isbn_storage.Find(modifier))
+            {
+                return false; // New ISBN already exists
+            }
+            break;
         }
-    }
-    if (type == TokenType::KEYWORD)
-    {
-        if (Book::is_keyword_repeated(modifier))
-        {
-            return false; // Keywords are repeated
+        case NAME:
+        case AUTHOR: {
+            if (modifier.size() > 60)
+            {
+                return false; // exceed length limit
+            }
+            for (int i = 0; i < modifier.size(); i++)
+            {
+                if (!std::isprint(modifier[i]) || modifier[i] == '"')
+                    return false; // contain invalid char
+            }
+            break;
         }
+        case PRICE: {
+            if (modifier.size() > 13)
+            {
+                return false;
+            }
+            for (int i = 0; i < modifier.size(); i++)
+            {
+                if (!std::isdigit(modifier[i]) && modifier[i] != '.')
+                    return false; // contain invalid char
+            }
+            break;
+        }
+        case KEYWORD: {
+            if (Book::is_keyword_repeated(modifier))
+            {
+                return false; // Keywords are repeated
+            }
+        }
+        default:
+            return false;
     }
+
     Book copied_book = isbn_storage.Copy(isbn);
     std::string original_isbn = isbn;
     std::string original_name = copied_book.get_book_name();

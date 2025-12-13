@@ -1,3 +1,8 @@
+#pragma once
+#include <ostream>
+#ifndef BOOK_HPP
+#define BOOK_HPP
+
 #include <cstring>
 #include <string>
 #include <vector>
@@ -5,12 +10,12 @@
 class Book
 {
 private:
-    char book_name[60];
-    char author[60];
-    char keywords[60];
-    char isbn[20];
-    double price;
-    int stock;
+    char book_name[60]{};
+    char author[60]{};
+    char keywords[60]{};
+    char isbn[20]{};
+    double price = 0;
+    int stock = 0;
 
 public:
     std::string get_book_name();
@@ -30,6 +35,18 @@ public:
     Book(std::string);
     Book(const Book &other);
     static bool is_keyword_repeated(const std::string &keyword);
+
     bool operator<(const Book &other) const { return strcmp(this->isbn, other.isbn) < 0; }
     bool operator==(const Book &other) const { return strcmp(this->isbn, other.isbn) == 0; }
+    friend std::ostream &operator<<(std::ostream &os, const Book &other)
+    {
+        std::string isbn_ = other.isbn;
+        std::string name_ = other.book_name;
+        std::string author_ = other.author;
+        std::string keyword_ = other.keywords;
+        os << isbn_ << '\t' << name_ << '\t' << author_ << '\t' << keyword_ << '\t' << other.price << '\t'
+           << other.stock << '\n';
+        return os;
+    }
 };
+#endif

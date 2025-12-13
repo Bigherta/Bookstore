@@ -1,5 +1,9 @@
-#include "./book.hpp"
+#pragma once
+#ifndef STORAGE_HPP
+#define STORAGE_HPP
+
 #include "./Token.hpp"
+#include "./Book.hpp"
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -166,3 +170,5 @@ public:
     void import_book(const std::string &book_isbn, int num);
 
 };
+
+#endif

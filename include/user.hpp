@@ -1,26 +1,34 @@
+#pragma once
+#ifndef USER_HPP
+#define USER_HPP
 
+#include "./storage.hpp"
+#include <cstring>
 #include <string>
-#include <unordered_map>
+#include <utility>
 #include <vector>
 
 
 class user
 {
 public:
-    std::string userID;
-    std::string username;
-    std::string password;
-    std::string selectedBookISBN;
+    char userID[31];
+    char username[31];
+    char password[31];
     int privilegeLevel = 0; // 0: visitor, 1: customer, 3: worker, 7: manager
-
-    bool log_status = false;
+    bool is_valid = true;
 
     user() {}
 
     user(const std::string &userID_, const std::string &username_, const std::string &password_,
-         int privilegeLevel_ = 0) :
-        userID(userID_), username(username_), password(password_), privilegeLevel(privilegeLevel_)
+         int privilegeLevel_ = 0) : privilegeLevel(privilegeLevel_)
     {
+        std::strncpy(userID, userID_.c_str(), userID_.size());
+        userID[userID_.size()] = '\0';
+        std::strncpy(username, username_.c_str(), username_.size());
+        username[username_.size()] = '\0';
+        std::strncpy(password, password_.c_str(), password_.size());
+        password[password_.size()] = '\0';
     }
 };
 
@@ -28,6 +36,10 @@ class UserManager
 {
 public:
     UserManager();
+
+    int count(const std::string &userID_);
+
+    bool is_log(const std::string &);
 
     bool login(const std::string &userID_, const std::string &password_);
 
@@ -44,10 +56,13 @@ public:
 
     user &getCurrentUser();
 
-private:
-    std::unordered_map<std::string, user> userDatabase; // userID -> user
+    std::string getSelectedbook();
 
-    std::vector<user> logstack;
+private:
+    MemoryRiver<user> userDatabase;
+
+    std::vector<std::pair<std::string, std::string>> logstack;
 
     user currentUser;
 };
+#endif

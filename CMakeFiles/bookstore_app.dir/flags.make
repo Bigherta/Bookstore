@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/TestPoints/1075
+CXX_INCLUDES = -I/mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/include
 
-CXX_FLAGS = -std=gnu++14
+CXX_FLAGS = -std=gnu++17
 

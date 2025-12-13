@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/Bookstore_2025.dir/TestPoints/1075/parser.cpp.o CMakeFiles/Bookstore_2025.dir/TestPoints/1075/Token.cpp.o CMakeFiles/Bookstore_2025.dir/TestPoints/1075/user.cpp.o -o Bookstore_2025 

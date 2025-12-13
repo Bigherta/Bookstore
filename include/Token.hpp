@@ -1,4 +1,6 @@
 #pragma once
+#ifndef TOKEN_HPP
+#define TOKEN_HPP
 
 #include <memory>
 #include <string>
@@ -55,3 +57,4 @@ private:
     std::vector<Token> tokens_{};
     int cursor_{0};
 };
+#endif

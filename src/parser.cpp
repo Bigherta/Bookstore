@@ -88,12 +88,14 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
     switch (cmd)
     {
         case LOGIN: {
-            std::string userID_, password_;
             if (tokens_.size() > 3 || tokens_.size() < 2)
             {
                 std::cout << "Invalid\n";
                 break;
             }
+
+            std::string userID_, password_;
+
             userID_ = tokens_.get()->text;
 
             if (tokens_.peek() != nullptr)
@@ -109,19 +111,28 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             break;
         }
         case LOGOUT: {
-            if (!userManager.logout())
+            if (tokens_.size() != 1)
+            {
                 std::cout << "Invalid\n";
-
+                break;
+            }
+            if (!userManager.logout())
+            {
+                std::cout << "Invalid\n";
+                break;
+            }
             break;
         }
 
         case REGISTER: {
-            std::string userID_, password_, username_;
             if (tokens_.size() != 4)
             {
                 std::cout << "Invalid\n";
                 break;
             }
+
+            std::string userID_, password_, username_;
+
             userID_ = tokens_.get()->text;
 
             password_ = tokens_.get()->text;
@@ -138,13 +149,14 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
         }
 
         case PASSWD: {
-            std::string userID_, cur_Password_, new_Password_;
-
             if (tokens_.size() < 3 || tokens_.size() > 4)
             {
                 std::cout << "Invalid\n";
                 break;
             }
+
+            std::string userID_, cur_Password_, new_Password_;
+
             userID_ = tokens_.get()->text;
 
             cur_Password_ = tokens_.get()->text;
@@ -162,13 +174,13 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
         }
 
         case USERADD: {
-            std::string userID_, password_, username_;
-
             if (tokens_.size() != 5)
             {
                 std::cout << "Invalid\n";
                 break;
             }
+            std::string userID_, password_, username_;
+
             userID_ = tokens_.get()->text;
 
             password_ = tokens_.get()->text;
@@ -199,13 +211,13 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             break;
         }
         case DELETEUSER: {
-            std::string userID_;
-
             if (tokens_.size() != 2)
             {
                 std::cout << "Invalid\n";
                 break;
             }
+            std::string userID_;
+
             userID_ = tokens_.get()->text;
 
             if (!userManager.deleteUser(userID_))
@@ -266,7 +278,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             }
             else
             {
-                if (tokens_.size() > 2 || userManager.getCurrentUser().privilegeLevel < 1)
+                if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 1)
                 {
                     std::cout << "Invalid\n";
                     break;
@@ -292,6 +304,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                     break;
                 }
                 std::string search_value = text_.substr(column + 1, text_.size() - column - 2);
+                if (search_value.empty())
+                {
+                    std::cout << "Invalid\n";
+                    break;
+                }
                 if (search_param == ISBN)
                 {
                     storage storage_;
@@ -308,7 +325,25 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 }
                 else if (search_param == KEYWORD)
                 {
-                    // to do
+                    bool is_valid = true;
+                    for (int i = 0; i < search_value.size(); i++)
+                    {
+                        if (search_value[i] == '|')
+                        {
+                            is_valid = false;
+                            break;
+                        }
+                    }
+                    if (!is_valid)
+                    {
+                        std::cout << "Invalid\n";
+                        break;
+                    }
+                    storage storage_ = storage(search_value);
+                    std::vector<std::pair<std::string, int>> name_index_pair;
+                    storage_.init(name_index_pair);
+                    storage_.Show(name_index_pair);
+                    break;
                 }
                 else
                 {
@@ -348,7 +383,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             break;
         }
         case SELECT: {
-            if (userManager.getCurrentUser().privilegeLevel < 3 || tokens_.size() < 2)
+            if (userManager.getCurrentUser().privilegeLevel < 3 || tokens_.size() != 2)
             {
                 std::cout << "Invalid\n";
                 break;
@@ -360,17 +395,17 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             if (!storage_.Find(isbn_))
             {
                 storage_.Insert(isbn_, name_index_pair);
-                userManager.getCurrentUser().selectedBookISBN = isbn_;
+                userManager.getSelectedbook() = isbn_;
             }
             else
             {
-                userManager.getCurrentUser().selectedBookISBN = isbn_;
+                userManager.getSelectedbook() = isbn_;
             }
             break;
         }
         case MODIFY: {
-            if (userManager.getCurrentUser().privilegeLevel < 3 ||
-                userManager.getCurrentUser().selectedBookISBN.empty() || tokens_.size() < 2)
+            if (userManager.getCurrentUser().privilegeLevel < 3 || userManager.getSelectedbook().empty() ||
+                tokens_.size() < 2)
             {
                 std::cout << "Invalid\n";
                 break;
@@ -460,29 +495,29 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             {
                 if (!isbn.empty())
                 {
-                    storage::modify_book(TokenType::ISBN, isbn, userManager.getCurrentUser().selectedBookISBN);
+                    storage::modify_book(TokenType::ISBN, isbn, userManager.getSelectedbook());
                 }
                 if (!name.empty())
                 {
-                    storage::modify_book(TokenType::NAME, name, userManager.getCurrentUser().selectedBookISBN);
+                    storage::modify_book(TokenType::NAME, name, userManager.getSelectedbook());
                 }
                 if (!author.empty())
                 {
-                    storage::modify_book(TokenType::AUTHOR, author, userManager.getCurrentUser().selectedBookISBN);
+                    storage::modify_book(TokenType::AUTHOR, author, userManager.getSelectedbook());
                 }
                 if (!keyword.empty())
                 {
-                    storage::modify_book(TokenType::KEYWORD, keyword, userManager.getCurrentUser().selectedBookISBN);
+                    storage::modify_book(TokenType::KEYWORD, keyword, userManager.getSelectedbook());
                 }
                 if (!price.empty())
                 {
-                    storage::modify_book(TokenType::PRICE, price, userManager.getCurrentUser().selectedBookISBN);
+                    storage::modify_book(TokenType::PRICE, price, userManager.getSelectedbook());
                 }
             }
             break;
         }
         case IMPORT: {
-            if (tokens_.size() != 3 || userManager.getCurrentUser().selectedBookISBN.empty() ||
+            if (tokens_.size() != 3 || userManager.getSelectedbook().empty() ||
                 userManager.getCurrentUser().privilegeLevel < 3)
             {
                 std::cout << "Invalid\n";
@@ -503,12 +538,12 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             }
             double total_ = std::stod(total_cost);
             storage storage_;
-            storage_.import_book(userManager.getCurrentUser().selectedBookISBN, num);
+            storage_.import_book(userManager.getSelectedbook(), num);
             Log.add_trading(0, total_);
             break;
         }
         case REPORT: {
-            if (userManager.getCurrentUser().privilegeLevel < 7)
+            if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 7)
             {
                 std::cout << "Invalid\n";
                 break;
@@ -530,7 +565,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
         }
 
         case LOG: {
-            if (userManager.getCurrentUser().privilegeLevel < 7)
+            if (tokens_.size() != 1 || userManager.getCurrentUser().privilegeLevel < 7)
             {
                 std::cout << "Invalid\n";
                 break;
@@ -538,13 +573,17 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             Log.Log();
             break;
         }
+        case EXIT: {
+            if (tokens_.size() != 1)
+            {
+                std::cout << "Invalid\n";
+                break;
+            }
+            exit(0);
+        }
         case TEXT:
             std::cout << "Invalid\n";
             break;
-
-        case EXIT:
-            exit(0);
-
         default:
             break;
     }
