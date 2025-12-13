@@ -1,8 +1,7 @@
 #include "../include/user.hpp"
+#include "../include/storage.hpp"
 #include <cctype>
-#include <iostream>
 #include <string>
-#include "../include/parser.hpp"
 
 UserManager::UserManager()
 {
@@ -30,7 +29,7 @@ bool UserManager::logout()
     if (logstack.size() == 0 || currentUser.privilegeLevel < 1)
         return false;
     userDatabase[currentUser.userID].log_status = false;
-    std::cout << "Goodbye, " << currentUser.userID << "\n";
+    userDatabase[currentUser.userID].selectedBookISBN.clear();
     logstack.pop_back();
     if (!logstack.empty())
         currentUser = logstack.back();
@@ -117,4 +116,4 @@ bool UserManager::deleteUser(const std::string &userID_)
     return true;
 }
 
-int UserManager::getPrivilegeLevel() const { return currentUser.privilegeLevel; }
+user &UserManager::getCurrentUser() { return currentUser; }

@@ -1,12 +1,16 @@
-
+#include "./book.hpp"
+#include "./Token.hpp"
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <utility>
 #include <vector>
 
 using std::fstream;
 using std::string;
+
+class Book;
 
 template<class T, int info_len = 2>
 class MemoryRiver
@@ -110,19 +114,21 @@ struct index_to_head
     }
 };
 
-template<class T>
+
 class storage
 {
 private: 
     std::string index_name;
 public:
+    storage() = default;
+
     storage(std::string s) : index_name(s) {}
 
     struct Block
     {
         int next_block; // 下一个块的索引，若不存在，则为-1
         int size; // 当前块存储的数据量
-        T val[200]{};
+        Book val[200]{};
         Block() : next_block(-1), size(0) {}
     };
 
@@ -131,17 +137,32 @@ public:
     
     void init(std::vector<std::pair<std::string, int>> &);
 
-    void Insert(T, std::vector<std::pair<std::string, int>> &);
+    void Insert(Book, std::vector<std::pair<std::string, int>> &);
 
-    void Find(const std::vector<std::pair<std::string, int>> &);
+    bool Find(const std::string &);
 
-    void Delete(T, std::vector<std::pair<std::string, int>> &);
+    Book Copy(const std::string &);
 
-    void split(Block &block, T val, int pos, int offset);
+    void Show(const std::vector<std::pair<std::string, int>> &);
 
-    void merge(Block &block, int offset);
+    void SearchIsbn(const std::string &);
 
-    bool insert_val(Block &temp, T value, int block_index);
+    void Delete(Book, std::vector<std::pair<std::string, int>> &);
 
-    bool delete_val(Block &temp, T value, int block_index);
+    void split(Block &, Book , int , int );
+
+    void merge(Block &, int );
+
+    bool insert_book(Block &, Book , int );
+
+    bool delete_book(Block &, Book , int );
+
+    static bool modify_book(TokenType, std::string, std::string);
+
+    bool buy_book(const std::string &book_isbn, int num, double &);
+
+    bool select_book(const std::string &book_isbn);
+
+    void import_book(const std::string &book_isbn, int num);
+
 };

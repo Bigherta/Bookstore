@@ -1,6 +1,6 @@
 #include "../include/log.hpp"
 #include <iomanip>
-#include "../include/parser.hpp"
+
 
 bool log::ShowFinance(int count_)
 {
