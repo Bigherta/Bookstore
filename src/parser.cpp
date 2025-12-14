@@ -137,7 +137,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
             if (!userManager.registerUser(userID_, password_, username_))
                 std::cout << "Invalid\n";
-            
+
             break;
         }
 
@@ -159,7 +159,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
             if (!userManager.passwd(userID_, cur_Password_, new_Password_))
                 std::cout << "Invalid\n";
-            
+
             break;
         }
 
@@ -194,7 +194,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
             if (!userManager.useradd(userID_, password_, privilegeLevel_, username_))
                 std::cout << "Invalid\n";
-            
+
             break;
         }
         case DELETEUSER: {
@@ -209,7 +209,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
             if (!userManager.deleteUser(userID_))
                 std::cout << "Invalid\n";
-            
+
             break;
         }
 
@@ -394,7 +394,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             {
                 userManager.getSelectedbook() = isbn_;
             }
-            
+
             break;
         }
         case MODIFY: {
@@ -488,25 +488,13 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             }
             else
             {
-                if (!name.empty())
+                if (!storage::modify_book(isbn, name, author, keyword, price, userManager.getSelectedbook()))
                 {
-                    storage::modify_book(TokenType::NAME, name, userManager.getSelectedbook());
-                }
-                if (!author.empty())
-                {
-                    storage::modify_book(TokenType::AUTHOR, author, userManager.getSelectedbook());
-                }
-                if (!keyword.empty())
-                {
-                    storage::modify_book(TokenType::KEYWORD, keyword, userManager.getSelectedbook());
-                }
-                if (!price.empty())
-                {
-                    storage::modify_book(TokenType::PRICE, price, userManager.getSelectedbook());
+                    std::cout << "Invalid\n";
+                    break;
                 }
                 if (!isbn.empty())
                 {
-                    storage::modify_book(TokenType::ISBN, isbn, userManager.getSelectedbook());
                     userManager.getSelectedbook() = isbn;
                 }
             }

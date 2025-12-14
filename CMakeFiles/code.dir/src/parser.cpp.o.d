@@ -191,7 +191,7 @@ CMakeFiles/code.dir/src/parser.cpp.o: \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++io.h \
  /usr/include/c++/13/bits/fstream.tcc /usr/include/c++/13/utility \
  /usr/include/c++/13/bits/stl_relops.h \
- /mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/src/../include/Book.hpp \
+ /mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/src/../include/book.hpp \
  /usr/include/c++/13/iomanip /usr/include/c++/13/locale \
  /usr/include/c++/13/bits/locale_facets_nonio.h /usr/include/c++/13/ctime \
  /usr/include/x86_64-linux-gnu/c++/13/bits/time_members.h \

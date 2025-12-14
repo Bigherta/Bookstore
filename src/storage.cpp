@@ -135,6 +135,8 @@ void storage::Insert(Book value, std::vector<std::pair<std::string, int>> &index
     file.write(t);
 }
 // 插入一个值
+
+
 void storage::Show(const std::vector<std::pair<std::string, int>> &index_pos_pair_)
 {
     int book_pos = 0;
@@ -265,73 +267,6 @@ void storage::SearchIsbn(const std::string &isbn)
         {
             std::cout << *pos;
             return;
-        }
-    }
-}
-
-bool storage::Find(const std::string &isbn)
-{
-    std::vector<std::pair<std::string, int>> index_pos_pair_;
-    init(index_pos_pair_);
-    int book_pos = 0;
-    bool is_exist = false;
-    for (int i = 0; i < index_pos_pair_.size(); i++)
-    {
-        if (index_pos_pair_[i].first.empty())
-        {
-            is_exist = true;
-            book_pos = index_pos_pair_[i].second;
-            break;
-        }
-    }
-    if (!is_exist)
-    {
-        return false;
-    }
-
-    index_to_head t;
-    if (!file.read(t, book_pos))
-    {
-        return false;
-    }
-
-    bool is_empty = true;
-
-    Block temp;
-
-    book.read(temp, t.head);
-
-    while (temp.next_block != -1)
-    {
-        if (temp.size != 0)
-            is_empty = false;
-        Book *pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
-        if (pos == temp.val + temp.size || !(*pos == Book(isbn)))
-        {
-            book.read(temp, temp.next_block);
-        }
-        else
-        {
-            return true;
-        }
-    }
-
-    if (temp.size != 0)
-        is_empty = false;
-    if (is_empty)
-    {
-        return false;
-    }
-    else
-    {
-        Book *pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
-        if (pos == temp.val + temp.size || !(*pos == Book(isbn)))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
         }
     }
 }
@@ -487,85 +422,255 @@ Book storage::Copy(const std::string &isbn)
     }
 }
 
-bool storage::modify_book(TokenType type, std::string modifier, std::string isbn)
+bool storage::Find(const std::string &isbn)
+{
+    // 初始化索引表
+    std::vector<std::pair<std::string, int>> index_pos_pair_;
+    init(index_pos_pair_);
+
+    // 查找空索引块，用于定位对应 book block
+    int book_pos = -1;
+    for (int i = 0; i < index_pos_pair_.size(); i++)
+    {
+        if (index_pos_pair_[i].first.empty())
+        {
+            book_pos = index_pos_pair_[i].second;
+            break;
+        }
+    }
+
+    if (book_pos == -1) // 没有空索引块，说明没有书籍
+    {
+        return false;
+    }
+
+    // 读取索引头
+    index_to_head t;
+    if (!file.read(t, book_pos))
+    {
+        return false;
+    }
+
+    // 遍历 book block 链表，查找 ISBN
+    Block temp;
+    book.read(temp, t.head);
+
+    while (true)
+    {
+        // 使用 std::lower_bound 查找 ISBN
+        Book *pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
+        if (pos != temp.val + temp.size && *pos == Book(isbn))
+        {
+            return true; // 找到 ISBN
+        }
+
+        if (temp.next_block == -1) // 已经是最后一个 block
+            break;
+
+        book.read(temp, temp.next_block); // 继续读取下一个 block
+    }
+
+    // 遍历完 block 都没找到
+    return false;
+}
+
+
+ bool storage::modify_book(std::string isbn_, std::string name_, std::string author_, std::string keywords_,
+                          std::string price_, std::string selected_book)
 {
     // Implementation for modifying a book based on the type and modifier
     std::vector<std::pair<std::string, int>> index_pos_pair_;
 
-
     storage isbn_storage;
     isbn_storage.init(index_pos_pair_);
-    switch (type)
+
+    bool is_change_isbn = false, is_change_name = false, is_change_author = false, is_change_keyword = false,
+         is_change_price = false;
+
+    if (!isbn_.empty())
     {
-        case ISBN: {
-            if (modifier.size() > 20)
-            {
-                return false; // exceed length limit
-            }
-            for (int i = 0; i < modifier.size(); i++)
-            {
-                if (!std::isprint(modifier[i]))
-                    return false; // contain invalid char
-            }
-            if (modifier == isbn || isbn_storage.Find(modifier))
-            {
-                return false; // New ISBN already exists
-            }
-            break;
+        if (isbn_.size() > 20)
+        {
+            return false; // exceed length limit
         }
-        case NAME:
-        case AUTHOR: {
-            if (modifier.size() > 60)
-            {
-                return false; // exceed length limit
-            }
-            for (int i = 0; i < modifier.size(); i++)
-            {
-                if (!std::isprint(modifier[i]) || modifier[i] == '"')
-                    return false; // contain invalid char
-            }
-            break;
+        for (int i = 0; i < isbn_.size(); i++)
+        {
+            if (!std::isprint(isbn_[i]))
+                return false; // contain invalid char
         }
-        case PRICE: {
-            if (modifier.size() > 13)
-            {
-                return false;
-            }
-            for (int i = 0; i < modifier.size(); i++)
-            {
-                if (!std::isdigit(modifier[i]) && modifier[i] != '.')
-                    return false; // contain invalid char
-            }
-            break;
+        if (isbn_ == selected_book || isbn_storage.Find(isbn_))
+        {
+            return false; // New ISBN already exists
         }
-        case KEYWORD: {
-            if (Book::is_keyword_repeated(modifier))
-            {
-                return false; // Keywords are repeated
-            }
-            break;
+        is_change_isbn = true;
+    }
+    if (!name_.empty() || !author_.empty())
+    {
+        if (name_.size() > 60 || author_.size() > 60)
+        {
+            return false; // exceed length limit
         }
-        case STOCK: {
-            for (int i = 0; i < modifier.size(); i++)
-            {
-                if (!std::isdigit(modifier[i]))
-                    return false; // contain invalid char
-            }
-            break;
+        for (int i = 0; i < name_.size(); i++)
+        {
+            if (!std::isprint(name_[i]) || name_[i] == '"')
+                return false; // contain invalid char
         }
-        default:
+        for (int i = 0; i < author_.size(); i++)
+        {
+            if (!std::isprint(author_[i]) || author_[i] == '"')
+                return false; // contain invalid char
+        }
+        if (!name_.empty())
+            is_change_name = true;
+        if (!author_.empty())
+            is_change_author = true;
+    }
+    if (!price_.empty())
+    {
+        if (price_.size() > 13)
+        {
             return false;
+        }
+        for (int i = 0; i < price_.size(); i++)
+        {
+            if (!std::isdigit(price_[i]) && price_[i] != '.')
+                return false; // contain invalid char
+        }
+        is_change_price = true;
     }
 
-    Book copied_book = isbn_storage.Copy(isbn);
-    std::string original_isbn = isbn;
+
+    if (!keywords_.empty())
+    {
+        if (Book::is_keyword_repeated(keywords_))
+        {
+            return false; // Keywords are repeated
+        }
+        is_change_keyword = true;
+    }
+
+    Book copied_book = isbn_storage.Copy(selected_book);
+    std::string original_isbn = selected_book;
     std::string original_name = copied_book.get_book_name();
     std::string original_author = copied_book.get_author();
     std::vector<std::string> original_keyword = copied_book.get_keyword();
+
     Book NewBook = copied_book;
 
     isbn_storage.Delete(copied_book, index_pos_pair_);
 
+    storage ori_name_storage = storage(original_name);
+    ori_name_storage.init(index_pos_pair_);
+    ori_name_storage.Delete(copied_book, index_pos_pair_);
+
+
+    storage ori_author_storage = storage(original_author);
+    ori_author_storage.init(index_pos_pair_);
+    ori_author_storage.Delete(copied_book, index_pos_pair_);
+
+
+    for (const auto &kw: original_keyword)
+    {
+        storage kw_storage(kw);
+        kw_storage.init(index_pos_pair_);
+        kw_storage.Delete(copied_book, index_pos_pair_);
+    }
+
+    if (!isbn_.empty())
+        NewBook.set_isbn(isbn_);
+    if (!name_.empty())
+        NewBook.set_book_name(name_);
+    if (!author_.empty())
+        NewBook.set_author(author_);
+    if (!keywords_.empty())
+        NewBook.set_keywords(keywords_);
+    if (!price_.empty())
+        NewBook.set_price(std::stod(price_));
+
+    if (is_change_name)
+    {
+        storage new_name_storage(name_);
+        new_name_storage.init(index_pos_pair_);
+        new_name_storage.Insert(NewBook, index_pos_pair_);
+    }
+    else
+    {
+        ori_name_storage.Insert(NewBook, index_pos_pair_);
+    }
+
+    if (is_change_author)
+    {
+        storage new_author_storage(author_);
+        new_author_storage.init(index_pos_pair_);
+        new_author_storage.Insert(NewBook, index_pos_pair_);
+    }
+    else
+    {
+        ori_author_storage.Insert(NewBook, index_pos_pair_);
+    }
+
+    if (is_change_keyword)
+    {
+        std::vector<std::string> new_keywords = NewBook.get_keyword();
+        for (auto &kw: new_keywords)
+        {
+            storage kw_storage(kw);
+            kw_storage.init(index_pos_pair_);
+            kw_storage.Insert(NewBook, index_pos_pair_);
+        }
+    }
+    else
+    {
+
+        for (auto &kw: original_keyword)
+        {
+            storage kw_storage(kw);
+            kw_storage.init(index_pos_pair_);
+            kw_storage.Insert(NewBook, index_pos_pair_);
+        }
+    }
+
+    isbn_storage.Insert(NewBook, index_pos_pair_);
+    return true;
+}
+
+bool storage::buy_book(const std::string &book_isbn, int num, double &total_cost)
+{
+    Book copied_book = Copy(book_isbn);
+    int stock = copied_book.get_stock();
+    double price = copied_book.get_price();
+    if (stock < num)
+        return false;
+    total_cost = price * num;
+    std::cout << std::fixed << std::setprecision(2) << total_cost << '\n';
+    change_stock(book_isbn, stock - num);
+    return true;
+}
+
+void storage::import_book(const std::string &book_isbn, int num)
+{
+    Book copied_book = Copy(book_isbn);
+    int stock = copied_book.get_stock();
+    change_stock(book_isbn, stock + num);
+}
+
+void storage::change_stock(const std::string &book_isbn, int num)
+{
+    Book copied_book = Copy(book_isbn);
+    int stock = copied_book.get_stock();
+    std::vector<std::pair<std::string, int>> index_pos_pair_;
+
+    std::string original_isbn = book_isbn;
+    std::string original_name = copied_book.get_book_name();
+    std::string original_author = copied_book.get_author();
+    std::vector<std::string> original_keyword = copied_book.get_keyword();
+
+    Book NewBook = copied_book;
+    NewBook.set_stock(num);
+
+    storage isbn_storage;
+    isbn_storage.init(index_pos_pair_);
+    isbn_storage.Delete(copied_book, index_pos_pair_);
 
     storage ori_name_storage = storage(original_name);
     ori_name_storage.init(index_pos_pair_);
@@ -585,137 +690,18 @@ bool storage::modify_book(TokenType type, std::string modifier, std::string isbn
     }
 
 
-    switch (type)
+    ori_name_storage.Insert(NewBook, index_pos_pair_);
+
+
+    ori_author_storage.Insert(NewBook, index_pos_pair_);
+
+
+    for (auto &kw: original_keyword)
     {
-        case TokenType::NAME:
-            // Modify title logic
-            {
-                NewBook.set_book_name(modifier);
-                storage new_name_storage = storage(modifier);
-                new_name_storage.init(index_pos_pair_);
-                isbn_storage.Insert(NewBook, index_pos_pair_);
-                new_name_storage.Insert(NewBook, index_pos_pair_);
-                ori_author_storage.Insert(NewBook, index_pos_pair_);
-                for (const auto &kw: original_keyword)
-                {
-                    storage kw_storage(kw);
-                    kw_storage.init(index_pos_pair_);
-                    kw_storage.Insert(NewBook, index_pos_pair_);
-                }
-                break;
-            }
-        case TokenType::AUTHOR:
-
-            // Modify author logic
-            {
-                NewBook.set_author(modifier);
-                storage new_author_storage = storage(modifier);
-                new_author_storage.init(index_pos_pair_);
-                isbn_storage.Insert(NewBook, index_pos_pair_);
-                new_author_storage.Insert(NewBook, index_pos_pair_);
-                ori_name_storage.Insert(NewBook, index_pos_pair_);
-                for (const auto &kw: original_keyword)
-                {
-                    storage kw_storage(kw);
-                    kw_storage.init(index_pos_pair_);
-                    kw_storage.Insert(NewBook, index_pos_pair_);
-                }
-                break;
-            }
-        case TokenType::ISBN:
-            // Modify ISBN logic
-            {
-                NewBook.set_isbn(modifier);
-                isbn_storage.Insert(NewBook, index_pos_pair_);
-                ori_name_storage.Insert(NewBook, index_pos_pair_);
-                ori_author_storage.Insert(NewBook, index_pos_pair_);
-                for (const auto &kw: original_keyword)
-                {
-                    storage kw_storage(kw);
-                    kw_storage.init(index_pos_pair_);
-                    kw_storage.Insert(NewBook, index_pos_pair_);
-                }
-                break;
-            }
-        case TokenType::PRICE:
-            // Modify price logic
-            {
-                NewBook.set_price(std::stod(modifier));
-                isbn_storage.Insert(NewBook, index_pos_pair_);
-                ori_name_storage.Insert(NewBook, index_pos_pair_);
-                ori_author_storage.Insert(NewBook, index_pos_pair_);
-                for (const auto &kw: original_keyword)
-                {
-                    storage kw_storage(kw);
-                    kw_storage.init(index_pos_pair_);
-                    kw_storage.Insert(NewBook, index_pos_pair_);
-                }
-                break;
-            }
-            break;
-        case TokenType::KEYWORD:
-            // Modify keyword logic
-            {
-                NewBook.set_keywords(modifier);
-                isbn_storage.Insert(NewBook, index_pos_pair_);
-                ori_name_storage.Insert(NewBook, index_pos_pair_);
-                ori_author_storage.Insert(NewBook, index_pos_pair_);
-                int column = 0;
-                while (column < modifier.size())
-                {
-                    int start = column;
-                    while (column < modifier.size() && modifier[column] != '|')
-                    {
-                        ++column;
-                    }
-                    std::string sub_str = modifier.substr(start, column - start);
-                    storage new_keyword_storage = storage(sub_str);
-                    new_keyword_storage.init(index_pos_pair_);
-                    new_keyword_storage.Insert(NewBook, index_pos_pair_);
-                    ++column;
-                }
-                break;
-            }
-        case TokenType::STOCK:
-            // Modify stock logic
-            {
-                NewBook.set_stock(std::stoi(modifier));
-                isbn_storage.Insert(NewBook, index_pos_pair_);
-                ori_name_storage.Insert(NewBook, index_pos_pair_);
-                ori_author_storage.Insert(NewBook, index_pos_pair_);
-                for (const auto &kw: original_keyword)
-                {
-                    storage kw_storage(kw);
-                    kw_storage.init(index_pos_pair_);
-                    kw_storage.Insert(NewBook, index_pos_pair_);
-                }
-                break;
-            }
-        default:
-            return false;
+        storage kw_storage(kw);
+        kw_storage.init(index_pos_pair_);
+        kw_storage.Insert(NewBook, index_pos_pair_);
     }
-    return true;
-}
 
-bool storage::buy_book(const std::string &book_isbn, int num, double &total_cost)
-{
-    Book copied_book = Copy(book_isbn);
-    int stock = copied_book.get_stock();
-    double price = copied_book.get_price();
-    if (stock < num)
-        return false;
-    total_cost = price * num;
-    std::cout << std::fixed << std::setprecision(2) << total_cost << '\n';
-    std::string outcome = std::to_string(stock - num);
-    modify_book(TokenType::STOCK, outcome, book_isbn);
-    return true;
-}
-
-void storage::import_book(const std::string &book_isbn, int num)
-{
-    Book copied_book = Copy(book_isbn);
-    int stock = copied_book.get_stock();
-
-    std::string outcome = std::to_string(stock + num);
-    modify_book(TokenType::STOCK, outcome, book_isbn);
+    isbn_storage.Insert(NewBook, index_pos_pair_);
 }

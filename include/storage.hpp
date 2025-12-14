@@ -8,8 +8,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "Book.hpp"
-#include "Token.hpp"
+#include "book.hpp"
 
 using std::fstream;
 using std::string;
@@ -159,13 +158,16 @@ public:
 
     bool delete_book(Block &, Book, int);
 
-    static bool modify_book(TokenType, std::string, std::string);
+    static bool modify_book(std::string, std::string, std::string, std::string, std::string, std::string);
 
     bool buy_book(const std::string &book_isbn, int num, double &);
 
     bool select_book(const std::string &book_isbn);
 
     void import_book(const std::string &book_isbn, int num);
+
+    void change_stock(const std::string &book_isbn, int num);
+
 };
 
 #endif
