@@ -63,7 +63,7 @@ CMAKE_BINARY_DIR = /mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/B
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/code.dir/all
+all: CMakeFiles/Bookstore.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -71,34 +71,34 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/code.dir/clean
+clean: CMakeFiles/Bookstore.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/code.dir
+# Target rules for target CMakeFiles/Bookstore.dir
 
 # All Build rule for target.
-CMakeFiles/code.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/CMakeFiles --progress-num=1,2,3,4,5,6,7,8 "Built target code"
-.PHONY : CMakeFiles/code.dir/all
+CMakeFiles/Bookstore.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bookstore.dir/build.make CMakeFiles/Bookstore.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bookstore.dir/build.make CMakeFiles/Bookstore.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/CMakeFiles --progress-num=1,2,3,4,5,6,7,8 "Built target Bookstore"
+.PHONY : CMakeFiles/Bookstore.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/code.dir/rule: cmake_check_build_system
+CMakeFiles/Bookstore.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/CMakeFiles 8
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/code.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Bookstore.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/f/程序设计/大一上/大作业/Bookstore-2025-main/Bookstore-2025/CMakeFiles 0
-.PHONY : CMakeFiles/code.dir/rule
+.PHONY : CMakeFiles/Bookstore.dir/rule
 
 # Convenience name for target.
-code: CMakeFiles/code.dir/rule
-.PHONY : code
+Bookstore: CMakeFiles/Bookstore.dir/rule
+.PHONY : Bookstore
 
 # clean rule for target.
-CMakeFiles/code.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/clean
-.PHONY : CMakeFiles/code.dir/clean
+CMakeFiles/Bookstore.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Bookstore.dir/build.make CMakeFiles/Bookstore.dir/clean
+.PHONY : CMakeFiles/Bookstore.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
