@@ -2,23 +2,19 @@
 cmake_minimum_required(VERSION 3.10)
 
 # 2. 定义项目名称
-project(BookstoreManager VERSION 1.0
-    LANGUAGES CXX
-)
+project(BookstoreManager VERSION 1.0 LANGUAGES CXX)
 
 # 3. 指定 C++ 标准
-# 现代 C++ 代码通常推荐 C++17 或更高
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # 4. 定义头文件查找路径
-# 假设所有头文件 (.hpp) 都在项目根目录下的 'include/' 目录中
-include_directories(
-    include
-)
+# 使用 target_include_directories 更规范
+# PRIVATE 表示只对当前目标生效
+# PROJECT_SOURCE_DIR 指向项目根目录
+set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
-# 5. 定义所有源文件列表 (假设它们位于 src 目录)
-# ----------------------------------------------------
+# 5. 定义所有源文件
 set(SOURCES
     src/main.cpp
     src/user.cpp
@@ -28,11 +24,12 @@ set(SOURCES
     src/storage.cpp
     src/Token.cpp
 )
-# ----------------------------------------------------
 
 # 6. 添加可执行目标
-# 生成名为 'bookstore_app' 的可执行文件
 add_executable(code ${SOURCES})
 
-# 7. 链接依赖库 (如果您的项目使用了外部库，例如 Boost、SQLite 等，则在这里添加)
-# target_link_libraries(bookstore_app PRIVATE)
+# 7. 绑定头文件路径到目标
+target_include_directories(code PRIVATE ${INCLUDE_DIR})
+
+# 8. 链接依赖库（如果有外部库，可以在这里添加）
+# 例如：target_link_libraries(code PRIVATE Boost::boost)

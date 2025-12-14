@@ -8,8 +8,8 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "./Book.hpp"
-#include "./Token.hpp"
+#include "Book.hpp"
+#include "Token.hpp"
 
 using std::fstream;
 using std::string;

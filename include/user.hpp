@@ -2,7 +2,7 @@
 #ifndef USER_HPP
 #define USER_HPP
 
-#include "./storage.hpp"
+#include "storage.hpp"
 #include <cstring>
 #include <string>
 #include <utility>

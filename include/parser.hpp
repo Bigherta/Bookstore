@@ -4,7 +4,7 @@
 
 #include <string>
 #include <unordered_map>
-#include "./Token.hpp"
+#include "Token.hpp"
 
 
 
