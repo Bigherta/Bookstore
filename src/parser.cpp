@@ -104,10 +104,6 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             if (!userManager.login(userID_, password_))
                 std::cout << "Invalid\n";
 
-            else
-            {
-                std::cout << "Welcome, " << userID_ << "\n";
-            }
             break;
         }
         case LOGOUT: {
@@ -141,10 +137,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
             if (!userManager.registerUser(userID_, password_, username_))
                 std::cout << "Invalid\n";
-            else
-            {
-                std::cout << "Register" << userID_ << " successfully\n";
-            }
+            
             break;
         }
 
@@ -166,10 +159,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
             if (!userManager.passwd(userID_, cur_Password_, new_Password_))
                 std::cout << "Invalid\n";
-            else
-            {
-                std::cout << "Change password of " << userID_ << " successfully\n";
-            }
+            
             break;
         }
 
@@ -204,10 +194,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
             if (!userManager.useradd(userID_, password_, privilegeLevel_, username_))
                 std::cout << "Invalid\n";
-            else
-            {
-                std::cout << "Add user " << userID_ << " successfully\n";
-            }
+            
             break;
         }
         case DELETEUSER: {
@@ -222,10 +209,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
             if (!userManager.deleteUser(userID_))
                 std::cout << "Invalid\n";
-            else
-            {
-                std::cout << "Delete user " << userID_ << " successfully\n";
-            }
+            
             break;
         }
 
@@ -246,6 +230,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                     std::cout << "Invalid\n";
                     break;
                 }
+                tokens_.get();
                 if (tokens_.peek() == nullptr)
                 {
                     Log.ShowFinance();
@@ -258,7 +243,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         std::cout << "Invalid\n";
                         break;
                     }
-                    if (Parser::isN(count_str))
+                    if (!Parser::isN(count_str))
                     {
                         std::cout << "Invalid\n";
                         break;
@@ -298,25 +283,27 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 }
                 const TokenType search_param = matchkeyword(text_.substr(start, column - start));
                 column++;
-                if (text_[column] != '"' || text_[text_.size() - 1] != '"')
-                {
-                    std::cout << "Invalid\n";
-                    break;
-                }
-                std::string search_value = text_.substr(column + 1, text_.size() - column - 2);
-                if (search_value.empty())
-                {
-                    std::cout << "Invalid\n";
-                    break;
-                }
+                std::string search_value;
                 if (search_param == ISBN)
                 {
+                    search_value = text_.substr(column, text_.size() - column);
                     storage storage_;
                     storage_.SearchIsbn(search_value);
                     break;
                 }
                 else if (search_param == NAME || search_param == AUTHOR)
                 {
+                    if (text_[column] != '"' || text_[text_.size() - 1] != '"')
+                    {
+                        std::cout << "Invalid\n";
+                        break;
+                    }
+                    search_value = text_.substr(column + 1, text_.size() - column - 2);
+                    if (search_value.empty())
+                    {
+                        std::cout << "Invalid\n";
+                        break;
+                    }
                     storage storage_ = storage(search_value);
                     std::vector<std::pair<std::string, int>> name_index_pair;
                     storage_.init(name_index_pair);
@@ -325,6 +312,12 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 }
                 else if (search_param == KEYWORD)
                 {
+                    if (text_[column] != '"' || text_[text_.size() - 1] != '"')
+                    {
+                        std::cout << "Invalid\n";
+                        break;
+                    }
+                    search_value = text_.substr(column + 1, text_.size() - column - 2);
                     bool is_valid = true;
                     for (int i = 0; i < search_value.size(); i++)
                     {
@@ -401,6 +394,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             {
                 userManager.getSelectedbook() = isbn_;
             }
+            
             break;
         }
         case MODIFY: {
@@ -428,18 +422,19 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                     column++;
                 }
                 const TokenType change_param = matchkeyword(text_.substr(start, column - start));
+                column++;
                 switch (change_param)
                 {
                     case ISBN: {
                         if (!isbn.empty())
                             is_valid = false;
 
-                        isbn = text_.substr(column + 1);
+                        isbn = text_.substr(column);
 
                         break;
                     }
                     case NAME: {
-                        if (text_[column + 1] != '"' || text_[text_.size() - 1] != '"' || !name.empty())
+                        if (text_[column] != '"' || text_[text_.size() - 1] != '"' || !name.empty())
                         {
                             is_valid = false;
                             break;
@@ -449,7 +444,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         break;
                     }
                     case AUTHOR: {
-                        if (text_[column + 1] != '"' || text_[text_.size() - 1] != '"' || !author.empty())
+                        if (text_[column] != '"' || text_[text_.size() - 1] != '"' || !author.empty())
                         {
                             is_valid = false;
                             break;
@@ -458,7 +453,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         break;
                     }
                     case KEYWORD: {
-                        if (text_[column + 1] != '"' || text_[text_.size() - 1] != '"' || !keyword.empty())
+                        if (text_[column] != '"' || text_[text_.size() - 1] != '"' || !keyword.empty())
                         {
                             is_valid = false;
                             break;
@@ -473,7 +468,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                             is_valid = false;
                             break;
                         }
-                        price = text_.substr(column + 1);
+                        price = text_.substr(column);
                         if (!Parser::isD(price))
                         {
                             is_valid = false;
@@ -493,10 +488,6 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             }
             else
             {
-                if (!isbn.empty())
-                {
-                    storage::modify_book(TokenType::ISBN, isbn, userManager.getSelectedbook());
-                }
                 if (!name.empty())
                 {
                     storage::modify_book(TokenType::NAME, name, userManager.getSelectedbook());
@@ -512,6 +503,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 if (!price.empty())
                 {
                     storage::modify_book(TokenType::PRICE, price, userManager.getSelectedbook());
+                }
+                if (!isbn.empty())
+                {
+                    storage::modify_book(TokenType::ISBN, isbn, userManager.getSelectedbook());
+                    userManager.getSelectedbook() = isbn;
                 }
             }
             break;

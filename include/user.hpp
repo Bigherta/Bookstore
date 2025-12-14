@@ -56,7 +56,7 @@ public:
 
     user &getCurrentUser();
 
-    std::string getSelectedbook();
+    std::string &getSelectedbook();
 
 private:
     MemoryRiver<user> userDatabase;

@@ -2,14 +2,14 @@
 #ifndef STORAGE_HPP
 #define STORAGE_HPP
 
-#include "./Token.hpp"
-#include "./Book.hpp"
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
+#include "./Book.hpp"
+#include "./Token.hpp"
 
 using std::fstream;
 using std::string;
@@ -121,13 +121,7 @@ struct index_to_head
 
 class storage
 {
-private: 
-    std::string index_name;
-public:
-    storage() = default;
-
-    storage(std::string s) : index_name(s) {}
-
+private:
     struct Block
     {
         int next_block; // 下一个块的索引，若不存在，则为-1
@@ -135,10 +129,14 @@ public:
         Book val[200]{};
         Block() : next_block(-1), size(0) {}
     };
-
+    std::string index_name;
     MemoryRiver<index_to_head> file; // 记录的是书名到写入头位置的映射
     MemoryRiver<Block> book; // 记录的是书的value
-    
+public:
+    storage() = default;
+
+    storage(std::string s) : index_name(s) {}
+
     void init(std::vector<std::pair<std::string, int>> &);
 
     void Insert(Book, std::vector<std::pair<std::string, int>> &);
@@ -153,13 +151,13 @@ public:
 
     void Delete(Book, std::vector<std::pair<std::string, int>> &);
 
-    void split(Block &, Book , int , int );
+    void split(Block &, Book, int, int);
 
-    void merge(Block &, int );
+    void merge(Block &, int);
 
-    bool insert_book(Block &, Book , int );
+    bool insert_book(Block &, Book, int);
 
-    bool delete_book(Block &, Book , int );
+    bool delete_book(Block &, Book, int);
 
     static bool modify_book(TokenType, std::string, std::string);
 
@@ -168,7 +166,6 @@ public:
     bool select_book(const std::string &book_isbn);
 
     void import_book(const std::string &book_isbn, int num);
-
 };
 
 #endif

@@ -1,4 +1,5 @@
 #pragma once
+#include <iomanip>
 #include <ostream>
 #ifndef BOOK_HPP
 #define BOOK_HPP
@@ -44,8 +45,9 @@ public:
         std::string name_ = other.book_name;
         std::string author_ = other.author;
         std::string keyword_ = other.keywords;
-        os << isbn_ << '\t' << name_ << '\t' << author_ << '\t' << keyword_ << '\t' << other.price << '\t'
-           << other.stock << '\n';
+        os << isbn_ << '\t' << name_ << '\t' << author_ << '\t' << keyword_ << '\t';
+        os << std::fixed << std::setprecision(2) << other.price << '\t';
+        os << other.stock << '\n';
         return os;
     }
 };

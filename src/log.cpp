@@ -25,34 +25,32 @@ bool log::ShowFinance(int count_)
     }
 
     // 获取日志文件的总字节数，用于遍历交易记录
-    int log_end = log_record.end();
-    record temp; // 用于临时存储读取的记录
-    int start_index = 2 * sizeof(int); // 从文件偏移开始读取记录，跳过前两个 int（header 信息）
 
+    record temp; // 用于临时存储读取的记录
+    int start_index = 2 * sizeof(int);
+    int end_index = start_index + (cur_count - 1) * sizeof(record);
     double inc = 0; // 累计收入
     double exp = 0; // 累计支出
 
     // 遍历日志文件中的每一条记录
-    while (start_index + sizeof(record) <= log_end)
+    for (int i = 1; i <= cur_count; i++)
     {
         // 读取记录到 temp
-        log_record.read(temp, start_index);
+        log_record.read(temp, end_index);
 
         // 累加收入和支出
         inc += temp.income;
         exp += temp.expense;
 
         // 如果当前记录的 count 等于查询的 count，则输出累计金额
-        if (temp.count == count_)
+        if (i == count_)
         {
             std::cout << "+ " << std::fixed << std::setprecision(2) << inc;
             std::cout << " - " << std::fixed << std::setprecision(2) << exp;
             std::cout << '\n';
             return true;
         }
-
-        // 移动到下一条记录的偏移
-        start_index += sizeof(record);
+        end_index -= sizeof(record);
     }
 
     // 如果 count_ = -1，则输出所有交易的总额
@@ -63,11 +61,7 @@ bool log::ShowFinance(int count_)
         std::cout << '\n';
         return true;
     }
-    else
-    {
-        // 如果循环结束仍未找到指定 count，则操作非法
-        return false;
-    }
+    return false;
 }
 
 void log::add_trading(double income, double expense)
@@ -90,5 +84,4 @@ void log::add_trading(double income, double expense)
 
     // 将新交易记录写入日志
     log_record.write(new_trade);
-    
 }

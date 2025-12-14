@@ -32,7 +32,7 @@ set(SOURCES
 
 # 6. 添加可执行目标
 # 生成名为 'bookstore_app' 的可执行文件
-add_executable(bookstore_app ${SOURCES})
+add_executable(code ${SOURCES})
 
 # 7. 链接依赖库 (如果您的项目使用了外部库，例如 Boost、SQLite 等，则在这里添加)
 # target_link_libraries(bookstore_app PRIVATE)

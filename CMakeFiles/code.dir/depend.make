@@ -1,2 +1,2 @@
-# Empty dependencies file for bookstore_app.
+# Empty dependencies file for code.
 # This may be replaced when dependencies are built.

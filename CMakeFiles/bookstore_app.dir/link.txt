@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/bookstore_app.dir/src/main.cpp.o CMakeFiles/bookstore_app.dir/src/user.cpp.o CMakeFiles/bookstore_app.dir/src/book.cpp.o CMakeFiles/bookstore_app.dir/src/log.cpp.o CMakeFiles/bookstore_app.dir/src/parser.cpp.o CMakeFiles/bookstore_app.dir/src/storage.cpp.o CMakeFiles/bookstore_app.dir/src/Token.cpp.o -o bookstore_app 

@@ -173,4 +173,4 @@ bool UserManager::deleteUser(const std::string &userID_)
 
 user &UserManager::getCurrentUser() { return currentUser; }
 
-std::string UserManager::getSelectedbook() { return logstack.back().second; }
+std::string &UserManager::getSelectedbook() { return logstack.back().second; }
