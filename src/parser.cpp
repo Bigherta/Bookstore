@@ -216,10 +216,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
         case SHOW: {
             if (tokens_.size() == 1)
             {
-                storage storage_;
-                std::vector<std::pair<std::string, int>> name_index_pair;
-                storage_.init(name_index_pair);
-                storage_.Show(name_index_pair);
+                storage<IsbnTag> storage_;
+                storage_.Show();
                 break;
             }
             const TokenType showType = tokens_.peek()->type;
@@ -287,7 +285,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 if (search_param == ISBN)
                 {
                     search_value = text_.substr(column, text_.size() - column);
-                    storage storage_;
+                    storage<IsbnTag> storage_;
                     storage_.SearchIsbn(search_value);
                     break;
                 }
@@ -304,10 +302,16 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         std::cout << "Invalid\n";
                         break;
                     }
-                    storage storage_ = storage(search_value);
-                    std::vector<std::pair<std::string, int>> name_index_pair;
-                    storage_.init(name_index_pair);
-                    storage_.Show(name_index_pair);
+                    if (search_param == NAME)
+                    {
+                        storage<NameTag> storage_(search_value);
+                        storage_.Show();
+                    }
+                    if (search_param == AUTHOR)
+                    {
+                        storage<AuthorTag> storage_(search_value);
+                        storage_.Show();
+                    }
                     break;
                 }
                 else if (search_param == KEYWORD)
@@ -332,10 +336,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         std::cout << "Invalid\n";
                         break;
                     }
-                    storage storage_ = storage(search_value);
-                    std::vector<std::pair<std::string, int>> name_index_pair;
-                    storage_.init(name_index_pair);
-                    storage_.Show(name_index_pair);
+                    storage<KeywordTag> storage_(search_value);
+                    storage_.Show();
                     break;
                 }
                 else
@@ -353,7 +355,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 break;
             }
             std::string isbn = tokens_.get()->text;
-            storage storage_;
+            storage<IsbnTag> storage_;
             if (!storage_.Find(isbn))
             {
                 std::cout << "Invalid\n";
@@ -387,12 +389,10 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 break;
             }
             std::string isbn_ = tokens_.get()->text;
-            storage storage_;
-            std::vector<std::pair<std::string, int>> name_index_pair;
-            storage_.init(name_index_pair);
+            storage<IsbnTag> storage_;
             if (!storage_.Find(isbn_))
             {
-                storage_.Insert(isbn_, name_index_pair);
+                storage_.Insert(isbn_);
                 userManager.getSelectedbook() = isbn_;
             }
             else
@@ -494,7 +494,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             else
             {
                 std::string ori_isbn = userManager.getSelectedbook();
-                if (!storage::modify_book(isbn, name, author, keyword, price, userManager.getSelectedbook()))
+                if (!storage<IsbnTag>::modify_book(isbn, name, author, keyword, price, userManager.getSelectedbook()))
                 {
                     std::cout << "Invalid\n";
                     break;
@@ -534,7 +534,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 break;
             }
             double total_ = std::stod(total_cost);
-            storage storage_;
+            storage<IsbnTag> storage_;
             storage_.import_book(userManager.getSelectedbook(), num);
             Log.add_trading(0, total_);
             break;

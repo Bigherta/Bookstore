@@ -18,7 +18,6 @@ set(SOURCES
     src/book.cpp
     src/log.cpp
     src/parser.cpp
-    src/storage.cpp
     src/Token.cpp
 )
 
