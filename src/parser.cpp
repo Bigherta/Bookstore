@@ -1,7 +1,7 @@
 #include "../include/parser.hpp"
+#include <iostream>
 #include "../include/log.hpp"
 #include "../include/user.hpp"
-#include <iostream>
 
 // 将字符串匹配成对应的枚举类
 TokenType Parser::matchkeyword(const std::string &text) const
@@ -118,8 +118,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 password_ = tokens_.get()->text;
 
             if (!userManager.login(userID_, password_))
+            {
                 std::cout << "Invalid\n";
-
+                break;
+            }
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
         case LOGOUT: {
@@ -128,11 +131,14 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 std::cout << "Invalid\n";
                 break;
             }
+            int cur_privilege = userManager.getCurrentUser().privilegeLevel;
+            std::string cur_name = userManager.getCurrentUser().username;
             if (!userManager.logout())
             {
                 std::cout << "Invalid\n";
                 break;
             }
+            Log.add_operation(cur_privilege, cur_name, cmd);
             break;
         }
 
@@ -152,8 +158,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             username_ = tokens_.get()->text;
 
             if (!userManager.registerUser(userID_, password_, username_))
+            {
                 std::cout << "Invalid\n";
-
+                break;
+            }
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
 
@@ -174,8 +183,12 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 new_Password_ = tokens_.get()->text;
 
             if (!userManager.passwd(userID_, cur_Password_, new_Password_))
+            {
                 std::cout << "Invalid\n";
+                break;
+            }
 
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
 
@@ -209,8 +222,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             username_ = tokens_.get()->text;
 
             if (!userManager.useradd(userID_, password_, privilegeLevel_, username_))
+            {
                 std::cout << "Invalid\n";
+            }
 
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
         case DELETEUSER: {
@@ -224,8 +240,12 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             userID_ = tokens_.get()->text;
 
             if (!userManager.deleteUser(userID_))
+            {
                 std::cout << "Invalid\n";
+                break;
+            }
 
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
 
@@ -234,6 +254,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             {
                 storage<IsbnTag> storage_;
                 storage_.Show();
+                Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username,
+                                  cmd);
                 break;
             }
             const TokenType showType = tokens_.peek()->type;
@@ -273,6 +295,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         std::cout << "Invalid\n";
                         break;
                     }
+                    Log.add_operation(userManager.getCurrentUser().privilegeLevel,
+                                      userManager.getCurrentUser().username, showType);
                 }
             }
             else
@@ -308,7 +332,6 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                     }
                     storage<IsbnTag> storage_;
                     storage_.SearchIsbn(search_value);
-                    break;
                 }
                 else if (search_param == NAME || search_param == AUTHOR)
                 {
@@ -333,7 +356,6 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         storage<AuthorTag> storage_(search_value);
                         storage_.Show();
                     }
-                    break;
                 }
                 else if (search_param == KEYWORD)
                 {
@@ -364,13 +386,15 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                     }
                     storage<KeywordTag> storage_(search_value);
                     storage_.Show();
-                    break;
                 }
                 else
                 {
                     std::cout << "Invalid\n";
                     break;
                 }
+
+                Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username,
+                                  cmd);
             }
             break;
         }
@@ -406,6 +430,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 break;
             }
             Log.add_trading(total_cost, 0);
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
         case SELECT: {
@@ -442,7 +467,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             {
                 userManager.getSelectedbook() = isbn_;
             }
-
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
         case MODIFY: {
@@ -562,6 +587,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         }
                     }
                 }
+                Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             }
             break;
         }
@@ -599,6 +625,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             storage<IsbnTag> storage_;
             storage_.import_book(userManager.getSelectedbook(), num);
             Log.add_trading(0, total_);
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
         case REPORT: {
@@ -619,7 +646,9 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             else
             {
                 std::cout << "Invalid\n";
-            }
+                break;
+            } 
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
 
@@ -629,7 +658,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 std::cout << "Invalid\n";
                 break;
             }
-            Log.Log();
+            Log.Log(); 
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
         case EXIT: {
@@ -638,6 +668,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 std::cout << "Invalid\n";
                 break;
             }
+            Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             exit(0);
         }
         case TEXT:

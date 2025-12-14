@@ -131,17 +131,36 @@ void log::add_trading(double income, double expense)
     purchase_record.write(new_trade);
 }
 
-void log::change_opt(std::string name, std::string info, operate &opt)
+void log::change_opt(int privilege, std::string name, std::string info, operate &opt)
 {
     std::string info_;
-    info_ += "worker ";
+    switch (privilege)
+    {
+        case 0: {
+            info_ += "visitor ";
+            break;
+        }
+        case 1: {
+            info_ += "customer ";
+            break;
+        }
+        case 3: {
+            info_ += "worker ";
+            break;
+        }
+        case 7: {
+            info_ += "manager ";
+            break;
+        }
+    }
     info_ += name;
     info_ += info;
     std::strncpy(opt.operation, info_.c_str(), info_.size());
     opt.operation[info_.size()] = '\0';
+    opt.privilege = privilege;
 }
 
-void log::add_operation(std::string name, TokenType type)
+void log::add_operation(int privilege, std::string name, TokenType type)
 {
     // 初始化日志存储
     operation_record.initialise("operation");
@@ -150,52 +169,70 @@ void log::add_operation(std::string name, TokenType type)
     {
 
         case LOGIN: {
-            change_opt(name, " log in\n", opt);
+            change_opt(privilege, name, " log in\n", opt);
             break;
         }
         case LOGOUT: {
-            change_opt(name, " log out\n", opt);
+            change_opt(privilege, name, " log out\n", opt);
             break;
         }
         case REGISTER: {
-            change_opt(name, " register a new account\n", opt);
+            change_opt(privilege, name, " register a new account\n", opt);
             break;
         }
         case PASSWD: {
-            change_opt(name, " change other's password\n", opt);
+            change_opt(privilege, name, " change other's password\n", opt);
             break;
         }
         case USERADD: {
-            change_opt(name, " add a new user\n", opt);
+            change_opt(privilege, name, " add a new user\n", opt);
             break;
         }
         case DELETEUSER: {
-            change_opt(name, " delete a user\n", opt);
+            change_opt(privilege, name, " delete a user\n", opt);
             break;
         }
 
         case SHOW: {
-            change_opt(name, " show the books\n", opt);
+            change_opt(privilege, name, " show the books\n", opt);
             break;
         }
+
+        case FINANCE: {
+            change_opt(privilege, name, " show the finance\n", opt);
+            break;
+        }
+
         case BUY: {
-            change_opt(name, " buy some books\n", opt);
+            change_opt(privilege, name, " buy some books\n", opt);
             break;
         }
         case SELECT: {
-            change_opt(name, " select a book\n", opt);
+            change_opt(privilege, name, " select a book\n", opt);
             break;
         }
         case MODIFY: {
-            change_opt(name, " modify a book\n", opt);
+            change_opt(privilege, name, " modify a book\n", opt);
             break;
         }
         case IMPORT: {
-            change_opt(name, " import some books\n", opt);
+            change_opt(privilege, name, " import some books\n", opt);
+            break;
+        }
+        case REPORT: {
+            change_opt(privilege, name, " check the report\n", opt);
+            break;
+        }
+        case LOG: {
+            change_opt(privilege, name, " check the log\n", opt);
+            break;
+        }
+        case EXIT: {
+            change_opt(privilege, name, " exit\n", opt);
             break;
         }
         default: {
-            change_opt(name, " invalid operation\n", opt);
+            change_opt(privilege, name, " invalid operation\n", opt);
             break;
         }
     }
@@ -209,10 +246,13 @@ void log::ReportEmployee()
     int start_index = 2 * sizeof(int);
     int end_index = operation_record.end();
     operate opt;
-    while (start_index + sizeof (operate) <= end_index)
+    while (start_index + sizeof(operate) <= end_index)
     {
-        operation_record.read(opt,start_index);
-        std::cout << opt.operation;
+        operation_record.read(opt, start_index);
+        if (opt.privilege == 3)
+        {
+            std::cout << opt.operation;
+        }
         start_index += sizeof(operate);
     }
 }
@@ -220,7 +260,18 @@ void log::ReportEmployee()
 void log::Log()
 {
     std::cout << "以下是操作系统日志\n";
-    ReportEmployee();
+    operation_record.initialise("operation");
+    int start_index = 2 * sizeof(int);
+    int end_index = operation_record.end();
+    operate opt;
+    while (start_index + sizeof(operate) <= end_index)
+    {
+        operation_record.read(opt, start_index);
+
+        std::cout << opt.operation;
+
+        start_index += sizeof(operate);
+    }
     std::cout << "以下是财务交易情况\n";
     ReportFinance();
 }

@@ -15,7 +15,8 @@ private:
 
     struct operate
     {
-        char operation[64];
+        int privilege;
+        char operation[128];
     };
     MemoryRiver<record> purchase_record;
     MemoryRiver<operate> operation_record;
@@ -34,9 +35,9 @@ public:
      */
     void add_trading(double income, double expense); // 记录交易
 
-    void change_opt(std::string, std::string,  operate &);
+    void change_opt(int, std::string, std::string,  operate &);
 
-    void add_operation(std::string, TokenType); //记录操作
+    void add_operation(int, std::string, TokenType); //记录操作
 
     void ReportFinance();
 
