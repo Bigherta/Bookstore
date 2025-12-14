@@ -366,6 +366,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 break;
             }
             int num = stoi(quantity);
+            if (num <= 0)
+            {
+                std::cout << "Invalid\n";
+                break;
+            }
             double total_cost;
             if (!storage_.buy_book(isbn, num, total_cost))
             {
