@@ -1,7 +1,7 @@
 #include "../include/parser.hpp"
-#include <iostream>
 #include "../include/log.hpp"
 #include "../include/user.hpp"
+#include <iostream>
 
 // 将字符串匹配成对应的枚举类
 TokenType Parser::matchkeyword(const std::string &text) const
@@ -53,11 +53,13 @@ bool Parser::isLetterChar(char ch) noexcept { return std::isalpha(static_cast<un
 
 bool Parser::isNumberChar(char ch) noexcept
 {
-    return std::isalnum(static_cast<unsigned char>(ch)) && !std::isalpha(static_cast<unsigned char>(ch));
+    return (std::isalnum(static_cast<unsigned char>(ch)) && !std::isalpha(static_cast<unsigned char>(ch)));
 }
 
 bool Parser::isN(std::string str) noexcept
 {
+    if (str.empty())
+        return false;
     for (char c: str)
     {
         if (!std::isdigit(c))
@@ -70,6 +72,8 @@ bool Parser::isN(std::string str) noexcept
 
 bool Parser::isD(std::string str) noexcept
 {
+    if (str.empty())
+        return false;
     int dot_time = 0;
     for (int i = 0; i < str.size(); i++)
     {
@@ -297,6 +301,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 if (search_param == ISBN)
                 {
                     search_value = text_.substr(column, text_.size() - column);
+                    if (search_value.empty())
+                    {
+                        std::cout << "Invalid\n";
+                        break;
+                    }
                     storage<IsbnTag> storage_;
                     storage_.SearchIsbn(search_value);
                     break;
@@ -334,6 +343,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         break;
                     }
                     search_value = text_.substr(column + 1, text_.size() - column - 2);
+                    if (search_value.empty())
+                    {
+                        std::cout << "Invalid\n";
+                        break;
+                    }
                     bool is_valid = true;
                     for (int i = 0; i < search_value.size(); i++)
                     {
@@ -407,7 +421,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
             for (int i = 0; i < isbn_.size(); i++)
             {
-                if (!std::isprint(isbn_[i]))
+                if (isbn_[i] < 33 || isbn_[i] > 126)
                 {
                     is_valid = false; // 包含非法字符
                     break;
@@ -433,7 +447,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
         }
         case MODIFY: {
             if (userManager.getCurrentUser().privilegeLevel < 3 || userManager.getSelectedbook().empty() ||
-                tokens_.size() < 2)
+                tokens_.size() < 2 || tokens_.size() > 6)
             {
                 std::cout << "Invalid\n";
                 break;
@@ -465,6 +479,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
                         isbn = text_.substr(column);
 
+                        if (isbn.empty())
+                            is_valid = false;
                         break;
                     }
                     case NAME: {
@@ -475,6 +491,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         }
 
                         name = text_.substr(column + 1, text_.size() - column - 2);
+                        if (name.empty())
+                            is_valid = false;
                         break;
                     }
                     case AUTHOR: {
@@ -484,6 +502,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                             break;
                         }
                         author = text_.substr(column + 1, text_.size() - column - 2);
+                        if (author.empty())
+                            is_valid = false;
                         break;
                     }
                     case KEYWORD: {
@@ -493,7 +513,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                             break;
                         }
                         keyword = text_.substr(column + 1, text_.size() - column - 2);
-
+                        if (keyword.empty())
+                            is_valid = false;
                         break;
                     }
                     case PRICE: {
@@ -503,6 +524,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                             break;
                         }
                         price = text_.substr(column);
+                        if (price.empty())
+                            is_valid = false;
                         if (!Parser::isD(price))
                         {
                             is_valid = false;
@@ -556,6 +579,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 break;
             }
             int num = stoi(quantity);
+            if (num <= 0)
+            {
+                std::cout << "Invalid\n";
+                break;
+            }
             std::string total_cost = tokens_.get()->text;
             if (!isD(total_cost))
             {
@@ -563,6 +591,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 break;
             }
             double total_ = std::stod(total_cost);
+            if (total_ <= 0.00)
+            {
+                std::cout << "Invalid\n";
+                break;
+            }
             storage<IsbnTag> storage_;
             storage_.import_book(userManager.getSelectedbook(), num);
             Log.add_trading(0, total_);

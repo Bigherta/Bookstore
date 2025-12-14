@@ -2,14 +2,15 @@
 #ifndef STORAGE_HPP
 #define STORAGE_HPP
 
+#include "book.hpp"
+#include "parser.hpp"
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
-#include "book.hpp"
-#include "parser.hpp"
+
 
 using std::fstream;
 using std::string;
@@ -771,7 +772,7 @@ public:
                 return false; // 超出长度限制
             for (int i = 0; i < isbn_.size(); i++)
             {
-                if (!std::isprint(isbn_[i]))
+                if (isbn_[i] < 33 || isbn_[i] > 126)
                     return false; // 包含非法字符
             }
             if (isbn_ == selected_book || isbn_storage.Find(isbn_))
@@ -788,12 +789,12 @@ public:
                 return false; // 超出长度限制
             for (int i = 0; i < name_.size(); i++)
             {
-                if (!std::isprint(name_[i]) || name_[i] == '"')
+                if (name_[i] < 33 || name_[i] > 126 || name_[i] == '"')
                     return false; // 非法字符
             }
             for (int i = 0; i < author_.size(); i++)
             {
-                if (!std::isprint(author_[i]) || author_[i] == '"')
+                if (author_[i] < 33 || author_[i] > 126 || author_[i] == '"')
                     return false; // 非法字符
             }
             if (!name_.empty())
@@ -819,7 +820,7 @@ public:
                 return false; // 超出长度限制
             for (int i = 0; i < keywords_.size(); i++)
             {
-                if (!std::isprint(keywords_[i]) || keywords_[i] == '"')
+                if (keywords_[i] < 33 || keywords_[i] > 126 || keywords_[i] == '"')
                     return false; // 非法字符
             }
             if (Book::is_keyword_repeated(keywords_))

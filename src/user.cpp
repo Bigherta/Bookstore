@@ -93,7 +93,7 @@ bool UserManager::registerUser(const std::string &userID_, const std::string &pa
         if (!std::isalnum(ch) && ch != '_')
             return false;
     for (char ch: username_)
-        if (ch < 32 || ch > 126)
+        if (ch < 33 || ch > 126)
             return false;
 
     user newUser(userID_, username_, password_, 1);
@@ -154,7 +154,7 @@ bool UserManager::useradd(const std::string &userID_, const std::string &passwor
         if (!std::isalnum(ch) && ch != '_')
             return false;
     for (char ch: username_)
-        if (ch < 32 || ch > 126)
+        if (ch < 33 || ch > 126)
             return false;
 
     // 权限与重复检查
@@ -183,7 +183,4 @@ bool UserManager::deleteUser(const std::string &userID_)
 user &UserManager::getCurrentUser() { return currentUser; }
 
 // 获取当前操作的选中书籍 ISBN
-std::string &UserManager::getSelectedbook() 
-{ 
-    return logstack.back().second; 
-}
+std::string &UserManager::getSelectedbook() { return logstack.back().second; }

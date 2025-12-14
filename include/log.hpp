@@ -1,6 +1,6 @@
-
-#include <iostream>
 #include "storage.hpp"
+#include "Token.hpp"
+
 
 class log
 {
@@ -13,7 +13,12 @@ private:
     };
     record cur_;
 
-    MemoryRiver<record> log_record;
+    struct operate
+    {
+        char operation[64];
+    };
+    MemoryRiver<record> purchase_record;
+    MemoryRiver<operate> operation_record;
 
 public:
     /** 财务记录查询
@@ -29,10 +34,13 @@ public:
      */
     void add_trading(double income, double expense); // 记录交易
 
+    void change_opt(std::string, std::string,  operate &);
 
-    void ReportFinance() { std::cout << "财务报表\n"; }
+    void add_operation(std::string, TokenType); //记录操作
 
-    void ReportEmployee() { std::cout << "员工工作情况表\n"; }
+    void ReportFinance();
 
-    void Log() { std::cout << "日志记录\n"; }
+    void ReportEmployee();
+
+    void Log();
 };

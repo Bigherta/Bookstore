@@ -21,8 +21,6 @@ const std::unordered_map<std::string, TokenType> TABLE = {
 class Parser
 {
 public:
-
-
     /**
      * @brief 将一行指令拆分为 TokenStream
      * @param line 输入指令行
