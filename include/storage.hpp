@@ -2,14 +2,13 @@
 #ifndef STORAGE_HPP
 #define STORAGE_HPP
 
-#include "book.hpp"
-#include "parser.hpp"
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <utility>
-#include <vector>
+#include <unordered_map>
+#include "book.hpp"
+#include "parser.hpp"
 
 
 using std::fstream;
@@ -225,7 +224,7 @@ private:
         Block() : next_block(-1), size(0) {}
     };
     std::string index_name;
-    std::vector<std::pair<std::string, int>> index_pos_pair_;
+    std::unordered_map<std::string, int> index_pos_pair_;
     MemoryRiver<index_to_head> file; // 记录的是书名到写入头位置的映射
     MemoryRiver<Block> book; // 记录的是书的value
 public:
@@ -238,6 +237,7 @@ public:
      */
     void init()
     {
+        index_pos_pair_.clear();
         file.initialise(StorageTraits<Tag>::index_file);
         book.initialise(StorageTraits<Tag>::book_file);
         index_to_head t;
@@ -246,7 +246,7 @@ public:
         while (start + sizeof(t) <= end)
         {
             file.read(t, start);
-            index_pos_pair_.emplace_back(t.name, start);
+            index_pos_pair_.emplace(t.name, start);
             start += sizeof(t);
         }
     }
@@ -259,44 +259,42 @@ public:
     {
         index_to_head t;
 
-        for (int i = 0; i < index_pos_pair_.size(); i++)
+        auto iter = index_pos_pair_.find(index_name);
+        if (iter != index_pos_pair_.end())
         {
-            if (index_pos_pair_[i].first == index_name)
+            int book_pos = iter->second;
+            if (!file.read(t, book_pos))
+                return;
+            Block temp;
+            if (!book.read(temp, t.head))
+                return;
+            int block_index = t.head;
+            while (temp.next_block != -1)
             {
-                int book_pos = index_pos_pair_[i].second;
-                if (!file.read(t, book_pos))
-                    return;
-                Block temp;
-                if (!book.read(temp, t.head))
-                    return;
-                int block_index = t.head;
-                while (temp.next_block != -1)
-                {
-                    if (insert_book(temp, value, block_index))
-                    {
-                        return;
-                    }
-                    block_index = temp.next_block;
-                    book.read(temp, temp.next_block);
-                }
                 if (insert_book(temp, value, block_index))
+                {
                     return;
+                }
+                block_index = temp.next_block;
+                book.read(temp, temp.next_block);
+            }
+            if (insert_book(temp, value, block_index))
+                return;
+            else
+            {
+                if (temp.size < 256)
+                {
+                    temp.val[temp.size] = value;
+                    ++temp.size;
+                    book.update(temp, block_index);
+                    return;
+                }
                 else
                 {
-                    if (temp.size < 256)
-                    {
-                        temp.val[temp.size] = value;
-                        ++temp.size;
-                        book.update(temp, block_index);
-                        return;
-                    }
-                    else
-                    {
-                        split(temp, value, 256, block_index);
-                    }
+                    split(temp, value, 256, block_index);
                 }
-                return;
             }
+            return;
         }
 
         // 没找到，新建相关信息
@@ -306,7 +304,7 @@ public:
         new_block.val[0] = value;
         t.head = book.write(new_block);
         int pos = file.end();
-        index_pos_pair_.push_back(std::make_pair(index_name, pos));
+        index_pos_pair_.emplace(index_name, pos);
         file.write(t);
     }
 
@@ -319,13 +317,12 @@ public:
     bool Find(const std::string &isbn)
     {
         int book_pos = -1;
-        for (int i = 0; i < index_pos_pair_.size(); i++)
+
+        auto iter = index_pos_pair_.find(index_name);
+
+        if (iter != index_pos_pair_.end())
         {
-            if (index_pos_pair_[i].first == index_name)
-            {
-                book_pos = index_pos_pair_[i].second;
-                break;
-            }
+            book_pos = iter->second;
         }
 
         if (book_pos == -1)
@@ -369,23 +366,22 @@ public:
      */
     Book Copy(const std::string &isbn)
     {
-        int book_pos = 0;
-        bool is_exist = false;
-        for (int i = 0; i < index_pos_pair_.size(); i++)
+        int book_pos = -1;
+
+        auto iter = index_pos_pair_.find(index_name);
+
+        if (iter != index_pos_pair_.end())
         {
-            if (index_pos_pair_[i].first == index_name)
-            {
-                is_exist = true;
-                book_pos = index_pos_pair_[i].second;
-                break;
-            }
+            book_pos = iter->second;
         }
-        if (!is_exist)
+
+        if (book_pos == -1)
         {
             return Book();
         }
 
         index_to_head t;
+
         if (!file.read(t, book_pos))
         {
             return Book();
@@ -424,18 +420,16 @@ public:
      */
     void Show()
     {
-        int book_pos = 0;
-        bool is_exist = false;
-        for (int i = 0; i < index_pos_pair_.size(); i++)
+        int book_pos = -1;
+
+        auto iter = index_pos_pair_.find(index_name);
+
+        if (iter != index_pos_pair_.end())
         {
-            if (index_pos_pair_[i].first == index_name)
-            {
-                is_exist = true;
-                book_pos = index_pos_pair_[i].second;
-                break;
-            }
+            book_pos = iter->second;
         }
-        if (!is_exist)
+
+        if (book_pos == -1)
         {
             std::cout << "\n";
             return;
@@ -488,20 +482,18 @@ public:
      */
     void SearchIsbn(const std::string &isbn)
     {
-        int book_pos = 0;
-        bool is_exist = false;
-        for (int i = 0; i < index_pos_pair_.size(); i++)
+        int book_pos = -1;
+
+        auto iter = index_pos_pair_.find(index_name);
+
+        if (iter != index_pos_pair_.end())
         {
-            if (index_pos_pair_[i].first == index_name)
-            {
-                is_exist = true;
-                book_pos = index_pos_pair_[i].second;
-                break;
-            }
+            book_pos = iter->second;
         }
-        if (!is_exist)
+
+        if (book_pos == -1)
         {
-            std::cout << '\n';
+            std::cout << "\n";
             return;
         }
 
@@ -564,44 +556,42 @@ public:
     void Delete(Book value)
     {
         index_to_head t;
-        for (int i = 0; i < index_pos_pair_.size(); i++)
+        auto iter = index_pos_pair_.find(index_name);
+        if (iter != index_pos_pair_.end())
         {
-            if (index_pos_pair_[i].first == index_name)
+            int book_pos = iter->second;
+            if (!file.read(t, book_pos))
+                return;
+            Block temp;
+
+            if (!book.read(temp, t.head))
+                return;
+            int block_index = t.head;
+            while (temp.next_block != -1)
             {
-                int book_pos = index_pos_pair_[i].second;
-                if (!file.read(t, book_pos))
-                    return;
-                Block temp;
-
-                if (!book.read(temp, t.head))
-                    return;
-                int block_index = t.head;
-                while (temp.next_block != -1)
-                {
-                    if (!delete_book(temp, value, block_index))
-                    {
-                        block_index = temp.next_block;
-                        book.read(temp, temp.next_block);
-                    }
-                    else
-                    {
-                        Block next;
-                        while (temp.next_block != -1)
-                        {
-
-                            book.read(next, temp.next_block);
-                            if (temp.size + next.size <= 256)
-                                merge(temp, block_index);
-                            else
-                                break;
-                        }
-                        return;
-                    }
-                }
                 if (!delete_book(temp, value, block_index))
                 {
+                    block_index = temp.next_block;
+                    book.read(temp, temp.next_block);
+                }
+                else
+                {
+                    Block next;
+                    while (temp.next_block != -1)
+                    {
+
+                        book.read(next, temp.next_block);
+                        if (temp.size + next.size <= 256)
+                            merge(temp, block_index);
+                        else
+                            break;
+                    }
                     return;
                 }
+            }
+            if (!delete_book(temp, value, block_index))
+            {
+                return;
             }
         }
     }
