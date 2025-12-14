@@ -15,25 +15,46 @@ using std::string;
 
 class Book;
 
+/**
+ * @class MemoryRiver
+ * @brief 基于二进制文件的模板存储管理类，用于顺序读写对象和管理少量附加信息。
+ *
+ * @tparam T 存储的对象类型
+ * @tparam info_len 文件开头预留的整型信息数量，默认值为 2
+ */
 template<class T, int info_len = 2>
 class MemoryRiver
 {
 private:
-    fstream file;
-    string file_name;
-    int sizeofT = sizeof(T);
+    fstream file; ///< 文件流对象，用于读写二进制文件
+    string file_name; ///< 文件名
+    int sizeofT = sizeof(T); ///< 存储对象的字节大小
 
 public:
+    /**
+     * @brief 默认构造函数
+     */
     MemoryRiver() = default;
 
+    /**
+     * @brief 带文件名的构造函数
+     * @param file_name 要操作的文件名
+     */
     MemoryRiver(const string &file_name) : file_name(file_name) {}
 
+    /**
+     * @brief 析构函数，关闭文件流
+     */
     ~MemoryRiver()
     {
         if (file.is_open())
             file.close();
     }
 
+    /**
+     * @brief 初始化文件，如果文件不存在则创建并写入 info_len 个 int 默认值 0
+     * @param FN 可选的文件名，若提供则覆盖类内 file_name
+     */
     void initialise(string FN = "")
     {
         if (FN != "")
@@ -52,43 +73,65 @@ public:
         file.open(file_name, std::ios::in | std::ios::out | std::ios::binary);
     }
 
-    // 读出第n个int的值赋给tmp，1_base
+    /**
+     * @brief 读取文件开头第 n 个 int 信息到 tmp，1-based
+     * @param tmp 读取的值
+     * @param n 第 n 个 int（从 1 开始计数）
+     */
     void get_info(int &tmp, int n)
     {
         if (n > info_len)
             return;
-        /* your code here */
 
         file.seekg((n - 1) * sizeof(int));
         file.read(reinterpret_cast<char *>(&tmp), sizeof(int));
     }
 
-    // 将tmp写入第n个int的位置，1_base
+    /**
+     * @brief 将 tmp 写入文件开头第 n 个 int，1-based
+     * @param tmp 要写入的值
+     * @param n 第 n 个 int（从 1 开始计数）
+     */
     void write_info(int tmp, int n)
     {
         if (n > info_len)
             return;
-        /* your code here */
 
         file.seekp((n - 1) * sizeof(int));
         file.write(reinterpret_cast<char *>(&tmp), sizeof(int));
     }
 
+    /**
+     * @brief 将对象 t 写入文件末尾
+     * @param t 要写入的对象
+     * @return int 写入位置的偏移（字节数）
+     */
     int write(T &t)
     {
         file.seekp(0, std::ios::end);
         int pos = file.tellp();
         file.write(reinterpret_cast<char *>(&t), sizeofT);
-
         return pos;
     }
 
+    /**
+     * @brief 更新指定位置的对象
+     * @param t 要写入的新对象
+     * @param index 文件内偏移位置（字节数）
+     */
     void update(T &t, const int index)
     {
         file.seekp(index);
         file.write(reinterpret_cast<char *>(&t), sizeofT);
     }
 
+    /**
+     * @brief 从指定位置读取对象
+     * @param t 读取到的对象
+     * @param index 文件内偏移位置（字节数）
+     * @return true 读取成功
+     * @return false 读取失败
+     */
     bool read(T &t, const int index)
     {
         file.seekg(index);
@@ -98,6 +141,11 @@ public:
         }
         return false;
     }
+
+    /**
+     * @brief 获取文件末尾偏移量（字节数），即文件大小
+     * @return int 文件末尾位置（字节数）
+     */
     int end()
     {
         file.seekg(0, std::ios::end);
@@ -105,9 +153,10 @@ public:
     }
 };
 
+
 struct index_to_head
 {
-    char name[65]{};
+    char name[61]{};
     int head = 0;
     index_to_head() {}
     index_to_head(std::string s)
@@ -182,6 +231,9 @@ public:
 
     storage(std::string s) : index_name(s) { init(); }
 
+    /**
+     * @brief 初始化索引和书籍存储，从文件中加载现有索引
+     */
     void init()
     {
         file.initialise(StorageTraits<Tag>::index_file);
@@ -197,6 +249,10 @@ public:
         }
     }
 
+    /**
+     * @brief 插入书籍到存储，维护块链和索引
+     * @param value 要插入的书籍对象
+     */
     void Insert(Book value)
     {
         index_to_head t;
@@ -240,6 +296,8 @@ public:
                 return;
             }
         }
+
+        // 没找到，新建相关信息
         t = index_to_head(index_name);
         Block new_block;
         new_block.size = 1;
@@ -250,6 +308,12 @@ public:
         file.write(t);
     }
 
+    /**
+     * @brief 查找书籍是否存在
+     * @param isbn 书籍 ISBN
+     * @return true 如果书籍存在
+     * @return false 如果书籍不存在
+     */
     bool Find(const std::string &isbn)
     {
         int book_pos = -1;
@@ -262,19 +326,17 @@ public:
             }
         }
 
-        if (book_pos == -1) // 没有空索引块，说明没有书籍
+        if (book_pos == -1)
         {
             return false;
         }
 
-        // 读取索引头
         index_to_head t;
         if (!file.read(t, book_pos))
         {
             return false;
         }
 
-        // 遍历 book block 链表，查找 ISBN
         Block temp;
         book.read(temp, t.head);
 
@@ -284,7 +346,7 @@ public:
             Book *pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
             if (pos != temp.val + temp.size && *pos == Book(isbn))
             {
-                return true; // 找到 ISBN
+                return true;
             }
 
             if (temp.next_block == -1) // 已经是最后一个 block
@@ -297,6 +359,12 @@ public:
         return false;
     }
 
+
+    /**
+     * @brief 根据 ISBN 返回书籍副本
+     * @param isbn 书籍 ISBN
+     * @return Book 返回书籍对象，如果不存在返回默认 Book
+     */
     Book Copy(const std::string &isbn)
     {
         int book_pos = 0;
@@ -349,6 +417,9 @@ public:
         }
     }
 
+    /**
+     * @brief 输出当前索引下的所有书籍信息
+     */
     void Show()
     {
         int book_pos = 0;
@@ -409,6 +480,10 @@ public:
         }
     }
 
+    /**
+     * @brief 输出指定 ISBN 的书籍信息
+     * @param isbn 书籍 ISBN
+     */
     void SearchIsbn(const std::string &isbn)
     {
         int book_pos = 0;
@@ -480,6 +555,10 @@ public:
         }
     }
 
+    /**
+     * @brief 删除指定书籍，处理块合并
+     * @param value 要删除的书籍对象
+     */
     void Delete(Book value)
     {
         index_to_head t;
@@ -525,6 +604,14 @@ public:
         }
     }
 
+
+    /**
+     * @brief 分裂满块，将新书插入块中并更新块链
+     * @param block 当前块
+     * @param val 要插入的书籍
+     * @param pos 插入位置索引
+     * @param offset 当前块在文件中的偏移
+     */
     void split(Block &block, Book val, int pos, int offset)
     {
         int length = block.size + 1;
@@ -557,6 +644,11 @@ public:
         book.update(block, offset);
     }
 
+    /**
+     * @brief 合并当前块和下一个块
+     * @param block 当前块
+     * @param offset 当前块在文件中的偏移
+     */
     void merge(Block &block, int offset)
     {
         Block next_block;
@@ -584,6 +676,14 @@ public:
         book.update(block, offset);
     }
 
+    /**
+     * @brief 在块中插入书籍，处理溢出和排序
+     * @param temp 当前块
+     * @param value 要插入的书籍
+     * @param block_index 块在文件中的偏移
+     * @return true 插入成功（包括已存在的情况）
+     * @return false 插入失败
+     */
     bool insert_book(Block &temp, Book value, int block_index)
     {
         Book *pos = std::lower_bound(temp.val, temp.val + temp.size, value);
@@ -610,6 +710,15 @@ public:
         }
     }
 
+
+    /**
+     * @brief 在块中删除书籍
+     * @param temp 当前块
+     * @param value 要删除的书籍
+     * @param block_index 块在文件中的偏移
+     * @return true 删除成功
+     * @return false 未找到书籍
+     */
     bool delete_book(Block &temp, Book value, int block_index)
     {
         Book *pos = std::lower_bound(temp.val, temp.val + temp.size, value);
@@ -631,77 +740,89 @@ public:
         return true;
     }
 
+
+    /**
+     * @brief 修改指定书籍的信息（ISBN、书名、作者、关键词、价格）
+     *
+     * @param isbn_ 新的 ISBN，如果为空则不修改
+     * @param name_ 新书名，如果为空则不修改
+     * @param author_ 新作者，如果为空则不修改
+     * @param keywords_ 新关键词，如果为空则不修改
+     * @param price_ 新价格，如果为空则不修改
+     * @param selected_book 当前选中的书籍 ISBN
+     * @return true 修改成功
+     * @return false 修改失败（如参数超长、非法字符或 ISBN 冲突）
+     */
     static bool modify_book(std::string isbn_, std::string name_, std::string author_, std::string keywords_,
                             std::string price_, std::string selected_book)
     {
-        // Implementation for modifying a book based on the type and modifier
+        // 初始化 ISBN 存储
         storage<IsbnTag> isbn_storage;
 
+        // 修改标志位
         bool is_change_isbn = false, is_change_name = false, is_change_author = false, is_change_keyword = false,
              is_change_price = false;
 
+        // 验证并标记 ISBN 是否需要修改
         if (!isbn_.empty())
         {
             if (isbn_.size() > 20)
-            {
-                return false; // exceed length limit
-            }
+                return false; // 超出长度限制
             for (int i = 0; i < isbn_.size(); i++)
             {
                 if (!std::isprint(isbn_[i]))
-                    return false; // contain invalid char
+                    return false; // 包含非法字符
             }
             if (isbn_ == selected_book || isbn_storage.Find(isbn_))
             {
-                return false; // New ISBN already exists
+                return false; // 新 ISBN 已存在
             }
             is_change_isbn = true;
         }
+
+        // 验证书名和作者是否需要修改
         if (!name_.empty() || !author_.empty())
         {
             if (name_.size() > 60 || author_.size() > 60)
-            {
-                return false; // exceed length limit
-            }
+                return false; // 超出长度限制
             for (int i = 0; i < name_.size(); i++)
             {
                 if (!std::isprint(name_[i]) || name_[i] == '"')
-                    return false; // contain invalid char
+                    return false; // 非法字符
             }
             for (int i = 0; i < author_.size(); i++)
             {
                 if (!std::isprint(author_[i]) || author_[i] == '"')
-                    return false; // contain invalid char
+                    return false; // 非法字符
             }
             if (!name_.empty())
                 is_change_name = true;
             if (!author_.empty())
                 is_change_author = true;
         }
+
+        // 验证价格是否合法
         if (!price_.empty())
         {
             if (price_.size() > 13)
-            {
-                return false;
-            }
+                return false; // 超出长度限制
             for (int i = 0; i < price_.size(); i++)
             {
                 if (!std::isdigit(price_[i]) && price_[i] != '.')
-                    return false; // contain invalid char
+                    return false; // 非法字符
             }
             is_change_price = true;
         }
 
-
+        // 验证关键词是否重复
         if (!keywords_.empty())
         {
             if (Book::is_keyword_repeated(keywords_))
-            {
-                return false; // Keywords are repeated
-            }
+                return false; // 关键词重复
             is_change_keyword = true;
         }
 
+        // 复制当前书籍对象
         Book copied_book = isbn_storage.Copy(selected_book);
         std::string original_isbn = selected_book;
         std::string original_name = copied_book.get_book_name();
@@ -710,22 +831,19 @@ public:
 
         Book NewBook = copied_book;
 
+        // 从原索引中删除书籍
         isbn_storage.Delete(copied_book);
-
         storage<NameTag> ori_name_storage(original_name);
         ori_name_storage.Delete(copied_book);
-
-
         storage<AuthorTag> ori_author_storage(original_author);
         ori_author_storage.Delete(copied_book);
-
-
         for (const auto &kw: original_keyword)
         {
             storage<KeywordTag> kw_storage(kw);
             kw_storage.Delete(copied_book);
         }
 
+        // 更新书籍信息
         if (!isbn_.empty())
             NewBook.set_isbn(isbn_);
         if (!name_.empty())
@@ -737,6 +855,7 @@ public:
         if (!price_.empty())
             NewBook.set_price(std::stod(price_));
 
+        // 更新索引：书名索引
         if (is_change_name)
         {
             storage<NameTag> new_name_storage(name_);
@@ -747,6 +866,7 @@ public:
             ori_name_storage.Insert(NewBook);
         }
 
+        // 更新索引：作者索引
         if (is_change_author)
         {
             storage<AuthorTag> new_author_storage(author_);
@@ -757,6 +877,7 @@ public:
             ori_author_storage.Insert(NewBook);
         }
 
+        // 更新索引：关键词索引
         if (is_change_keyword)
         {
             std::vector<std::string> new_keywords = NewBook.get_keyword();
@@ -768,7 +889,6 @@ public:
         }
         else
         {
-
             for (auto &kw: original_keyword)
             {
                 storage<KeywordTag> kw_storage(kw);
@@ -776,10 +896,20 @@ public:
             }
         }
 
+        // 更新 ISBN 索引
         isbn_storage.Insert(NewBook);
-        return true;
+
+        return true; // 修改成功
     }
 
+     /**
+     * @brief 购买书籍，更新库存并返回总价
+     * @param book_isbn 书籍 ISBN
+     * @param num 购买数量
+     * @param total_cost 输出参数，总价
+     * @return true 购买成功
+     * @return false 库存不足
+     */
     bool buy_book(const std::string &book_isbn, int num, double &total_cost)
     {
         Book copied_book = Copy(book_isbn);
@@ -793,8 +923,11 @@ public:
         return true;
     }
 
-    bool select_book(const std::string &book_isbn);
-
+    /**
+     * @brief 增加书籍库存
+     * @param book_isbn 书籍 ISBN
+     * @param num 增加数量
+     */
     void import_book(const std::string &book_isbn, int num)
     {
         Book copied_book = Copy(book_isbn);
@@ -802,6 +935,11 @@ public:
         change_stock(book_isbn, stock + num);
     }
 
+    /**
+     * @brief 修改书籍库存数量
+     * @param book_isbn 书籍 ISBN
+     * @param num 新库存数量
+     */
     void change_stock(const std::string &book_isbn, int num)
     {
         Book copied_book = Copy(book_isbn);

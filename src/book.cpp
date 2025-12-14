@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <vector>
 
+// 判断关键词是否重复（'|' 分隔）
 bool Book::is_keyword_repeated(const std::string &keyword)
 {
     std::unordered_set<std::string> exist_keywords;
@@ -26,6 +27,7 @@ bool Book::is_keyword_repeated(const std::string &keyword)
     return false;
 }
 
+// 复制构造函数
 Book::Book(const Book &other)
 {
     strcpy(this->book_name, other.book_name);
@@ -36,13 +38,14 @@ Book::Book(const Book &other)
     this->stock = other.stock;
 }
 
+// 默认构造
 Book::Book() = default;
 
+// 根据 ISBN 构造
 Book::Book(std::string isbn_) { strcpy(isbn, isbn_.c_str()); }
 
-std::string Book::get_book_name() { return std::string(book_name); }
-std::string Book::get_author() { return std::string(author); }
-std::string Book::get_isbn() { return std::string(isbn); }
+
+// 获取关键词列表（按 '|' 分割）
 std::vector<std::string> Book::get_keyword()
 {
     std::vector<std::string> result;
@@ -60,6 +63,12 @@ std::vector<std::string> Book::get_keyword()
     }
     return result;
 }
+
+
+// get/set 简单实现
+std::string Book::get_book_name() { return std::string(book_name); }
+std::string Book::get_author() { return std::string(author); }
+std::string Book::get_isbn() { return std::string(isbn); }
 int Book::get_stock() { return stock; }
 double Book::get_price() { return price; }
 

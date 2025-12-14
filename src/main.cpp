@@ -2,21 +2,28 @@
 #include "../include/parser.hpp"
 #include "../include/user.hpp"
 
-std::vector<std::pair<std::string, int>> name_index_pair;
-
+/**
+ * @brief 程序入口
+ * 
+ * 初始化解析器、用户管理器和日志模块
+ * 逐行读取输入指令，并交给 Parser 执行
+ */
 int main()
 {
-    Parser parser;
-    UserManager userManager;
-    log Log;
-    std::string line;
+    Parser parser;           // 指令解析器
+    UserManager userManager; // 用户管理器
+    log Log;                 // 日志记录器
+    std::string line;        // 存储用户输入的一行指令
+
+    // 循环读取标准输入的每一行
     while (std::getline(std::cin, line))
     {
-        if (std::cin.eof())
+        if (std::cin.eof()) // 文件结束检查
         {
             exit(0);
         }
-        parser.execute(line, userManager, Log);
+        parser.execute(line, userManager, Log); // 执行输入指令
     }
+
     return 0;
 }

@@ -3,6 +3,7 @@
 #include "../include/log.hpp"
 #include "../include/user.hpp"
 
+// 将字符串匹配成对应的枚举类
 TokenType Parser::matchkeyword(const std::string &text) const
 {
     auto it = TABLE.find(text);
@@ -13,7 +14,8 @@ TokenType Parser::matchkeyword(const std::string &text) const
     return BLANK;
 }
 
-TokenStream Parser::tokenize(const std::string &line) const // 解析一行源码
+// 解析一行源码
+TokenStream Parser::tokenize(const std::string &line) const
 {
     std::vector<Token> tokens;
     int column = 0;
