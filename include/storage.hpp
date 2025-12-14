@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 #include "book.hpp"
+#include "parser.hpp"
 
 using std::fstream;
 using std::string;
@@ -806,17 +807,21 @@ public:
         {
             if (price_.size() > 13)
                 return false; // 超出长度限制
-            for (int i = 0; i < price_.size(); i++)
-            {
-                if (!std::isdigit(price_[i]) && price_[i] != '.')
-                    return false; // 非法字符
-            }
+            if (!Parser::isD(price_))
+                return false; // 不是小数
             is_change_price = true;
         }
 
         // 验证关键词是否重复
         if (!keywords_.empty())
         {
+            if (keywords_.size() > 60)
+                return false; // 超出长度限制
+            for (int i = 0; i < keywords_.size(); i++)
+            {
+                if (!std::isprint(keywords_[i]) || keywords_[i] == '"')
+                    return false; // 非法字符
+            }
             if (Book::is_keyword_repeated(keywords_))
                 return false; // 关键词重复
             is_change_keyword = true;
@@ -902,7 +907,7 @@ public:
         return true; // 修改成功
     }
 
-     /**
+    /**
      * @brief 购买书籍，更新库存并返回总价
      * @param book_isbn 书籍 ISBN
      * @param num 购买数量

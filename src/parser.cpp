@@ -70,13 +70,23 @@ bool Parser::isN(std::string str) noexcept
 
 bool Parser::isD(std::string str) noexcept
 {
-    for (char c: str)
+    int dot_time = 0;
+    for (int i = 0; i < str.size(); i++)
     {
-        if (!std::isdigit(c) && c != '.')
+        if (!std::isdigit(str[i]) && str[i] != '.')
+            return false; // 非法字符
+        else
         {
-            return false;
+            if (str[i] == '.')
+            {
+                if (i == 0 || i == str.size() - 1)
+                    return false;
+                dot_time++;
+            }
         }
     }
+    if (dot_time > 1)
+        return false;
     return true;
 }
 
@@ -391,6 +401,23 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 break;
             }
             std::string isbn_ = tokens_.get()->text;
+            bool is_valid = true;
+            if (isbn_.size() > 20)
+                is_valid = false; // 超出长度限制
+
+            for (int i = 0; i < isbn_.size(); i++)
+            {
+                if (!std::isprint(isbn_[i]))
+                {
+                    is_valid = false; // 包含非法字符
+                    break;
+                }
+            }
+            if (!is_valid)
+            {
+                std::cout << "Invalid\n";
+                break;
+            }
             storage<IsbnTag> storage_;
             if (!storage_.Find(isbn_))
             {

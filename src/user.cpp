@@ -92,6 +92,9 @@ bool UserManager::registerUser(const std::string &userID_, const std::string &pa
     for (char ch: password_)
         if (!std::isalnum(ch) && ch != '_')
             return false;
+    for (char ch: username_)
+        if (ch < 32 || ch > 126)
+            return false;
 
     user newUser(userID_, username_, password_, 1);
     userDatabase.write(newUser);
@@ -101,8 +104,11 @@ bool UserManager::registerUser(const std::string &userID_, const std::string &pa
 // 修改密码
 bool UserManager::passwd(const std::string &userID_, const std::string &cur_Password_, const std::string &new_Password_)
 {
-    if (new_Password_.size() > 30)
+    if (cur_Password_.size() > 30 || new_Password_.size() > 30)
         return false;
+    for (char ch: cur_Password_)
+        if (!std::isalnum(ch) && ch != '_')
+            return false;
     for (char ch: new_Password_)
         if (!std::isalnum(ch) && ch != '_')
             return false;
@@ -147,6 +153,9 @@ bool UserManager::useradd(const std::string &userID_, const std::string &passwor
     for (char ch: password_)
         if (!std::isalnum(ch) && ch != '_')
             return false;
+    for (char ch: username_)
+        if (ch < 32 || ch > 126)
+            return false;
 
     // 权限与重复检查
     if (privilegeLevel_ >= currentUser.privilegeLevel || count(userID_) != -1 || currentUser.privilegeLevel < 3)
@@ -174,4 +183,7 @@ bool UserManager::deleteUser(const std::string &userID_)
 user &UserManager::getCurrentUser() { return currentUser; }
 
 // 获取当前操作的选中书籍 ISBN
-std::string &UserManager::getSelectedbook() { return logstack.back().second; }
+std::string &UserManager::getSelectedbook() 
+{ 
+    return logstack.back().second; 
+}
