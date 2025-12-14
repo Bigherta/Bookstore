@@ -58,7 +58,7 @@ bool Parser::isNumberChar(char ch) noexcept
 
 bool Parser::isN(std::string str) noexcept
 {
-    if (str.empty())
+    if (str.empty() || str.size() > 10)
         return false;
     for (char c: str)
     {
@@ -99,6 +99,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
     if (line.empty())
         return;
     TokenStream tokens_ = tokenize(line);
+    if (tokens_.size() == 0)
+        return;
     int privilegeLevel_ = -1;
     const TokenType cmd = tokens_.get()->type;
     switch (cmd)
@@ -417,8 +419,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 std::cout << "Invalid\n";
                 break;
             }
-            int num = stoi(quantity);
-            if (num <= 0)
+            long long num = stoll(quantity);
+            if (num <= 0 || num > 2147483647)
             {
                 std::cout << "Invalid\n";
                 break;

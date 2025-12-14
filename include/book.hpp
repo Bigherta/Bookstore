@@ -113,12 +113,12 @@ public:
     Book(const Book &other);
 
     /**
-     * @brief 检查关键词是否重复
+     * @brief 检查关键词是否合法
      * @param keyword 要检查的关键词
-     * @return true 如果关键词重复
-     * @return false 如果关键词不重复
+     * @return true 如果关键词不合法
+     * @return false 如果关键词合法
      */
-    static bool is_keyword_repeated(const std::string &keyword);
+    static bool is_keyword_invalid(const std::string &keyword);
 
     /**
      * @brief 重载小于运算符，根据 ISBN 比较

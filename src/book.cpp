@@ -4,9 +4,27 @@
 #include <unordered_set>
 #include <vector>
 
-// 判断关键词是否重复（'|' 分隔）
-bool Book::is_keyword_repeated(const std::string &keyword)
+// 判断关键词是否合法（'|' 分隔）
+bool Book::is_keyword_invalid(const std::string &keyword)
 {
+    // 1. 检查总长度
+    if (keyword.size() > 60 || keyword.empty())
+    {
+        return true;
+    }
+
+    // 2. 检查字符合法性
+    if (keyword.back() == '|')
+    {
+        return true;
+    }
+    for (char ch: keyword)
+    {
+        if (ch < 33 || ch > 126 || ch == '"')
+        {
+            return true;
+        }
+    }
     std::unordered_set<std::string> exist_keywords;
     int column = 0;
     while (column < keyword.size())
@@ -17,6 +35,10 @@ bool Book::is_keyword_repeated(const std::string &keyword)
             ++column;
         }
         std::string sub_str = keyword.substr(start, column - start);
+        if (sub_str.empty())
+        {
+            return true;
+        }
         if (exist_keywords.find(sub_str) != exist_keywords.end())
         {
             return true;

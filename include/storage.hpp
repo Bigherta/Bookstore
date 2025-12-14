@@ -813,18 +813,11 @@ public:
             is_change_price = true;
         }
 
-        // 验证关键词是否重复
+        // 验证关键词是否合法
         if (!keywords_.empty())
         {
-            if (keywords_.size() > 60)
-                return false; // 超出长度限制
-            for (int i = 0; i < keywords_.size(); i++)
-            {
-                if (keywords_[i] < 33 || keywords_[i] > 126 || keywords_[i] == '"')
-                    return false; // 非法字符
-            }
-            if (Book::is_keyword_repeated(keywords_))
-                return false; // 关键词重复
+            if (Book::is_keyword_invalid(keywords_))
+                return false; // 关键词合法
             is_change_keyword = true;
         }
 
