@@ -37,6 +37,8 @@ class UserManager
 public:
     UserManager();
 
+    auto &get_stack() {return logstack;}
+
     int count(const std::string &userID_);
 
     bool is_log(const std::string &);

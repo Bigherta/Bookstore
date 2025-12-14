@@ -493,6 +493,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             }
             else
             {
+                std::string ori_isbn = userManager.getSelectedbook();
                 if (!storage::modify_book(isbn, name, author, keyword, price, userManager.getSelectedbook()))
                 {
                     std::cout << "Invalid\n";
@@ -500,7 +501,14 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 }
                 if (!isbn.empty())
                 {
-                    userManager.getSelectedbook() = isbn;
+                    auto &log_stack = userManager.get_stack();
+                    for (int i = 0; i < log_stack.size(); i++)
+                    {
+                        if (log_stack[i].second == ori_isbn)
+                        {
+                            log_stack[i].second = isbn;
+                        }
+                    }
                 }
             }
             break;
