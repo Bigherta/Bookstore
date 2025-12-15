@@ -64,6 +64,8 @@ bool Parser::isN(std::string str) noexcept
 {
     if (str.empty() || str.size() > 10)
         return false;
+    if (str[0] < '1' || str[0] > '9')
+        return false;
     for (char c: str)
     {
         if (!std::isdigit(c))
@@ -81,6 +83,15 @@ bool Parser::isD(std::string str) noexcept
 {
     if (str.empty() || str.size() > 13)
         return false;
+    if (str == "0")
+        return true;
+    if (str[0] == '0')
+    {
+        if (str.size() == 1)
+            return false;
+        if (str[1] != '.')
+            return false;
+    }
     int dot_time = 0;
     for (int i = 0; i < str.size(); i++)
     {
