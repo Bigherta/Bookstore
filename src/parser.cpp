@@ -64,17 +64,18 @@ bool Parser::isN(std::string str) noexcept
 {
     if (str.empty() || str.size() > 10)
         return false;
+    if (str == "0")
+        return true;
     if (str[0] < '1' || str[0] > '9')
         return false;
     for (char c: str)
     {
-        if (!std::isdigit(c))
+        if (!std::isdigit(static_cast<unsigned char>(c)))
         {
             return false;
         }
     }
-    long long temp = std::stoll(str);
-    if (temp > 2147483647)
+    if (str.size() == 10 && str > "2147483647")
         return false;
     return true;
 }
@@ -92,23 +93,34 @@ bool Parser::isD(std::string str) noexcept
         if (str[1] != '.')
             return false;
     }
-    int dot_time = 0;
+    int dot_pos = -1;
     for (int i = 0; i < str.size(); i++)
     {
-        if (!std::isdigit(str[i]) && str[i] != '.')
-            return false; // 非法字符
-        else
+        if (!std::isdigit(static_cast<unsigned char>(str[i])) && str[i] != '.')
+            return false;
+        if (str[i] == '.')
         {
-            if (str[i] == '.')
-            {
-                if (i == 0 || i == str.size() - 1)
-                    return false;
-                dot_time++;
-            }
+            if (i == 0 || i == str.size() - 1)
+                return false;
+            if (dot_pos != -1)
+                return false;
+            dot_pos = i;
         }
     }
-    if (dot_time > 1)
+    std::string int_part = (dot_pos == -1) ? str : str.substr(0, dot_pos);
+
+    if (int_part.size() > 10 || (int_part.size() == 10 && int_part > "2147483647"))
         return false;
+    if (dot_pos != -1)
+    {
+        std::string double_part = str.substr(dot_pos + 1);
+        if (int_part == "2147483647")
+            for (char c: double_part)
+            {
+                if (c != '0')
+                    return false;
+            }
+    }
     return true;
 }
 
@@ -632,8 +644,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 std::cout << "Invalid\n";
                 break;
             }
-            int num = stoi(quantity);
-            if (num <= 0)
+            long long num = stoll(quantity);
+            if (num <= 0 || num > 2147483647)
             {
                 std::cout << "Invalid\n";
                 break;
