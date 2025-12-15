@@ -22,6 +22,10 @@ TokenStream Parser::tokenize(const std::string &line, bool &is_valid) const
     while (column < line.size())
     {
         char ch = line[column];
+        if (static_cast<unsigned char>(ch) > 127)
+        {
+            is_valid = false;
+        }
         // 如果ch是空格
         if (std::isspace(static_cast<int>(ch)))
         {
