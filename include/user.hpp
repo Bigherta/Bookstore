@@ -126,6 +126,8 @@ public:
      */
     std::string &getSelectedbook();
 
+    void exit ();
+
 private:
     /// 用户数据库，使用 MemoryRiver 存储 user 对象
     MemoryRiver<user> userDatabase;

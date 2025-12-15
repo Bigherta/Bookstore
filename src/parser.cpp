@@ -713,6 +713,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 break;
             }
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
+            userManager.exit();
             exit(0);
         }
         case TEXT:

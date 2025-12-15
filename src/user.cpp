@@ -182,3 +182,9 @@ user &UserManager::getCurrentUser() { return currentUser; }
 
 // 获取当前操作的选中书籍 ISBN
 std::string &UserManager::getSelectedbook() { return logstack.back().second; }
+
+void UserManager::exit()
+{
+    logstack.clear();
+    currentUser = user();
+}
