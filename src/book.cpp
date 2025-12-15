@@ -14,7 +14,7 @@ bool Book::is_keyword_invalid(const std::string &keyword)
     }
 
     // 2. 检查字符合法性
-    if (keyword.back() == '|')
+    if (keyword.back() == '|' || keyword.front() == '|')
     {
         return true;
     }
