@@ -226,7 +226,7 @@ private:
     };
     std::string index_name;
     std::vector<std::pair<std::string, int>> index_pos_pair_;
-    MemoryRiver<index_to_head> file; // 记录的是书名到写入头位置的映射
+    MemoryRiver<index_to_head> file; // 记录的是索引到写入头位置的映射
     MemoryRiver<Block> book; // 记录的是书的value
 public:
     storage() { init(); }

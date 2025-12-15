@@ -15,7 +15,7 @@ TokenType Parser::matchkeyword(const std::string &text) const
 }
 
 // 解析一行源码
-TokenStream Parser::tokenize(const std::string &line) const
+TokenStream Parser::tokenize(const std::string &line, bool &is_valid) const
 {
     std::vector<Token> tokens;
     int column = 0;
@@ -25,6 +25,10 @@ TokenStream Parser::tokenize(const std::string &line) const
         // 如果ch是空格
         if (std::isspace(static_cast<int>(ch)))
         {
+            if (ch != ' ')
+            {
+                is_valid = false;
+            }
             ++column;
             continue;
         }
@@ -101,7 +105,13 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 {
     if (line.empty())
         return;
-    TokenStream tokens_ = tokenize(line);
+    bool is_valid = true;
+    TokenStream tokens_ = tokenize(line, is_valid);
+    if (!is_valid)
+    {
+        std::cout << "Invalid\n";
+        return;
+    }
     if (tokens_.size() == 0)
         return;
     int privilegeLevel_ = -1;

@@ -26,7 +26,7 @@ public:
      * @param line 输入指令行
      * @return 解析后的 TokenStream
      */
-    TokenStream tokenize(const std::string &line) const;
+    TokenStream tokenize(const std::string &line, bool &is_valid) const;
 
 
     /**

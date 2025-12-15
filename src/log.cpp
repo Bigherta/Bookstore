@@ -1,4 +1,5 @@
 #include "../include/log.hpp"
+#include <cstdio>
 #include <cstring>
 #include <iomanip>
 #include <iostream>
@@ -155,8 +156,7 @@ void log::change_opt(int privilege, std::string name, std::string info, operate 
     }
     info_ += name;
     info_ += info;
-    std::strncpy(opt.operation, info_.c_str(), sizeof(opt.operation) - 1);
-    opt.operation[sizeof(opt.operation) - 1] = '\0';
+    std::snprintf(opt.operation, sizeof(opt.operation), "%s", info_.c_str());
     opt.privilege = privilege;
 }
 
