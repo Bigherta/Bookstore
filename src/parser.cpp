@@ -40,7 +40,7 @@ TokenStream Parser::tokenize(const std::string &line, bool &is_valid) const
         {
             int start = column;
             ++column;
-            while (column < line.size() && !std::isspace(line[column]))
+            while (column < line.size() && !std::isspace(static_cast<int>(line[column])))
             {
                 ++column;
             }
@@ -128,7 +128,7 @@ bool Parser::isD(std::string str) noexcept
     return true;
 }
 
-void Parser::execute(const std::string &line, UserManager &userManager, log &Log)
+void Parser::execute(const std::string &line, UserManager &userManager, log &Log, bool &is_running)
 {
     if (line.empty())
         return;
@@ -219,7 +219,14 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
 
             userID_ = tokens_.get()->text;
 
-            cur_Password_ = tokens_.get()->text;
+            if (tokens_.size() == 4)
+            {
+                cur_Password_ = tokens_.get()->text;
+            }
+            else
+            {
+                new_Password_ = tokens_.get()->text;
+            }
 
             if (tokens_.peek() != nullptr)
                 new_Password_ = tokens_.get()->text;
@@ -714,7 +721,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             }
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             userManager.exit();
-            exit(0);
+            is_running = false;
+            return;
         }
         case TEXT:
             std::cout << "Invalid\n";

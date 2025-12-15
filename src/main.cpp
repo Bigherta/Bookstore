@@ -22,8 +22,14 @@ int main()
         {
             exit(0);
         }
-        parser.execute(line, userManager, Log); // 执行输入指令
-    }
+        bool is_running = true;
 
+        parser.execute(line, userManager, Log, is_running); // 执行输入指令
+
+        if (!is_running)
+        {
+             return 0;
+        }
+    }
     return 0;
 }

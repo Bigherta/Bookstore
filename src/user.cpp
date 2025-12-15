@@ -1,4 +1,5 @@
 #include "../include/user.hpp"
+#include <cassert>
 #include <cctype>
 #include <cstdio>
 #include <cstring>
@@ -104,7 +105,7 @@ bool UserManager::registerUser(const std::string &userID_, const std::string &pa
 // 修改密码
 bool UserManager::passwd(const std::string &userID_, const std::string &cur_Password_, const std::string &new_Password_)
 {
-    if (cur_Password_.size() > 30 || new_Password_.size() > 30)
+    if (cur_Password_.size() > 30 || new_Password_.size() > 30 || new_Password_.empty())
         return false;
     for (char ch: cur_Password_)
         if (!std::isalnum(ch) && ch != '_')
@@ -120,22 +121,15 @@ bool UserManager::passwd(const std::string &userID_, const std::string &cur_Pass
     user temp{};
     userDatabase.read(temp, pos);
 
-    if (currentUser.privilegeLevel < 7 && new_Password_.empty())
+    if (currentUser.privilegeLevel < 7 && cur_Password_.empty())
         return false;
 
     // 修改密码逻辑
-    if (!new_Password_.empty())
-    {
+    if (!cur_Password_.empty())
         if (cur_Password_ != temp.password)
             return false;
-       std::snprintf(temp.password, sizeof(temp.password), "%s", new_Password_.c_str());
-        userDatabase.update(temp, pos);
-    }
-    else
-    {
-        std::snprintf(temp.password, sizeof(temp.password), "%s", cur_Password_.c_str());
-        userDatabase.update(temp, pos);
-    }
+    std::snprintf(temp.password, sizeof(temp.password), "%s", new_Password_.c_str());
+    userDatabase.update(temp, pos);
     return true;
 }
 
@@ -181,7 +175,11 @@ bool UserManager::deleteUser(const std::string &userID_)
 user &UserManager::getCurrentUser() { return currentUser; }
 
 // 获取当前操作的选中书籍 ISBN
-std::string &UserManager::getSelectedbook() { return logstack.back().second; }
+std::string &UserManager::getSelectedbook()
+{
+    assert(!logstack.empty());
+    return logstack.back().second;
+}
 
 void UserManager::exit()
 {

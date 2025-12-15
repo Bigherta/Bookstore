@@ -78,6 +78,6 @@ public:
      * 根据指令类型调用相应的用户/书籍/日志操作，
      * 并处理输入的合法性和权限验证。
      */
-    void execute(const std::string &, UserManager &, log &);
+    void execute(const std::string &, UserManager &, log &, bool &is_running);
 };
 #endif
