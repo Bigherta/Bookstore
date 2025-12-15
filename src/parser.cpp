@@ -67,12 +67,15 @@ bool Parser::isN(std::string str) noexcept
             return false;
         }
     }
+    long long temp = std::stoll(str);
+    if (temp > 2147483647)
+        return false;
     return true;
 }
 
 bool Parser::isD(std::string str) noexcept
 {
-    if (str.empty())
+    if (str.empty() || str.size() > 13)
         return false;
     int dot_time = 0;
     for (int i = 0; i < str.size(); i++)
@@ -226,6 +229,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             if (!userManager.useradd(userID_, password_, privilegeLevel_, username_))
             {
                 std::cout << "Invalid\n";
+                break;
             }
 
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
@@ -260,6 +264,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                                   cmd);
                 break;
             }
+            if (tokens_.peek() == nullptr)
+            {
+                std::cout << "Invalid\n";
+                break;
+            }
             const TokenType showType = tokens_.peek()->type;
             if (showType == FINANCE)
             {
@@ -287,19 +296,14 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         break;
                     }
                     long long count_ = std::stoll(count_str);
-                    if (count_ > 2147483647)
-                    {
-                        std::cout << "Invalid\n";
-                        break;
-                    }
                     if (!Log.ShowFinance(count_))
                     {
                         std::cout << "Invalid\n";
                         break;
                     }
-                    Log.add_operation(userManager.getCurrentUser().privilegeLevel,
-                                      userManager.getCurrentUser().username, showType);
                 }
+                Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username,
+                                  showType);
             }
             else
             {
@@ -589,7 +593,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                         }
                     }
                 }
-                Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
+                Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username,
+                                  cmd);
             }
             break;
         }
@@ -649,7 +654,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             {
                 std::cout << "Invalid\n";
                 break;
-            } 
+            }
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
@@ -660,7 +665,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
                 std::cout << "Invalid\n";
                 break;
             }
-            Log.Log(); 
+            Log.Log();
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }

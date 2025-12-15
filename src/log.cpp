@@ -5,7 +5,7 @@
 #include <string>
 
 
-bool log::ShowFinance(int count_)
+bool log::ShowFinance(long long count_ )
 {
     // 如果指定查询交易笔数为 0，直接输出空行，表示合法指令
     if (count_ == 0)
@@ -22,7 +22,7 @@ bool log::ShowFinance(int count_)
     purchase_record.get_info(cur_count, 1);
 
     // 如果请求查询的交易笔数大于总交易笔数，则操作非法
-    if (cur_count < count_)
+    if (cur_count < count_ || count_)
     {
         return false;
     }
@@ -34,9 +34,10 @@ bool log::ShowFinance(int count_)
     int end_index = start_index + (cur_count - 1) * sizeof(record);
     double inc = 0; // 累计收入
     double exp = 0; // 累计支出
+    int need_count = (count_ == -1 ? cur_count : count_);
 
     // 遍历日志文件中的每一条记录
-    for (int i = 1; i <= cur_count; i++)
+    for (int i = 1; i <= need_count; i++)
     {
         // 读取记录到 temp
         purchase_record.read(temp, end_index);
@@ -45,26 +46,14 @@ bool log::ShowFinance(int count_)
         inc += temp.income;
         exp += temp.expense;
 
-        // 如果当前记录的 count 等于查询的 count，则输出累计金额
-        if (i == count_)
-        {
-            std::cout << "+ " << std::fixed << std::setprecision(2) << inc;
-            std::cout << " - " << std::fixed << std::setprecision(2) << exp;
-            std::cout << '\n';
-            return true;
-        }
         end_index -= sizeof(record);
     }
 
-    // 如果 count_ = -1，则输出所有交易的总额
-    if (count_ == -1)
-    {
-        std::cout << "+ " << std::fixed << std::setprecision(2) << inc;
-        std::cout << " - " << std::fixed << std::setprecision(2) << exp;
-        std::cout << '\n';
-        return true;
-    }
-    return false;
+
+    std::cout << "+ " << std::fixed << std::setprecision(2) << inc;
+    std::cout << " - " << std::fixed << std::setprecision(2) << exp;
+    std::cout << '\n';
+    return true;
 }
 
 void log::ReportFinance()
@@ -155,8 +144,8 @@ void log::change_opt(int privilege, std::string name, std::string info, operate 
     }
     info_ += name;
     info_ += info;
-    std::strncpy(opt.operation, info_.c_str(), info_.size());
-    opt.operation[info_.size()] = '\0';
+    std::strncpy(opt.operation, info_.c_str(), sizeof(opt.operation) - 1);
+    opt.operation[sizeof(opt.operation) - 1] = '\0';
     opt.privilege = privilege;
 }
 

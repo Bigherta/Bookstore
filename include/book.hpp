@@ -15,11 +15,11 @@
 class Book
 {
 private:
-    char book_name[60]{};   ///< 书名
-    char author[60]{};      ///< 作者
-    char keywords[60]{};    ///< 关键词，用 '|' 分隔
-    char isbn[20]{};        ///< ISBN 编号
-    double price = 0;       ///< 价格
+    char book_name[61]{};   ///< 书名
+    char author[61]{};      ///< 作者
+    char keywords[61]{};    ///< 关键词，用 '|' 分隔
+    char isbn[21]{};        ///< ISBN 编号
+    char price[14]{};      ///< 价格
     int stock = 0;          ///< 库存数量
 
 public:
@@ -51,7 +51,7 @@ public:
      * @brief 获取书籍价格
      * @return double 价格
      */
-    double get_price();
+    std::string get_price();
 
     /**
      * @brief 获取库存数量
@@ -87,7 +87,7 @@ public:
      * @brief 设置价格
      * @param price_ 新价格
      */
-    void set_price(double price_);
+    void set_price(const std::string &price_);
 
     /**
      * @brief 设置库存数量
@@ -104,7 +104,7 @@ public:
      * @brief 根据字符串初始化 Book 对象
      * @param identifier 书籍的标识符（如 ISBN 或书名）
      */
-    Book(std::string identifier);
+    Book(const std::string &identifier);
 
     /**
      * @brief 拷贝构造函数
@@ -149,7 +149,7 @@ public:
         std::string author_ = other.author;
         std::string keyword_ = other.keywords;
         os << isbn_ << '\t' << name_ << '\t' << author_ << '\t' << keyword_ << '\t';
-        os << std::fixed << std::setprecision(2) << other.price << '\t';
+        os << std::fixed << std::setprecision(2) << std::stod(other.price) << '\t';
         os << other.stock << '\n';
         return os;
     }

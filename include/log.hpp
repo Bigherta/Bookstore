@@ -26,7 +26,7 @@ public:
      * @param count_ 查询的交易笔数，默认为 -1，表示查询所有交易总额
      * @return 若查询合法则返回 true 并输出结果，否则返回 false
      */
-    bool ShowFinance(int count_ = -1);
+    bool ShowFinance(long long count_ = -1);
 
 
     /** 记录一笔交易

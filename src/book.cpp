@@ -52,11 +52,11 @@ bool Book::is_keyword_invalid(const std::string &keyword)
 // 复制构造函数
 Book::Book(const Book &other)
 {
-    strcpy(this->book_name, other.book_name);
-    strcpy(this->author, other.author);
-    strcpy(this->keywords, other.keywords);
-    strcpy(this->isbn, other.isbn);
-    this->price = other.price;
+    std::strncpy(book_name, other.book_name, sizeof(book_name));
+    std::strncpy(author, other.author, sizeof(author));
+    std::strncpy(keywords, other.keywords, sizeof(keywords));
+    std::strncpy(isbn, other.isbn, sizeof(isbn));
+    std::strncpy(price, other.price, sizeof(price));
     this->stock = other.stock;
 }
 
@@ -64,7 +64,11 @@ Book::Book(const Book &other)
 Book::Book() = default;
 
 // 根据 ISBN 构造
-Book::Book(std::string isbn_) { strcpy(isbn, isbn_.c_str()); }
+Book::Book(const std::string &isbn_)
+{
+    std::strncpy(isbn, isbn_.c_str(), sizeof(isbn) - 1);
+    isbn[sizeof(isbn) - 1] = '\0';
+}
 
 
 // 获取关键词列表（按 '|' 分割）
@@ -79,7 +83,7 @@ std::vector<std::string> Book::get_keyword()
         {
             ++column;
         }
-        std::string sub_str = std::string(keywords).substr(start, column - start);
+        std::string sub_str(keywords + start, column - start);
         result.push_back(sub_str);
         ++column;
     }
@@ -91,12 +95,32 @@ std::vector<std::string> Book::get_keyword()
 std::string Book::get_book_name() { return std::string(book_name); }
 std::string Book::get_author() { return std::string(author); }
 std::string Book::get_isbn() { return std::string(isbn); }
+std::string Book::get_price() { return std::string(price); }
 int Book::get_stock() { return stock; }
-double Book::get_price() { return price; }
 
-void Book::set_book_name(const std::string &name) { std::strncpy(book_name, name.c_str(), sizeof(book_name) - 1); }
-void Book::set_author(const std::string &auth) { std::strncpy(author, auth.c_str(), sizeof(author) - 1); }
-void Book::set_keywords(const std::string &key) { std::strncpy(keywords, key.c_str(), sizeof(keywords) - 1); }
-void Book::set_isbn(const std::string &isbn_) { std::strncpy(isbn, isbn_.c_str(), sizeof(isbn) - 1); }
-void Book::set_price(double p) { price = p; }
+void Book::set_book_name(const std::string &name)
+{
+    std::strncpy(book_name, name.c_str(), sizeof(book_name) - 1);
+    book_name[sizeof(book_name) - 1] = '\0';
+}
+void Book::set_author(const std::string &auth)
+{
+    std::strncpy(author, auth.c_str(), sizeof(author) - 1);
+    author[sizeof(author) - 1] = '\0';
+}
+void Book::set_keywords(const std::string &key)
+{
+    std::strncpy(keywords, key.c_str(), sizeof(keywords) - 1);
+    keywords[sizeof(keywords) - 1] = '\0';
+}
+void Book::set_isbn(const std::string &isbn_)
+{
+    std::strncpy(isbn, isbn_.c_str(), sizeof(isbn) - 1);
+    isbn[sizeof(isbn) - 1] = '\0';
+}
+void Book::set_price(const std::string &price_)
+{
+    std::strncpy(price, price_.c_str(), sizeof(price) - 1);
+    price[sizeof(price) - 1] = '\0';
+}
 void Book::set_stock(int s) { stock = s; }

@@ -852,7 +852,7 @@ public:
         if (!keywords_.empty())
             NewBook.set_keywords(keywords_);
         if (!price_.empty())
-            NewBook.set_price(std::stod(price_));
+            NewBook.set_price(price_);
 
         // 更新索引：书名索引
         if (is_change_name)
@@ -913,7 +913,7 @@ public:
     {
         Book copied_book = Copy(book_isbn);
         int stock = copied_book.get_stock();
-        double price = copied_book.get_price();
+        double price = stod(copied_book.get_price());
         if (stock < num)
             return false;
         total_cost = price * num;
