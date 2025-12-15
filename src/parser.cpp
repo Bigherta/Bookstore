@@ -168,7 +168,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             break;
         }
         case LOGOUT: {
-            if (tokens_.size() != 1)
+            if (tokens_.size() != 1 || userManager.getCurrentUser().privilegeLevel < 1)
             {
                 std::cout << "Invalid\n";
                 break;
