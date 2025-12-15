@@ -149,7 +149,7 @@ public:
         std::string author_ = other.author;
         std::string keyword_ = other.keywords;
         os << isbn_ << '\t' << name_ << '\t' << author_ << '\t' << keyword_ << '\t';
-        os << std::fixed << std::setprecision(2) << std::stod(other.price) << '\t';
+        os << std::fixed << std::setprecision(2) << std::stod(std::string(other.price)) << '\t';
         os << other.stock << '\n';
         return os;
     }

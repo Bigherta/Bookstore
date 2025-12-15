@@ -2,19 +2,19 @@
 #ifndef USER_HPP
 #define USER_HPP
 
-#include "storage.hpp"
 #include <cstring>
 #include <string>
 #include <utility>
 #include <vector>
+#include "storage.hpp"
 
 
 class user
 {
 public:
-    char userID[31];
-    char username[31];
-    char password[31];
+    char userID[31]{};
+    char username[31]{};
+    char password[31]{};
     int privilegeLevel = 0; // 0: visitor, 1: customer, 3: worker, 7: manager
     bool is_valid = true;
 
@@ -23,12 +23,9 @@ public:
     user(const std::string &userID_, const std::string &username_, const std::string &password_,
          int privilegeLevel_ = 0) : privilegeLevel(privilegeLevel_)
     {
-        std::strncpy(userID, userID_.c_str(), userID_.size());
-        userID[userID_.size()] = '\0';
-        std::strncpy(username, username_.c_str(), username_.size());
-        username[username_.size()] = '\0';
-        std::strncpy(password, password_.c_str(), password_.size());
-        password[password_.size()] = '\0';
+        std::snprintf(userID, sizeof(userID), "%s", userID_.c_str());
+        std::snprintf(username, sizeof(username), "%s", username_.c_str());
+        std::snprintf(password, sizeof(password), "%s", password_.c_str());
     }
 };
 

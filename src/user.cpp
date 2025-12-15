@@ -1,25 +1,25 @@
 #include "../include/user.hpp"
 #include <cctype>
+#include <cstdio>
 #include <cstring>
 #include <string>
 
 UserManager::UserManager()
 {
+    userDatabase.initialise("userData");
     // 初始化时保证存在默认管理员账户 root
     if (count("root") == -1)
     {
         user admin("root", "root", "sjtu", 7);
-        userDatabase.initialise("userData");
         userDatabase.write(admin);
     }
 }
 
-// 检查用户是否存在，返回其在数据库中的位置
+// 检查用户是否存在，返回其在数据库中的位置(不存在返回-1)
 int UserManager::count(const std::string &userID_)
 {
-    userDatabase.initialise("userData");
     int start_index = 2 * sizeof(int);
-    user temp;
+    user temp{};
     int user_data_end = userDatabase.end();
     while (start_index + sizeof(user) <= user_data_end)
     {
@@ -46,7 +46,7 @@ bool UserManager::login(const std::string &userID_, const std::string &password_
     int pos = count(userID_);
     if (pos == -1)
         return false;
-    user temp;
+    user temp{};
     userDatabase.read(temp, pos);
 
     // 权限检查和密码匹配
@@ -117,7 +117,7 @@ bool UserManager::passwd(const std::string &userID_, const std::string &cur_Pass
     if (pos == -1 || currentUser.privilegeLevel < 1)
         return false;
 
-    user temp;
+    user temp{};
     userDatabase.read(temp, pos);
 
     if (currentUser.privilegeLevel < 7 && new_Password_.empty())
@@ -128,14 +128,12 @@ bool UserManager::passwd(const std::string &userID_, const std::string &cur_Pass
     {
         if (cur_Password_ != temp.password)
             return false;
-        std::strncpy(temp.password, new_Password_.c_str(), new_Password_.size());
-        temp.password[new_Password_.size()] = '\0';
+       std::snprintf(temp.password, sizeof(temp.password), "%s", new_Password_.c_str());
         userDatabase.update(temp, pos);
     }
     else
     {
-        std::strncpy(temp.password, cur_Password_.c_str(), cur_Password_.size());
-        temp.password[cur_Password_.size()] = '\0';
+        std::snprintf(temp.password, sizeof(temp.password), "%s", cur_Password_.c_str());
         userDatabase.update(temp, pos);
     }
     return true;
@@ -172,7 +170,7 @@ bool UserManager::deleteUser(const std::string &userID_)
     int pos = count(userID_);
     if (pos == -1 || is_log(userID_) || currentUser.privilegeLevel < 7)
         return false;
-    user temp;
+    user temp{};
     userDatabase.read(temp, pos);
     temp.is_valid = false;
     userDatabase.update(temp, pos);

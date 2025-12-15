@@ -7,7 +7,7 @@ class log
 private:
     struct record
     {
-        int count;
+        int count = 0;
         double income = 0;
         double expense = 0;
     };
@@ -15,8 +15,8 @@ private:
 
     struct operate
     {
-        int privilege;
-        char operation[128];
+        int privilege = 0;
+        char operation[128]{};
     };
     MemoryRiver<record> purchase_record;
     MemoryRiver<operate> operation_record;

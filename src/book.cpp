@@ -61,13 +61,19 @@ Book::Book(const Book &other)
 }
 
 // 默认构造
-Book::Book() = default;
+Book::Book()
+{
+    price[0] = '0';
+    price[sizeof(price) - 1] = '\0';
+}
 
 // 根据 ISBN 构造
 Book::Book(const std::string &isbn_)
 {
     std::strncpy(isbn, isbn_.c_str(), sizeof(isbn) - 1);
     isbn[sizeof(isbn) - 1] = '\0';
+    price[0] = '0';
+    price[sizeof(price) - 1] = '\0';
 }
 
 
@@ -100,27 +106,22 @@ int Book::get_stock() { return stock; }
 
 void Book::set_book_name(const std::string &name)
 {
-    std::strncpy(book_name, name.c_str(), sizeof(book_name) - 1);
-    book_name[sizeof(book_name) - 1] = '\0';
+    std::snprintf(book_name, sizeof(book_name), "%s", name.c_str());
 }
 void Book::set_author(const std::string &auth)
 {
-    std::strncpy(author, auth.c_str(), sizeof(author) - 1);
-    author[sizeof(author) - 1] = '\0';
+    std::snprintf(author, sizeof(author), "%s",auth.c_str());
 }
 void Book::set_keywords(const std::string &key)
 {
-    std::strncpy(keywords, key.c_str(), sizeof(keywords) - 1);
-    keywords[sizeof(keywords) - 1] = '\0';
+    std::snprintf(keywords, sizeof(keywords), "%s", key.c_str());
 }
 void Book::set_isbn(const std::string &isbn_)
 {
-    std::strncpy(isbn, isbn_.c_str(), sizeof(isbn) - 1);
-    isbn[sizeof(isbn) - 1] = '\0';
+    std::snprintf(isbn, sizeof(isbn), "%s", isbn_.c_str());
 }
 void Book::set_price(const std::string &price_)
 {
-    std::strncpy(price, price_.c_str(), sizeof(price) - 1);
-    price[sizeof(price) - 1] = '\0';
+    std::snprintf(price, sizeof(price), "%s", price_.c_str());
 }
 void Book::set_stock(int s) { stock = s; }
