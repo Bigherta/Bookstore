@@ -498,7 +498,6 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case SELECT: {
-            assert(false);
             if (userManager.getCurrentUser().privilegeLevel < 3 || tokens_.size() != 2)
             {
                 std::cout << "Invalid\n";
@@ -536,6 +535,8 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case MODIFY: {
+            
+            assert(false);
             if (userManager.getCurrentUser().privilegeLevel < 3 || userManager.getSelectedbook().empty() ||
                 tokens_.size() < 2 || tokens_.size() > 6)
             {
