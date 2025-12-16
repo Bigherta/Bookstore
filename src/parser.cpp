@@ -302,6 +302,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
         case SHOW: {
             if (tokens_.size() == 1)
             {
+                if (userManager.getCurrentUser().privilegeLevel < 1)
+                {
+                    std::cout << "Invalid\n";
+                    break;
+                }
                 storage<IsbnTag> storage_;
                 storage_.Show();
                 Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username,

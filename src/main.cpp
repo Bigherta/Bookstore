@@ -18,15 +18,11 @@ int main()
     // 循环读取标准输入的每一行
     while (std::getline(std::cin, line))
     {
-        if (std::cin.eof()) // 文件结束检查
-        {
-            exit(0);
-        }
         bool is_running = true;
 
         parser.execute(line, userManager, Log, is_running); // 执行输入指令
 
-        if (!is_running)
+        if (!is_running || std::cin.eof())
         {
              return 0;
         }

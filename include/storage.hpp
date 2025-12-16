@@ -943,7 +943,6 @@ public:
     {
         Book copied_book = Copy(book_isbn);
         int stock = copied_book.get_stock();
-        std::vector<std::pair<std::string, int>> index_pos_pair_;
 
         std::string original_isbn = book_isbn;
         std::string original_name = copied_book.get_book_name();
