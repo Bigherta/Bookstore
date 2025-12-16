@@ -201,7 +201,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case PASSWD: {
-            assert(false);
+            
 
             if (tokens_.size() < 3 || tokens_.size() > 4 || userManager.getCurrentUser().privilegeLevel < 1)
             {
@@ -241,6 +241,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case USERADD: {
+            assert(false);
             if (tokens_.size() != 5 || userManager.getCurrentUser().privilegeLevel < 3)
             {
                 std::cout << "Invalid\n";
