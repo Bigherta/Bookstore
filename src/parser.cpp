@@ -1,5 +1,6 @@
 #include "../include/parser.hpp"
 #include <cassert>
+#include <cctype>
 #include <iostream>
 #include "../include/log.hpp"
 #include "../include/user.hpp"
@@ -136,7 +137,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
     switch (cmd)
     {
         case LOGIN: {
-            
+
             if (tokens_.size() > 3 || tokens_.size() < 2)
             {
                 std::cout << "Invalid\n";
@@ -159,7 +160,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case LOGOUT: {
-            
+
             if (tokens_.size() != 1 || userManager.getCurrentUser().privilegeLevel < 1)
             {
                 std::cout << "Invalid\n";
@@ -177,7 +178,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case REGISTER: {
-            
+
             if (tokens_.size() != 4)
             {
                 std::cout << "Invalid\n";
@@ -202,7 +203,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case PASSWD: {
-            
+
 
             if (tokens_.size() < 3 || tokens_.size() > 4 || userManager.getCurrentUser().privilegeLevel < 1)
             {
@@ -242,7 +243,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case USERADD: {
-            
+
             if (tokens_.size() != 5 || userManager.getCurrentUser().privilegeLevel < 3)
             {
                 std::cout << "Invalid\n";
@@ -282,7 +283,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
         case DELETEUSER: {
 
-            
+
             if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 7)
             {
                 std::cout << "Invalid\n";
@@ -303,10 +304,10 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case SHOW: {
-            
+
             if (tokens_.size() == 1)
             {
-                
+
                 if (userManager.getCurrentUser().privilegeLevel < 1)
                 {
                     std::cout << "Invalid\n";
@@ -326,7 +327,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             const TokenType showType = tokens_.peek()->type;
             if (showType == FINANCE)
             {
-                
+
                 if (tokens_.size() < 2 || tokens_.size() > 3 || userManager.getCurrentUser().privilegeLevel < 7)
                 {
                     std::cout << "Invalid\n";
@@ -362,7 +363,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             }
             else
             {
-                
+
                 if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 1)
                 {
                     std::cout << "Invalid\n";
@@ -387,7 +388,22 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                 if (search_param == ISBN)
                 {
                     search_value = text_.substr(column, text_.size() - column);
-                    if (search_value.empty())
+                    if (search_value.empty() || search_value.size() > 20)
+                    {
+                        std::cout << "Invalid\n";
+                        break;
+                    }
+                    bool is_valid = true;
+
+                    for (char ch: search_value)
+                    {
+                        if (!std::isprint(static_cast<int>(ch)))
+                        {
+                            is_valid = false;
+                            break;
+                        }
+                    }
+                    if (!is_valid)
                     {
                         std::cout << "Invalid\n";
                         break;
@@ -403,7 +419,23 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                         break;
                     }
                     search_value = text_.substr(column + 1, text_.size() - column - 2);
-                    if (search_value.empty())
+                    
+                    if (search_value.empty() || search_value.size() > 60)
+                    {
+                        std::cout << "Invalid\n";
+                        break;
+                    }
+                    bool is_valid = true;
+
+                    for (char ch: search_value)
+                    {
+                        if (!std::isprint(static_cast<int>(ch)) || ch == '"')
+                        {
+                            is_valid = false;
+                            break;
+                        }
+                    }
+                    if (!is_valid)
                     {
                         std::cout << "Invalid\n";
                         break;
@@ -427,15 +459,17 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                         break;
                     }
                     search_value = text_.substr(column + 1, text_.size() - column - 2);
-                    if (search_value.empty())
+                   
+                    if (search_value.empty() || search_value.size() > 60)
                     {
                         std::cout << "Invalid\n";
                         break;
                     }
                     bool is_valid = true;
-                    for (int i = 0; i < search_value.size(); i++)
+
+                    for (char ch : search_value)
                     {
-                        if (search_value[i] == '|')
+                        if (!std::isprint(static_cast<int>(ch)) || ch == '|' || ch == '"')
                         {
                             is_valid = false;
                             break;
@@ -462,7 +496,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
         case BUY: {
 
-            
+
             if (tokens_.size() != 3 || userManager.getCurrentUser().privilegeLevel < 1)
             {
                 std::cout << "Invalid\n";
@@ -535,8 +569,8 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case MODIFY: {
-            
-            
+
+
             if (userManager.getCurrentUser().privilegeLevel < 3 || userManager.getSelectedbook().empty() ||
                 tokens_.size() < 2 || tokens_.size() > 6)
             {
@@ -659,7 +693,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case IMPORT: {
-            
+
             if (tokens_.size() != 3 || userManager.getSelectedbook().empty() ||
                 userManager.getCurrentUser().privilegeLevel < 3)
             {
@@ -731,7 +765,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case EXIT: {
-            
+
             if (tokens_.size() != 1)
             {
                 std::cout << "Invalid\n";
