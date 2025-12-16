@@ -817,7 +817,7 @@ public:
         if (!keywords_.empty())
         {
             if (Book::is_keyword_invalid(keywords_))
-                return false; // 关键词合法
+                return false; // 关键词不合法
             is_change_keyword = true;
         }
 

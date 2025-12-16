@@ -111,20 +111,6 @@ bool Parser::isD(std::string str) noexcept
             dot_pos = i;
         }
     }
-    std::string int_part = (dot_pos == -1) ? str : str.substr(0, dot_pos);
-
-    if (int_part.size() > 10 || (int_part.size() == 10 && int_part > "2147483647"))
-        return false;
-    if (dot_pos != -1)
-    {
-        std::string double_part = str.substr(dot_pos + 1);
-        if (int_part == "2147483647")
-            for (char c: double_part)
-            {
-                if (c != '0')
-                    return false;
-            }
-    }
     return true;
 }
 
@@ -209,7 +195,8 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
         }
 
         case PASSWD: {
-            if (tokens_.size() < 3 || tokens_.size() > 4)
+
+            if (tokens_.size() < 3 || tokens_.size() > 4 || userManager.getCurrentUser().privilegeLevel < 1)
             {
                 std::cout << "Invalid\n";
                 break;
@@ -225,6 +212,11 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             }
             else
             {
+                if (userManager.getCurrentUser().privilegeLevel < 7)
+                {
+                    std::cout << "Invalid\n";
+                    break;
+                }
                 new_Password_ = tokens_.get()->text;
             }
 
@@ -242,7 +234,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
         }
 
         case USERADD: {
-            if (tokens_.size() != 5)
+            if (tokens_.size() != 5 || userManager.getCurrentUser().privilegeLevel < 3)
             {
                 std::cout << "Invalid\n";
                 break;
@@ -280,7 +272,7 @@ void Parser::execute(const std::string &line, UserManager &userManager, log &Log
             break;
         }
         case DELETEUSER: {
-            if (tokens_.size() != 2)
+            if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 7)
             {
                 std::cout << "Invalid\n";
                 break;
