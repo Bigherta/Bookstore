@@ -136,7 +136,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
     switch (cmd)
     {
         case LOGIN: {
-            assert(false);
+            
             if (tokens_.size() > 3 || tokens_.size() < 2)
             {
                 std::cout << "Invalid\n";
@@ -281,6 +281,8 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case DELETEUSER: {
+
+            assert(false);
             
             if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 7)
             {
