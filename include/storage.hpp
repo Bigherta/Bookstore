@@ -2,14 +2,14 @@
 #ifndef STORAGE_HPP
 #define STORAGE_HPP
 
-#include "book.hpp"
-#include "parser.hpp"
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
+#include "book.hpp"
+#include "parser.hpp"
 
 
 using std::fstream;
@@ -457,27 +457,28 @@ public:
         while (temp.next_block != -1)
         {
             if (temp.size != 0)
-                is_empty = false;
-            for (int i = 0; i < temp.size; i++)
             {
-                std::cout << temp.val[i];
+                is_empty = false;
+                for (int i = 0; i < temp.size; i++)
+                {
+                    std::cout << temp.val[i];
+                }
             }
             book.read(temp, temp.next_block);
         }
 
         if (temp.size != 0)
+        {
             is_empty = false;
-        if (is_empty)
-        {
-            std::cout << "\n";
-            return;
-        }
-        else
-        {
             for (int i = 0; i < temp.size; i++)
             {
                 std::cout << temp.val[i];
             }
+            return;
+        }
+        if (is_empty)
+        {
+            std::cout << "\n";
             return;
         }
     }
@@ -512,17 +513,19 @@ public:
             return;
         }
 
-        bool is_empty = true;
-
         Block temp;
 
         book.read(temp, t.head);
 
         while (temp.next_block != -1)
         {
+            Book *pos;
             if (temp.size != 0)
-                is_empty = false;
-            Book *pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
+                pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
+            else
+            {
+                book.read(temp, temp.next_block);
+            }
             if (pos == temp.val + temp.size || !(*pos == Book(isbn)))
             {
                 book.read(temp, temp.next_block);
@@ -534,27 +537,25 @@ public:
             }
         }
 
+        Book *pos;
         if (temp.size != 0)
-            is_empty = false;
-        if (is_empty)
+            pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
+        else
+        {
+            std::cout << '\n';
+            return;
+        }
+        if (pos == temp.val + temp.size || !(*pos == Book(isbn)))
         {
             std::cout << '\n';
             return;
         }
         else
         {
-            Book *pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
-            if (pos == temp.val + temp.size || !(*pos == Book(isbn)))
-            {
-                std::cout << '\n';
-                return;
-            }
-            else
-            {
-                std::cout << *pos;
-                return;
-            }
+            std::cout << *pos;
+            return;
         }
+        
     }
 
     /**
