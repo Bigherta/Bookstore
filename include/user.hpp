@@ -126,6 +126,8 @@ public:
      */
     std::string &getSelectedbook();
 
+    bool is_valid_to_getSelectedbook();
+
     void exit ();
 
 private:
