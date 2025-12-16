@@ -114,10 +114,13 @@ bool Parser::isD(std::string str) noexcept
     return true;
 }
 
-void Parser::execute(const std::string &line, UserManager &userManager, log &Log, bool &is_running)
+void Parser::execute(const std::string &line_raw, UserManager &userManager, log &Log, bool &is_running)
 {
+    std::string line = line_raw;
     if (line.empty())
         return;
+    if (!line.empty() && (line.back() == '\r' || line.back() == '\n'))
+        line.pop_back();
     bool is_valid = true;
     TokenStream tokens_ = tokenize(line, is_valid);
     if (!is_valid)
