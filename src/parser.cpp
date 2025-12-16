@@ -362,7 +362,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             }
             else
             {
-                assert(false);
+                
                 if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 1)
                 {
                     std::cout << "Invalid\n";
@@ -461,6 +461,8 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case BUY: {
+
+            assert(false);
             if (tokens_.size() != 3 || userManager.getCurrentUser().privilegeLevel < 1)
             {
                 std::cout << "Invalid\n";
