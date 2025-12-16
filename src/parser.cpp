@@ -282,7 +282,6 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
         case DELETEUSER: {
 
-            assert(false);
             
             if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 7)
             {
@@ -304,6 +303,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case SHOW: {
+            assert(false);
             if (tokens_.size() == 1)
             {
                 if (userManager.getCurrentUser().privilegeLevel < 1)
