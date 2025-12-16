@@ -51,9 +51,11 @@ bool UserManager::login(const std::string &userID_, const std::string &password_
     userDatabase.read(temp, pos);
 
     // 权限检查和密码匹配
-    if (password_.empty() && currentUser.privilegeLevel <= temp.privilegeLevel)
-        return false;
+
     if (!password_.empty() && password_ != temp.password)
+        return false;
+
+    if (password_.empty() && currentUser.privilegeLevel <= temp.privilegeLevel)
         return false;
 
     logstack.push_back(make_pair(temp.userID, std::string()));
@@ -107,12 +109,16 @@ bool UserManager::passwd(const std::string &userID_, const std::string &cur_Pass
 {
     if (cur_Password_.size() > 30 || new_Password_.size() > 30 || new_Password_.empty())
         return false;
-    for (char ch: cur_Password_)
-        if (!std::isalnum(ch) && ch != '_')
-            return false;
-    for (char ch: new_Password_)
-        if (!std::isalnum(ch) && ch != '_')
-            return false;
+
+    if (!cur_Password_.empty())
+        for (char ch: cur_Password_)
+            if (!std::isalnum(ch) && ch != '_')
+                return false;
+
+    if (!new_Password_.empty())
+        for (char ch: new_Password_)
+            if (!std::isalnum(ch) && ch != '_')
+                return false;
 
     int pos = count(userID_);
     if (pos == -1 || currentUser.privilegeLevel < 1)
@@ -128,6 +134,7 @@ bool UserManager::passwd(const std::string &userID_, const std::string &cur_Pass
     if (!cur_Password_.empty())
         if (cur_Password_ != temp.password)
             return false;
+        
     std::snprintf(temp.password, sizeof(temp.password), "%s", new_Password_.c_str());
     userDatabase.update(temp, pos);
     return true;

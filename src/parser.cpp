@@ -255,7 +255,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                 std::cout << "Invalid\n";
                 break;
             }
-            else if (temp_text[0] != '1' && temp_text[0] != '3' && temp_text[0] != '7')
+            else if (temp_text[0] != '1' && temp_text[0] != '3')
             {
                 std::cout << "Invalid\n";
                 break;
