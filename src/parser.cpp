@@ -569,7 +569,11 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case MODIFY: {
-
+            if (!userManager.is_valid_to_getSelectedbook())
+            {
+                std::cout << "Invalid\n";
+                break;
+            }
 
             if (userManager.getCurrentUser().privilegeLevel < 3 || userManager.getSelectedbook().empty() ||
                 tokens_.size() < 2 || tokens_.size() > 6)
@@ -693,6 +697,11 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case IMPORT: {
+            if (!userManager.is_valid_to_getSelectedbook())
+            {
+                std::cout << "Invalid\n";
+                break;
+            }
 
             if (tokens_.size() != 3 || userManager.getSelectedbook().empty() ||
                 userManager.getCurrentUser().privilegeLevel < 3)

@@ -181,10 +181,14 @@ bool UserManager::deleteUser(const std::string &userID_)
 // 获取当前登录用户
 user &UserManager::getCurrentUser() { return currentUser; }
 
+bool UserManager::is_valid_to_getSelectedbook()
+{
+    return !(logstack.empty());
+}
+
 // 获取当前操作的选中书籍 ISBN
 std::string &UserManager::getSelectedbook()
 {
-    assert(!logstack.empty());
     return logstack.back().second;
 }
 
