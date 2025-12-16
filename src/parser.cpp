@@ -306,7 +306,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             
             if (tokens_.size() == 1)
             {
-                assert(false);
+                
                 if (userManager.getCurrentUser().privilegeLevel < 1)
                 {
                     std::cout << "Invalid\n";
@@ -326,6 +326,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             const TokenType showType = tokens_.peek()->type;
             if (showType == FINANCE)
             {
+                assert(false);
                 if (tokens_.size() < 2 || tokens_.size() > 3 || userManager.getCurrentUser().privilegeLevel < 7)
                 {
                     std::cout << "Invalid\n";
