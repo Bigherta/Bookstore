@@ -515,7 +515,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                 std::cout << "Invalid\n";
                 break;
             }
-            long long num = stoll(quantity);
+            long long num = std::stoll(quantity);
             if (num <= 0 || num > 2147483647)
             {
                 std::cout << "Invalid\n";

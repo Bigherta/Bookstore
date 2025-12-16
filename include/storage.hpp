@@ -915,7 +915,7 @@ public:
     {
         Book copied_book = Copy(book_isbn);
         int stock = copied_book.get_stock();
-        double price = stod(copied_book.get_price());
+        double price = std::stod(copied_book.get_price());
         if (stock < num)
             return false;
         total_cost = price * num;
