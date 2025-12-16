@@ -6,6 +6,7 @@
 #include <string>
 
 
+// 显示财务信息
 bool log::ShowFinance(long long count_)
 {
     // 如果指定查询交易笔数为 0，直接输出空行，表示合法指令
@@ -68,6 +69,7 @@ bool log::ShowFinance(long long count_)
     return false;
 }
 
+// 报告财务信息：显示所有交易详情和总额
 void log::ReportFinance()
 {
 
@@ -138,6 +140,7 @@ void log::add_trading(double income, double expense)
     purchase_record.write(new_trade);
 }
 
+// 更改操作信息：根据权限设置操作描述
 void log::change_opt(int privilege, std::string name, std::string info, operate &opt)
 {
     std::string info_;
@@ -246,6 +249,7 @@ void log::add_operation(int privilege, std::string name, TokenType type)
     operation_record.write(opt);
 }
 
+// 报告员工操作：显示权限为3的操作日志
 void log::ReportEmployee()
 {
     operation_record.initialise("operation");
@@ -263,6 +267,7 @@ void log::ReportEmployee()
     }
 }
 
+// 显示所有日志：包括操作日志和财务日志
 void log::Log()
 {
     std::cout << "以下是操作系统日志\n";

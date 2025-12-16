@@ -1,25 +1,39 @@
 #include "storage.hpp"
 #include "Token.hpp"
 
-
+/**
+ * @brief 日志管理类
+ *
+ * 该类负责管理财务记录和操作日志，包括交易记录的存储、查询和报告生成。
+ */
 class log
 {
 private:
+    /**
+     * @brief 财务记录结构体
+     *
+     * 存储单笔交易的详细信息，包括交易编号、收入和支出金额。
+     */
     struct record
     {
-        int count = 0;
-        double income = 0;
-        double expense = 0;
+        int count = 0;   /**< 交易编号 */
+        double income = 0;   /**< 收入金额 */
+        double expense = 0;  /**< 支出金额 */
     };
-    record cur_;
+    record cur_;   /**< 当前交易记录 */
 
+    /**
+     * @brief 操作记录结构体
+     *
+     * 存储用户操作的详细信息，包括权限级别和操作描述。
+     */
     struct operate
     {
-        int privilege = 0;
-        char operation[128]{};
+        int privilege = 0;   /**< 用户权限级别 */
+        char operation[128]{};   /**< 操作描述字符串 */
     };
-    MemoryRiver<record> purchase_record;
-    MemoryRiver<operate> operation_record;
+    MemoryRiver<record> purchase_record;   /**< 财务记录存储 */
+    MemoryRiver<operate> operation_record;   /**< 操作记录存储 */
 
 public:
     /** 财务记录查询
@@ -35,13 +49,41 @@ public:
      */
     void add_trading(double income, double expense); // 记录交易
 
-    void change_opt(int, std::string, std::string,  operate &);
+    /**
+     * @brief 设置操作信息
+     * @param privilege 用户权限级别
+     * @param name 用户名
+     * @param info 操作信息字符串
+     * @param opt 操作记录结构体引用
+     */
+    void change_opt(int privilege, std::string name, std::string info, operate &opt);
 
-    void add_operation(int, std::string, TokenType); //记录操作
+    /**
+     * @brief 添加操作记录
+     * @param privilege 用户权限级别
+     * @param name 用户名
+     * @param type 操作类型
+     */
+    void add_operation(int privilege, std::string name, TokenType type); //记录操作
 
+    /**
+     * @brief 生成财务报告
+     *
+     * 显示所有交易的详细信息和总额。
+     */
     void ReportFinance();
 
+    /**
+     * @brief 生成员工操作报告
+     *
+     * 显示权限级别为3的操作日志。
+     */
     void ReportEmployee();
 
+    /**
+     * @brief 显示所有日志
+     *
+     * 包括操作日志和财务日志。
+     */
     void Log();
 };

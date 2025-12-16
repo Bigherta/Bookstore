@@ -41,7 +41,7 @@ bool UserManager::is_log(const std::string &userID_)
     return false;
 }
 
-// 用户登录
+// 用户登录：支持密码登录或权限提升登录
 bool UserManager::login(const std::string &userID_, const std::string &password_)
 {
     int pos = count(userID_);
@@ -51,7 +51,7 @@ bool UserManager::login(const std::string &userID_, const std::string &password_
     userDatabase.read(temp, pos);
 
     // 权限检查和密码匹配
-
+    // 如果密码为空，则检查当前用户权限是否高于目标用户
     if (!password_.empty() && password_ != temp.password)
         return false;
 
@@ -63,7 +63,7 @@ bool UserManager::login(const std::string &userID_, const std::string &password_
     return true;
 }
 
-// 用户登出
+// 用户登出：弹出登录栈顶用户
 bool UserManager::logout()
 {
     if (logstack.size() == 0 || currentUser.privilegeLevel < 1)
@@ -76,19 +76,20 @@ bool UserManager::logout()
     }
     else
     {
-        currentUser = user();
+        currentUser = user(); // 重置为默认用户
     }
     return true;
 }
 
-// 用户注册
+// 注册新用户：检查用户名唯一性，设置默认权限，写入数据库
 bool UserManager::registerUser(const std::string &userID_, const std::string &password_, const std::string &username_)
 {
     if (count(userID_) != -1)
-        return false;
+        return false; // 用户已存在
     if (userID_.size() > 30 || password_.size() > 30 || username_.size() > 30)
-        return false;
+        return false; // 长度超限
 
+    // 检查字符合法性：只允许字母、数字、下划线
     for (char ch: userID_)
         if (!std::isalnum(ch) && ch != '_')
             return false;
@@ -96,7 +97,7 @@ bool UserManager::registerUser(const std::string &userID_, const std::string &pa
         if (!std::isalnum(ch) && ch != '_')
             return false;
     for (char ch: username_)
-        if (ch < 33 || ch > 126)
+        if (ch < 33 || ch > 126) // 可打印ASCII字符
             return false;
 
     user newUser(userID_, username_, password_, 1);
@@ -104,12 +105,13 @@ bool UserManager::registerUser(const std::string &userID_, const std::string &pa
     return true;
 }
 
-// 修改密码
+// 修改密码：支持用户自己修改或管理员修改他人密码
 bool UserManager::passwd(const std::string &userID_, const std::string &cur_Password_, const std::string &new_Password_)
 {
     if (cur_Password_.size() > 30 || new_Password_.size() > 30 || new_Password_.empty())
         return false;
 
+    // 检查密码字符合法性
     if (!cur_Password_.empty())
         for (char ch: cur_Password_)
             if (!std::isalnum(ch) && ch != '_')
@@ -127,10 +129,11 @@ bool UserManager::passwd(const std::string &userID_, const std::string &cur_Pass
     user temp{};
     userDatabase.read(temp, pos);
 
+    // 权限检查：管理员可以不提供旧密码
     if (currentUser.privilegeLevel < 7 && cur_Password_.empty())
         return false;
 
-    // 修改密码逻辑
+    // 验证旧密码（如果提供）
     if (!cur_Password_.empty())
         if (cur_Password_ != temp.password)
             return false;
@@ -192,6 +195,7 @@ std::string &UserManager::getSelectedbook()
     return logstack.back().second;
 }
 
+// 退出时清空登录栈
 void UserManager::exit()
 {
     logstack.clear();

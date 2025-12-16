@@ -15,7 +15,7 @@ TokenType Parser::matchkeyword(const std::string &text) const
     return BLANK;
 }
 
-// 解析一行源码
+// 解析一行源码，将输入行分割成tokens
 TokenStream Parser::tokenize(const std::string &line, bool &is_valid) const
 {
     std::vector<Token> tokens;
@@ -25,14 +25,14 @@ TokenStream Parser::tokenize(const std::string &line, bool &is_valid) const
         char ch = line[column];
         if (static_cast<unsigned char>(ch) > 127)
         {
-            is_valid = false;
+            is_valid = false; // 非ASCII字符无效
         }
         // 如果ch是空格
         if (std::isspace(static_cast<int>(ch)))
         {
             if (ch != ' ')
             {
-                is_valid = false;
+                is_valid = false; // 只允许空格，不允许制表符等
             }
             ++column;
             continue;
@@ -49,7 +49,7 @@ TokenStream Parser::tokenize(const std::string &line, bool &is_valid) const
             TokenType type = matchkeyword(text); // 判断是哪一个枚举类型
             if (type == BLANK)
             {
-                type = TEXT;
+                type = TEXT; // 非关键词设为TEXT
             }
             tokens.push_back(Token{type, text, column});
             continue;
@@ -65,6 +65,7 @@ bool Parser::isNumberChar(char ch) noexcept
     return (std::isalnum(static_cast<unsigned char>(ch)) && !std::isalpha(static_cast<unsigned char>(ch)));
 }
 
+// 检查字符串是否为有效的整数（不超过int范围）
 bool Parser::isN(std::string str) noexcept
 {
     if (str.empty() || str.size() > 10)
@@ -85,6 +86,7 @@ bool Parser::isN(std::string str) noexcept
     return true;
 }
 
+// 检查字符串是否为有效的浮点数
 bool Parser::isD(std::string str) noexcept
 {
     if (str.empty() || str.size() > 13)
@@ -115,6 +117,7 @@ bool Parser::isD(std::string str) noexcept
     return true;
 }
 
+// 执行指令的主函数
 void Parser::execute(const std::string &line_raw, UserManager &userManager, log &Log, bool &is_running)
 {
     std::string line = line_raw;
@@ -137,6 +140,9 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
     switch (cmd)
     {
         case LOGIN: {
+            // 登录命令：login [User-ID] [Password]
+            // 权限：无
+            // 参数：User-ID, Password (可选，如果当前用户权限更高)
 
             if (tokens_.size() > 3 || tokens_.size() < 2)
             {
@@ -160,6 +166,9 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case LOGOUT: {
+            // 登出命令：logout
+            // 权限：1+
+            // 参数：无
 
             if (tokens_.size() != 1 || userManager.getCurrentUser().privilegeLevel < 1)
             {
@@ -178,6 +187,9 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case REGISTER: {
+            // 注册命令：register [User-ID] [Password] [Username]
+            // 权限：无
+            // 参数：User-ID, Password, Username
 
             if (tokens_.size() != 4)
             {
@@ -203,7 +215,9 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case PASSWD: {
-
+            // 修改密码命令：passwd [User-ID] [Current-Password] [New-Password] 或 passwd [User-ID] [New-Password] (管理员)
+            // 权限：1+ 或管理员修改他人
+            // 参数：User-ID, Current-Password (可选), New-Password
 
             if (tokens_.size() < 3 || tokens_.size() > 4 || userManager.getCurrentUser().privilegeLevel < 1)
             {
@@ -243,6 +257,9 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case USERADD: {
+            // 添加用户命令：useradd [User-ID] [Password] [Privilege] [Username]
+            // 权限：3+
+            // 参数：User-ID, Password, Privilege (1或3), Username
 
             if (tokens_.size() != 5 || userManager.getCurrentUser().privilegeLevel < 3)
             {
@@ -282,7 +299,9 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case DELETEUSER: {
-
+            // 删除用户命令：delete [User-ID]
+            // 权限：7
+            // 参数：User-ID
 
             if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 7)
             {
@@ -304,9 +323,13 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case SHOW: {
+            // 显示命令：show 或 show finance [count] 或 show -ISBN=... 等
+            // 权限：1+ for show, 7 for finance
+            // 参数：无 或 finance [count] 或 -param=value
 
             if (tokens_.size() == 1)
             {
+                // show：显示所有图书
 
                 if (userManager.getCurrentUser().privilegeLevel < 1)
                 {
@@ -327,6 +350,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             const TokenType showType = tokens_.peek()->type;
             if (showType == FINANCE)
             {
+                // show finance [count]：显示财务信息
 
                 if (tokens_.size() < 2 || tokens_.size() > 3 || userManager.getCurrentUser().privilegeLevel < 7)
                 {
@@ -363,6 +387,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             }
             else
             {
+                // show -param=value：按参数搜索图书
 
                 if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 1)
                 {
