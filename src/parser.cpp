@@ -1,4 +1,5 @@
 #include "../include/parser.hpp"
+#include <cassert>
 #include <iostream>
 #include "../include/log.hpp"
 #include "../include/user.hpp"
@@ -174,6 +175,8 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case REGISTER: {
+            
+            assert(false);
             if (tokens_.size() != 4)
             {
                 std::cout << "Invalid\n";
