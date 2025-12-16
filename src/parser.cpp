@@ -303,9 +303,10 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case SHOW: {
-            assert(false);
+            
             if (tokens_.size() == 1)
             {
+                assert(false);
                 if (userManager.getCurrentUser().privilegeLevel < 1)
                 {
                     std::cout << "Invalid\n";
