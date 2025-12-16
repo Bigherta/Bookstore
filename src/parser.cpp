@@ -659,7 +659,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case IMPORT: {
-            assert(false);
+            
             if (tokens_.size() != 3 || userManager.getSelectedbook().empty() ||
                 userManager.getCurrentUser().privilegeLevel < 3)
             {
@@ -731,6 +731,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             break;
         }
         case EXIT: {
+            assert(false);
             if (tokens_.size() != 1)
             {
                 std::cout << "Invalid\n";
