@@ -344,13 +344,15 @@ public:
 
         while (true)
         {
-            // 使用 std::lower_bound 查找 ISBN
-            Book *pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
-            if (pos != temp.val + temp.size && *pos == Book(isbn))
+            if (temp.size != 0)
             {
-                return true;
+                // 使用 std::lower_bound 查找 ISBN
+                Book *pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
+                if (pos != temp.val + temp.size && *pos == Book(isbn))
+                {
+                    return true;
+                }
             }
-
             if (temp.next_block == -1) // 已经是最后一个 block
                 break;
 
@@ -555,7 +557,6 @@ public:
             std::cout << *pos;
             return;
         }
-        
     }
 
     /**

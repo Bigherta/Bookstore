@@ -79,6 +79,12 @@ void log::ReportFinance()
     purchase_record.get_info(cur_count, 1);
 
     // 获取日志文件的总字节数，用于遍历交易记录
+    if (cur_count == 0)
+    {
+        std::cout << "所有交易总额为：\n";
+        std::cout << "+ 0.00 - 0.00\n";
+        return;
+    }
 
     record temp; // 用于临时存储读取的记录
     int start_index = 2 * sizeof(int);

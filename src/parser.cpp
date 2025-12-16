@@ -1,5 +1,4 @@
 #include "../include/parser.hpp"
-#include <cassert>
 #include <cctype>
 #include <iostream>
 #include "../include/log.hpp"
@@ -121,8 +120,9 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
     std::string line = line_raw;
     if (line.empty())
         return;
-    if (!line.empty() && (line.back() == '\r' || line.back() == '\n'))
+    while (!line.empty() && (line.back() == '\r' || line.back() == '\n'))
         line.pop_back();
+
     bool is_valid = true;
     TokenStream tokens_ = tokenize(line, is_valid);
     if (!is_valid)
@@ -419,7 +419,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                         break;
                     }
                     search_value = text_.substr(column + 1, text_.size() - column - 2);
-                    
+
                     if (search_value.empty() || search_value.size() > 60)
                     {
                         std::cout << "Invalid\n";
@@ -459,7 +459,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                         break;
                     }
                     search_value = text_.substr(column + 1, text_.size() - column - 2);
-                   
+
                     if (search_value.empty() || search_value.size() > 60)
                     {
                         std::cout << "Invalid\n";
@@ -467,7 +467,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                     }
                     bool is_valid = true;
 
-                    for (char ch : search_value)
+                    for (char ch: search_value)
                     {
                         if (!std::isprint(static_cast<int>(ch)) || ch == '|' || ch == '"')
                         {
