@@ -134,7 +134,7 @@ private:
     /// 用户数据库，使用 MemoryRiver 存储 user 对象
     MemoryRiver<user> userDatabase;
 
-    /// 用户操作记录栈，每条记录为 <userID, 操作描述>
+    /// 用户操作记录栈，每条记录为 <userID, 选中书籍的isbn(默认为空)>
     std::vector<std::pair<std::string, std::string>> logstack;
 
     /// 当前登录用户
