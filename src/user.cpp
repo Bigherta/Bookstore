@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstring>
 #include <string>
+#include "../include/validator.hpp"
 
 UserManager::UserManager()
 {
@@ -15,6 +16,35 @@ UserManager::UserManager()
         userDatabase.write(admin);
     }
 }
+
+bool user::is_ID_or_passwd_valid(const std::string &ID_or_passwd)
+{
+    try
+    {
+        expect(ID_or_passwd.size()).ge(0).And().le(30);
+        expect(ID_or_passwd).toMatch("^[A-Za-z0-9_]+$");
+    }
+    catch (...)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool user::is_name_valid(const std::string &name)
+{
+    try
+    {
+        expect(name.size()).ge(0).And().le(30);
+        expect(name).toMatch("^[\x21-\x7E]+$");
+    }
+    catch (...)
+    {
+        return false;
+    }
+    return true;
+}
+
 
 // 检查用户是否存在，返回其在数据库中的位置(不存在返回-1)
 int UserManager::count(const std::string &userID_)
@@ -86,19 +116,9 @@ bool UserManager::registerUser(const std::string &userID_, const std::string &pa
 {
     if (count(userID_) != -1)
         return false; // 用户已存在
-    if (userID_.size() > 30 || password_.size() > 30 || username_.size() > 30)
-        return false; // 长度超限
-
-    // 检查字符合法性：只允许字母、数字、下划线
-    for (char ch: userID_)
-        if (!std::isalnum(ch) && ch != '_')
-            return false;
-    for (char ch: password_)
-        if (!std::isalnum(ch) && ch != '_')
-            return false;
-    for (char ch: username_)
-        if (ch < 33 || ch > 126) // 可打印ASCII字符
-            return false;
+    if (!user::is_ID_or_passwd_valid(userID_) || !user::is_ID_or_passwd_valid(password_) ||
+        !user::is_name_valid(username_)) // 验证合法性
+        return false;
 
     user newUser(userID_, username_, password_, 1);
     userDatabase.write(newUser);
@@ -108,19 +128,13 @@ bool UserManager::registerUser(const std::string &userID_, const std::string &pa
 // 修改密码：支持用户自己修改或管理员修改他人密码
 bool UserManager::passwd(const std::string &userID_, const std::string &cur_Password_, const std::string &new_Password_)
 {
-    if (cur_Password_.size() > 30 || new_Password_.size() > 30 || new_Password_.empty())
+
+    // 检查密码合法性(如果提供旧密码)
+
+    if (!user::is_ID_or_passwd_valid(new_Password_))
         return false;
-
-    // 检查密码字符合法性
-    if (!cur_Password_.empty())
-        for (char ch: cur_Password_)
-            if (!std::isalnum(ch) && ch != '_')
-                return false;
-
-    if (!new_Password_.empty())
-        for (char ch: new_Password_)
-            if (!std::isalnum(ch) && ch != '_')
-                return false;
+    if (!user::is_ID_or_passwd_valid(cur_Password_) && !cur_Password_.empty())
+        return false;
 
     int pos = count(userID_);
     if (pos == -1 || currentUser.privilegeLevel < 1)
@@ -137,7 +151,7 @@ bool UserManager::passwd(const std::string &userID_, const std::string &cur_Pass
     if (!cur_Password_.empty())
         if (cur_Password_ != temp.password)
             return false;
-        
+
     std::snprintf(temp.password, sizeof(temp.password), "%s", new_Password_.c_str());
     userDatabase.update(temp, pos);
     return true;
@@ -147,17 +161,9 @@ bool UserManager::passwd(const std::string &userID_, const std::string &cur_Pass
 bool UserManager::useradd(const std::string &userID_, const std::string &password_, int privilegeLevel_,
                           const std::string &username_)
 {
-    if (userID_.size() > 30 || password_.size() > 30 || username_.size() > 30)
+    if (!user::is_ID_or_passwd_valid(userID_) || !user::is_ID_or_passwd_valid(password_) ||
+        !user::is_name_valid(username_)) // 验证合法性
         return false;
-    for (char ch: userID_)
-        if (!std::isalnum(ch) && ch != '_')
-            return false;
-    for (char ch: password_)
-        if (!std::isalnum(ch) && ch != '_')
-            return false;
-    for (char ch: username_)
-        if (ch < 33 || ch > 126)
-            return false;
 
     // 权限与重复检查
     if (privilegeLevel_ >= currentUser.privilegeLevel || count(userID_) != -1 || currentUser.privilegeLevel < 3)
@@ -184,16 +190,10 @@ bool UserManager::deleteUser(const std::string &userID_)
 // 获取当前登录用户
 user &UserManager::getCurrentUser() { return currentUser; }
 
-bool UserManager::is_valid_to_getSelectedbook()
-{
-    return !(logstack.empty());
-}
+bool UserManager::is_valid_to_getSelectedbook() { return !(logstack.empty()); }
 
 // 获取当前操作的选中书籍 ISBN
-std::string &UserManager::getSelectedbook()
-{
-    return logstack.back().second;
-}
+std::string &UserManager::getSelectedbook() { return logstack.back().second; }
 
 // 退出时清空登录栈
 void UserManager::exit()

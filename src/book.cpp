@@ -11,9 +11,7 @@ bool Book::is_ISBN_valid(const std::string &ISBN)
     try
     {
         expect(ISBN.size()).le(20).And().ge(0);
-
-        for (char ch: ISBN)
-            expect(ch).ge(33).Or().le(126);
+        expect(ISBN).toMatch("^[\x21-\x7E]+$");
     }
     catch (...)
     {

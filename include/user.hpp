@@ -27,6 +27,10 @@ public:
         std::snprintf(username, sizeof(username), "%s", username_.c_str());
         std::snprintf(password, sizeof(password), "%s", password_.c_str());
     }
+
+    static bool is_ID_or_passwd_valid(const std::string &ID_or_passwd);
+    static bool is_name_valid(const std::string &name);
+
 };
 
 class UserManager
