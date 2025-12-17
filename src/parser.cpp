@@ -68,7 +68,7 @@ bool Parser::isN(std::string str) noexcept
     {
         expect(str.size()).ge(1).And().le(10);
         expect(str).toMatch("^(0|[1-9][0-9]*)$");
-        expect(str).le("2147483647");
+        expect(std::stoll(str)).le(2147483647);
     }
     catch (...)
     {
