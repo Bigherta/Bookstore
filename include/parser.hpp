@@ -36,23 +36,6 @@ public:
      */
     TokenType matchkeyword(const std::string &text) const;
 
-
-    /**
-     * @brief 检查字符是否为字母
-     * @param ch 待检测字符
-     * @return true 如果是字母
-     */
-    static bool isLetterChar(char ch) noexcept;
-
-
-    /**
-     * @brief 检查字符是否为数字字符
-     * @param ch 待检测字符
-     * @return true 如果是数字
-     */
-    static bool isNumberChar(char ch) noexcept;
-
-
     /**
      * @brief 检查字符串是否全部为整数
      * @param str 待检测字符串

@@ -10,7 +10,7 @@ bool Book::is_ISBN_valid(const std::string &ISBN)
 {
     try
     {
-        expect(ISBN.size()).le(20).And().ge(0);
+        expect(ISBN.size()).le(20).And().ge(1);
         expect(ISBN).toMatch("^[\x21-\x7E]+$");
     }
     catch (...)
@@ -25,7 +25,7 @@ bool Book::is_author_or_name_valid(const std::string &author_or_name)
 {
     try
     {
-        expect(author_or_name.size()).le(60).And().ge(0);
+        expect(author_or_name.size()).le(60).And().ge(1);
 
         for (char ch: author_or_name)
             expect(ch).ge(33).Or().le(126).And().Not().toBe('"');
@@ -43,7 +43,7 @@ bool Book::is_keyword_invalid(const std::string &keyword)
     // 检查总长度与字符合法性
     try
     {
-        expect(keyword.size()).le(60).And().ge(0);
+        expect(keyword.size()).le(60).And().ge(1);
         expect(keyword.back()).Not().toBe('|');
         expect(keyword.front()).Not().toBe('|');
         for (char ch: keyword)

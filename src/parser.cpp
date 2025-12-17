@@ -4,6 +4,8 @@
 #include "../include/book.hpp"
 #include "../include/log.hpp"
 #include "../include/user.hpp"
+#include "../include/validator.hpp"
+
 
 // 将字符串匹配成对应的枚举类
 TokenType Parser::matchkeyword(const std::string &text) const
@@ -59,61 +61,33 @@ TokenStream Parser::tokenize(const std::string &line, bool &is_valid) const
     return TokenStream(std::move(tokens));
 }
 
-bool Parser::isLetterChar(char ch) noexcept { return std::isalpha(static_cast<unsigned char>(ch)); }
-
-bool Parser::isNumberChar(char ch) noexcept
-{
-    return (std::isalnum(static_cast<unsigned char>(ch)) && !std::isalpha(static_cast<unsigned char>(ch)));
-}
-
 // 检查字符串是否为有效的整数（不超过int范围）
 bool Parser::isN(std::string str) noexcept
 {
-    if (str.empty() || str.size() > 10)
-        return false;
-    if (str == "0")
-        return true;
-    if (str[0] < '1' || str[0] > '9')
-        return false;
-    for (char c: str)
+    try
     {
-        if (!std::isdigit(static_cast<unsigned char>(c)))
-        {
-            return false;
-        }
+        expect(str.size()).ge(1).And().le(10);
+        expect(str).toMatch("^(0|[1-9][0-9]*)$");
+        expect(str).le("2147483647");
     }
-    if (str.size() == 10 && str > "2147483647")
+    catch (...)
+    {
         return false;
+    }
     return true;
 }
 
 // 检查字符串是否为有效的浮点数
 bool Parser::isD(std::string str) noexcept
 {
-    if (str.empty() || str.size() > 13)
-        return false;
-    if (str == "0")
-        return true;
-    if (str[0] == '0')
+    try
     {
-        if (str.size() == 1)
-            return false;
-        if (str[1] != '.')
-            return false;
+        expect(str.size()).ge(1).And().le(13);
+        expect(str).toMatch("^(0(\\.[0-9]+)?|[1-9][0-9]*(\\.[0-9]+)?)$");
     }
-    int dot_pos = -1;
-    for (int i = 0; i < str.size(); i++)
+    catch (...)
     {
-        if (!std::isdigit(static_cast<unsigned char>(str[i])) && str[i] != '.')
-            return false;
-        if (str[i] == '.')
-        {
-            if (i == 0 || i == str.size() - 1)
-                return false;
-            if (dot_pos != -1)
-                return false;
-            dot_pos = i;
-        }
+        return false;
     }
     return true;
 }
@@ -706,7 +680,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                 break;
             }
             long long num = stoll(quantity);
-            if (num <= 0 || num > 2147483647)
+            if (num <= 0)
             {
                 std::cout << "Invalid\n";
                 break;

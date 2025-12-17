@@ -21,7 +21,7 @@ bool user::is_ID_or_passwd_valid(const std::string &ID_or_passwd)
 {
     try
     {
-        expect(ID_or_passwd.size()).ge(0).And().le(30);
+        expect(ID_or_passwd.size()).ge(1).And().le(30);
         expect(ID_or_passwd).toMatch("^[A-Za-z0-9_]+$");
     }
     catch (...)
@@ -35,7 +35,7 @@ bool user::is_name_valid(const std::string &name)
 {
     try
     {
-        expect(name.size()).ge(0).And().le(30);
+        expect(name.size()).ge(1).And().le(30);
         expect(name).toMatch("^[\x21-\x7E]+$");
     }
     catch (...)
