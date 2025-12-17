@@ -770,13 +770,10 @@ public:
         // 验证并标记 ISBN 是否需要修改
         if (!isbn_.empty())
         {
-            if (isbn_.size() > 20)
-                return false; // 超出长度限制
-            for (int i = 0; i < isbn_.size(); i++)
+            if (!Book::is_ISBN_valid(isbn_))
             {
-                if (isbn_[i] < 33 || isbn_[i] > 126)
-                    return false; // 包含非法字符
-            }
+                return false;
+            } // ISBN不合法
             if (isbn_ == selected_book || isbn_storage.Find(isbn_))
             {
                 return false; // 新 ISBN 已存在
@@ -787,22 +784,22 @@ public:
         // 验证书名和作者是否需要修改
         if (!name_.empty() || !author_.empty())
         {
-            if (name_.size() > 60 || author_.size() > 60)
-                return false; // 超出长度限制
-            for (int i = 0; i < name_.size(); i++)
-            {
-                if (name_[i] < 33 || name_[i] > 126 || name_[i] == '"')
-                    return false; // 非法字符
-            }
-            for (int i = 0; i < author_.size(); i++)
-            {
-                if (author_[i] < 33 || author_[i] > 126 || author_[i] == '"')
-                    return false; // 非法字符
-            }
             if (!name_.empty())
+            {
+                if (!Book::is_author_or_name_valid(name_))
+                {
+                    return false;
+                }
                 is_change_name = true;
+            }
             if (!author_.empty())
+            {
+                if (!Book::is_author_or_name_valid(author_))
+                {
+                    return false;
+                }
                 is_change_author = true;
+            }
         }
 
         // 验证价格是否合法

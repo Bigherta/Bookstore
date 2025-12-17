@@ -26,10 +26,7 @@ TokenStream Parser::tokenize(const std::string &line, bool &is_valid) const
     while (column < line.size())
     {
         char ch = line[column];
-        if (static_cast<unsigned char>(ch) > 127)
-        {
-            is_valid = false; // 非ASCII字符无效
-        }
+
         // 如果ch是空格
         if (std::isspace(static_cast<int>(ch)))
         {
@@ -438,11 +435,15 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
                     for (char ch: search_value)
                     {
-                        if (!std::isprint(static_cast<int>(ch)) || ch == '|' || ch == '"')
+                        if (ch == '|' || ch == '"')
                         {
                             is_valid = false;
                             break;
                         }
+                    }
+                    if (!Book::is_keyword_invalid(search_value))
+                    {
+                        is_valid = false;
                     }
                     if (!is_valid)
                     {

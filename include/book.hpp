@@ -15,9 +15,9 @@
 class Book
 {
 private:
-    char book_name[61]{}; ///< 书名
-    char author[61]{}; ///< 作者
-    char keywords[61]{}; ///< 关键词，用 '|' 分隔
+    char book_name[241]{}; ///< 书名
+    char author[241]{}; ///< 作者
+    char keywords[241]{}; ///< 关键词，用 '|' 分隔
     char isbn[21]{}; ///< ISBN 编号
     char price[14]{}; ///< 价格
     int stock = 0; ///< 库存数量
