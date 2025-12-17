@@ -441,7 +441,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                             break;
                         }
                     }
-                    if (!Book::is_keyword_invalid(search_value))
+                    if (Book::is_keyword_invalid(search_value))
                     {
                         is_valid = false;
                     }
