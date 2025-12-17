@@ -1,6 +1,7 @@
 #include "../include/parser.hpp"
 #include <cctype>
 #include <iostream>
+#include "../include/book.hpp"
 #include "../include/log.hpp"
 #include "../include/user.hpp"
 
@@ -215,9 +216,8 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         }
 
         case PASSWD: {
-            // 修改密码命令：passwd [User-ID] [Current-Password] [New-Password] 或 passwd [User-ID] [New-Password] (管理员)
-            // 权限：1+ 或管理员修改他人
-            // 参数：User-ID, Current-Password (可选), New-Password
+            // 修改密码命令：passwd [User-ID] [Current-Password] [New-Password] 或 passwd [User-ID] [New-Password]
+            // (管理员) 权限：1+ 或管理员修改他人 参数：User-ID, Current-Password (可选), New-Password
 
             if (tokens_.size() < 3 || tokens_.size() > 4 || userManager.getCurrentUser().privilegeLevel < 1)
             {
@@ -413,22 +413,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                 if (search_param == ISBN)
                 {
                     search_value = text_.substr(column, text_.size() - column);
-                    if (search_value.empty() || search_value.size() > 20)
-                    {
-                        std::cout << "Invalid\n";
-                        break;
-                    }
-                    bool is_valid = true;
-
-                    for (char ch: search_value)
-                    {
-                        if (!std::isprint(static_cast<int>(ch)))
-                        {
-                            is_valid = false;
-                            break;
-                        }
-                    }
-                    if (!is_valid)
+                    if (!Book::is_ISBN_valid(search_value))
                     {
                         std::cout << "Invalid\n";
                         break;
@@ -445,22 +430,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                     }
                     search_value = text_.substr(column + 1, text_.size() - column - 2);
 
-                    if (search_value.empty() || search_value.size() > 60)
-                    {
-                        std::cout << "Invalid\n";
-                        break;
-                    }
-                    bool is_valid = true;
-
-                    for (char ch: search_value)
-                    {
-                        if (!std::isprint(static_cast<int>(ch)) || ch == '"')
-                        {
-                            is_valid = false;
-                            break;
-                        }
-                    }
-                    if (!is_valid)
+                    if (!Book::is_author_or_name_valid(search_value))
                     {
                         std::cout << "Invalid\n";
                         break;
@@ -528,6 +498,12 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                 break;
             }
             std::string isbn = tokens_.get()->text;
+
+            if (!Book::is_ISBN_valid(isbn))
+            {
+                std::cout << "Invalid\n";
+                break;
+            }
             storage<IsbnTag> storage_;
             if (!storage_.Find(isbn))
             {
@@ -563,19 +539,8 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                 break;
             }
             std::string isbn_ = tokens_.get()->text;
-            bool is_valid = true;
-            if (isbn_.size() > 20)
-                is_valid = false; // 超出长度限制
 
-            for (int i = 0; i < isbn_.size(); i++)
-            {
-                if (isbn_[i] < 33 || isbn_[i] > 126)
-                {
-                    is_valid = false; // 包含非法字符
-                    break;
-                }
-            }
-            if (!is_valid)
+            if (!Book::is_ISBN_valid(isbn_))
             {
                 std::cout << "Invalid\n";
                 break;

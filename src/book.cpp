@@ -3,28 +3,59 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include "../include/validator.hpp"
+
+// 判断ISBN是否合法（'|' 分隔）
+bool Book::is_ISBN_valid(const std::string &ISBN)
+{
+    try
+    {
+        expect(ISBN.size()).le(20).And().ge(0);
+
+        for (char ch: ISBN)
+            expect(ch).ge(33).Or().le(126);
+    }
+    catch (...)
+    {
+        return false;
+    }
+    return true;
+}
+
+// 判断书名或作者名是否合法（'|' 分隔）
+bool Book::is_author_or_name_valid(const std::string &author_or_name)
+{
+    try
+    {
+        expect(author_or_name.size()).le(60).And().ge(0);
+
+        for (char ch: author_or_name)
+            expect(ch).ge(33).Or().le(126).And().Not().toBe('"');
+    }
+    catch (...)
+    {
+        return false;
+    }
+    return true;
+}
 
 // 判断关键词是否合法（'|' 分隔）
 bool Book::is_keyword_invalid(const std::string &keyword)
 {
-    // 1. 检查总长度
-    if (keyword.size() > 60 || keyword.empty())
+    // 检查总长度与字符合法性
+    try
+    {
+        expect(keyword.size()).le(60).And().ge(0);
+        expect(keyword.back()).Not().toBe('|');
+        expect(keyword.front()).Not().toBe('|');
+        for (char ch: keyword)
+            expect(ch).ge(33).Or().le(126).Not().toBe('"');
+    }
+    catch (...)
     {
         return true;
     }
 
-    // 2. 检查字符合法性
-    if (keyword.back() == '|' || keyword.front() == '|')
-    {
-        return true;
-    }
-    for (char ch: keyword)
-    {
-        if (ch < 33 || ch > 126 || ch == '"')
-        {
-            return true;
-        }
-    }
     std::unordered_set<std::string> exist_keywords;
     int column = 0;
     while (column < keyword.size())
@@ -76,7 +107,6 @@ Book::Book(const std::string &isbn_)
     price[sizeof(price) - 1] = '\0';
 }
 
-
 // 获取关键词列表（按 '|' 分割）
 std::vector<std::string> Book::get_keyword()
 {
@@ -96,7 +126,6 @@ std::vector<std::string> Book::get_keyword()
     return result;
 }
 
-
 // get/set 简单实现
 std::string Book::get_book_name() { return std::string(book_name); }
 std::string Book::get_author() { return std::string(author); }
@@ -104,24 +133,9 @@ std::string Book::get_isbn() { return std::string(isbn); }
 std::string Book::get_price() { return std::string(price); }
 int Book::get_stock() { return stock; }
 
-void Book::set_book_name(const std::string &name)
-{
-    std::snprintf(book_name, sizeof(book_name), "%s", name.c_str());
-}
-void Book::set_author(const std::string &auth)
-{
-    std::snprintf(author, sizeof(author), "%s",auth.c_str());
-}
-void Book::set_keywords(const std::string &key)
-{
-    std::snprintf(keywords, sizeof(keywords), "%s", key.c_str());
-}
-void Book::set_isbn(const std::string &isbn_)
-{
-    std::snprintf(isbn, sizeof(isbn), "%s", isbn_.c_str());
-}
-void Book::set_price(const std::string &price_)
-{
-    std::snprintf(price, sizeof(price), "%s", price_.c_str());
-}
+void Book::set_book_name(const std::string &name) { std::snprintf(book_name, sizeof(book_name), "%s", name.c_str()); }
+void Book::set_author(const std::string &auth) { std::snprintf(author, sizeof(author), "%s", auth.c_str()); }
+void Book::set_keywords(const std::string &key) { std::snprintf(keywords, sizeof(keywords), "%s", key.c_str()); }
+void Book::set_isbn(const std::string &isbn_) { std::snprintf(isbn, sizeof(isbn), "%s", isbn_.c_str()); }
+void Book::set_price(const std::string &price_) { std::snprintf(price, sizeof(price), "%s", price_.c_str()); }
 void Book::set_stock(int s) { stock = s; }

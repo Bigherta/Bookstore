@@ -112,6 +112,8 @@ public:
      */
     Book(const Book &other);
 
+    static bool is_ISBN_valid(const std::string &ISBN);
+    static bool is_author_or_name_valid(const std::string &author_or_name);
     /**
      * @brief 检查关键词是否合法
      * @param keyword 要检查的关键词
