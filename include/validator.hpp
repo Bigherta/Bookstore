@@ -92,9 +92,7 @@ template <typename CharT>
 class validator_str<std::basic_string<CharT>> : public validator<std::basic_string<CharT>>
 {
    public:
-    validator_str(std::basic_string<CharT> val, bool revert_) {
-        this->value = val;
-        this->is_revert = revert_;
+    validator_str(std::basic_string<CharT> val, bool revert_) : validator<std::basic_string<CharT>>(val, revert_) {
     }
     validator_str &toBeConsistedOf(const std::basic_string<CharT> &obj)
     {
