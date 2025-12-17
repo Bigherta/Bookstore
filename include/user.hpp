@@ -18,8 +18,18 @@ public:
     int privilegeLevel = 0; // 0: visitor, 1: customer, 3: worker, 7: manager
     bool is_valid = true;
 
+    /**
+     * @brief 默认构造函数。
+     */
     user() {}
 
+    /**
+     * @brief 带参数的构造函数。
+     * @param userID_ 用户ID。
+     * @param username_ 用户名。
+     * @param password_ 密码。
+     * @param privilegeLevel_ 权限等级。
+     */
     user(const std::string &userID_, const std::string &username_, const std::string &password_,
          int privilegeLevel_ = 0) : privilegeLevel(privilegeLevel_)
     {
@@ -28,7 +38,18 @@ public:
         std::snprintf(password, sizeof(password), "%s", password_.c_str());
     }
 
+    /**
+     * @brief 检查ID或密码是否有效。
+     * @param ID_or_passwd ID或密码字符串。
+     * @return 如果有效返回true，否则false。
+     */
     static bool is_ID_or_passwd_valid(const std::string &ID_or_passwd);
+
+    /**
+     * @brief 检查名字是否有效。
+     * @param name 名字字符串。
+     * @return 如果有效返回true，否则false。
+     */
     static bool is_name_valid(const std::string &name);
 
 };
@@ -130,8 +151,15 @@ public:
      */
     std::string &getSelectedbook();
 
+    /**
+     * @brief 检查是否有效获取选中的书籍。
+     * @return 如果有效返回true，否则false。
+     */
     bool is_valid_to_getSelectedbook();
 
+    /**
+     * @brief 退出系统或执行清理。
+     */
     void exit ();
 
 private:

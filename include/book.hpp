@@ -112,8 +112,20 @@ public:
      */
     Book(const Book &other);
 
+    /**
+     * @brief 检查ISBN是否有效
+     * @param ISBN ISBN字符串
+     * @return true 如果有效，否则false
+     */
     static bool is_ISBN_valid(const std::string &ISBN);
+
+    /**
+     * @brief 检查作者或书名是否有效
+     * @param author_or_name 作者或书名字符串
+     * @return true 如果有效，否则false
+     */
     static bool is_author_or_name_valid(const std::string &author_or_name);
+
     /**
      * @brief 检查关键词是否合法
      * @param keyword 要检查的关键词

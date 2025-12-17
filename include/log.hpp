@@ -36,14 +36,14 @@ private:
     MemoryRiver<operate> operation_record;   /**< 操作记录存储 */
 
 public:
-    /** 财务记录查询
+    /** @brief 财务记录查询
      * @param count_ 查询的交易笔数，默认为 -1，表示查询所有交易总额
      * @return 若查询合法则返回 true 并输出结果，否则返回 false
      */
     bool ShowFinance(long long count_ = -1);
 
 
-    /** 记录一笔交易
+    /** @brief 记录一笔交易
      * @param income 交易的收入金额
      * @param expense 交易的支出金额
      */
