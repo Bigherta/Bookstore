@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'modify.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_MODIFY_H
 #define UI_MODIFY_H
 
@@ -48,7 +40,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("ModifyDialog"));
         Dialog->resize(400, 300);
         verticalLayout = new QVBoxLayout(Dialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -153,12 +145,12 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("Dialog", "Dialog", nullptr));
-        label_ISBN->setText(QCoreApplication::translate("Dialog", "ISBN:", nullptr));
-        label_title->setText(QCoreApplication::translate("Dialog", "Title:", nullptr));
-        label_author->setText(QCoreApplication::translate("Dialog", "Author:", nullptr));
-        label_keyword->setText(QCoreApplication::translate("Dialog", "Keyword:", nullptr));
-        pushButton->setText(QCoreApplication::translate("Dialog", "Modify", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("ModifyDialog", "Modify", nullptr));
+        label_ISBN->setText(QCoreApplication::translate("ModifyDialog", "ISBN:", nullptr));
+        label_title->setText(QCoreApplication::translate("ModifyDialog", "Title:", nullptr));
+        label_author->setText(QCoreApplication::translate("ModifyDialog", "Author:", nullptr));
+        label_keyword->setText(QCoreApplication::translate("ModifyDialog", "Keyword:", nullptr));
+        pushButton->setText(QCoreApplication::translate("ModifyDialog", "Modify", nullptr));
     } // retranslateUi
 
 };

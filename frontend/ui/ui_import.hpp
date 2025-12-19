@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'import.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_IMPORT_H
 #define UI_IMPORT_H
 
@@ -30,7 +22,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("ImportDialog"));
         Dialog->resize(400, 250);
         label_quantity = new QLabel(Dialog);
         label_quantity->setObjectName(QString::fromUtf8("label_quantity"));
@@ -57,10 +49,10 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("Dialog", "Dialog", nullptr));
-        label_quantity->setText(QCoreApplication::translate("Dialog", "Quantity:", nullptr));
-        label_cost->setText(QCoreApplication::translate("Dialog", "Cost:", nullptr));
-        pushButton_import->setText(QCoreApplication::translate("Dialog", "Import", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("ImportDialog", "Import", nullptr));
+        label_quantity->setText(QCoreApplication::translate("ImportDialog", "Quantity:", nullptr));
+        label_cost->setText(QCoreApplication::translate("ImportDialog", "Cost:", nullptr));
+        pushButton_import->setText(QCoreApplication::translate("ImportDialog", "Import", nullptr));
     } // retranslateUi
 
 };

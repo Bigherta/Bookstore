@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'finance.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_FINANCE_H
 #define UI_FINANCE_H
 
@@ -28,7 +20,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("FinanceDialog"));
         Dialog->resize(400, 300);
         label = new QLabel(Dialog);
         label->setObjectName(QString::fromUtf8("label"));
@@ -48,9 +40,9 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("Dialog", "Dialog", nullptr));
-        label->setText(QCoreApplication::translate("Dialog", "Count:", nullptr));
-        pushButton->setText(QCoreApplication::translate("Dialog", "Show Finance", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("FinanceDialog", "Show Finance", nullptr));
+        label->setText(QCoreApplication::translate("FinanceDialog", "Count:", nullptr));
+        pushButton->setText(QCoreApplication::translate("FinanceDialog", "Show Finance", nullptr));
     } // retranslateUi
 
 };

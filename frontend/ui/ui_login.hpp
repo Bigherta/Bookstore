@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'login.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_LOGIN_H
 #define UI_LOGIN_H
 
@@ -44,7 +36,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("LoginDialog"));
         Dialog->resize(400, 200);
         verticalLayout = new QVBoxLayout(Dialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -62,7 +54,7 @@ public:
         label_userID = new QLabel(formWidget);
         label_userID->setObjectName(QString::fromUtf8("label_userID"));
 
-        gridLayout->addWidget(label_userID, 0, 0, 1, 1, Qt::AlignRight|Qt::AlignVCenter);
+        gridLayout->addWidget(label_userID, 0, 0, 1, 1, Qt::AlignRight | Qt::AlignVCenter);
 
         lineEdit_userID = new QLineEdit(formWidget);
         lineEdit_userID->setObjectName(QString::fromUtf8("lineEdit_userID"));
@@ -75,7 +67,7 @@ public:
         label_password = new QLabel(formWidget);
         label_password->setObjectName(QString::fromUtf8("label_password"));
 
-        gridLayout->addWidget(label_password, 1, 0, 1, 1, Qt::AlignRight|Qt::AlignVCenter);
+        gridLayout->addWidget(label_password, 1, 0, 1, 1, Qt::AlignRight | Qt::AlignVCenter);
 
         lineEdit_password = new QLineEdit(formWidget);
         lineEdit_password->setObjectName(QString::fromUtf8("lineEdit_password"));
@@ -125,16 +117,19 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        label_userID->setText(QCoreApplication::translate("", "userID:", nullptr));
-        label_password->setText(QCoreApplication::translate("", "password:", nullptr));
-        pushButton->setText(QCoreApplication::translate("", "login", nullptr));
-        (void)Dialog;
-    } // retranslateUi
+        Dialog->setWindowTitle(QCoreApplication::translate("LoginDialog", "Log In", nullptr));
 
+        label_userID->setText(QCoreApplication::translate("LoginDialog", "userID:", nullptr));
+        label_password->setText(QCoreApplication::translate("LoginDialog", "password:", nullptr));
+        pushButton->setText(QCoreApplication::translate("LoginDialog", "Log In", nullptr));
+    }
 };
 
-namespace Ui {
-    class LoginDialog: public Ui_LoginDialog {};
+namespace Ui
+{
+    class LoginDialog : public Ui_LoginDialog
+    {
+    };
 } // namespace Ui
 
 QT_END_NAMESPACE

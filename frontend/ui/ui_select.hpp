@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'select.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_SELECT_H
 #define UI_SELECT_H
 
@@ -42,7 +34,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("SelectDialog"));
         Dialog->resize(400, 200);
         verticalLayout = new QVBoxLayout(Dialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -105,9 +97,9 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("Dialog", "Dialog", nullptr));
-        label_isbn->setText(QCoreApplication::translate("Dialog", "ISBN:", nullptr));
-        pushButton_select->setText(QCoreApplication::translate("Dialog", "Select it!", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("SelectDialog", "Select", nullptr));
+        label_isbn->setText(QCoreApplication::translate("SelectDialog", "ISBN:", nullptr));
+        pushButton_select->setText(QCoreApplication::translate("SelectDialog", "Select it!", nullptr));
     } // retranslateUi
 
 };

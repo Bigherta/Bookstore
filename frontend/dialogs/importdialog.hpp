@@ -52,6 +52,7 @@ private slots:
         } else {
             ui.lineEdit_quantity->clear();
             ui.lineEdit_cost->clear();
+            accept();
         }
     }
 

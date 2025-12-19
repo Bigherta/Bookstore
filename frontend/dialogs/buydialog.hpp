@@ -31,9 +31,9 @@ private slots:
 
         if (result == "Invalid\n") {
             QMessageBox::critical(this, "Error", "Operation not valid!");
-        } else {
-            QMessageBox::information(this, "Success", QString::fromStdString(result));
-        }
+            return;
+        } 
+        accept();
     }
 
 private:

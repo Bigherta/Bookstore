@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'mainwindow.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_MAINWINDOW_H
 #define UI_MAINWINDOW_H
 
@@ -38,15 +30,15 @@ public:
     QAction *actionShowFinance;
     QAction *actionReport;
     QAction *actionLogAll;
-    QAction *actionExit;          // 新增 Exit action
+    QAction *actionExit;
 
     // Widgets
     QWidget *centralwidget;
     QMenuBar *menubar;
-    QMenu *menuFile;              // 新增 File 菜单
     QMenu *menuUser;
     QMenu *menuBook;
     QMenu *menuLog;
+    QMenu *menuExit;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -84,7 +76,7 @@ public:
         actionReport->setObjectName(QString::fromUtf8("actionReport"));
         actionLogAll = new QAction(MainWindow);
         actionLogAll->setObjectName(QString::fromUtf8("actionLogAll"));
-        actionExit = new QAction(MainWindow);  // 新建 Exit action
+        actionExit = new QAction(MainWindow);
         actionExit->setObjectName(QString::fromUtf8("actionExit"));
 
         // Central widget
@@ -96,32 +88,31 @@ public:
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
         menubar->setGeometry(QRect(0, 0, 717, 20));
+        MainWindow->setMenuBar(menubar);
 
         // Menus
-        menuFile = new QMenu(menubar);  // 新增 File 菜单
-        menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuUser = new QMenu(menubar);
         menuUser->setObjectName(QString::fromUtf8("menuUser"));
         menuBook = new QMenu(menubar);
         menuBook->setObjectName(QString::fromUtf8("menuBook"));
         menuLog = new QMenu(menubar);
         menuLog->setObjectName(QString::fromUtf8("menuLog"));
-
-        MainWindow->setMenuBar(menubar);
+        menuExit = new QMenu(menubar);
+        menuExit->setObjectName(QString::fromUtf8("menuExit"));
 
         // Status bar
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
         MainWindow->setStatusBar(statusbar);
 
-        // Add menus to menubar
-        menubar->addAction(menuFile->menuAction());
+        // Menu order: User | Book | Log | Exit
         menubar->addAction(menuUser->menuAction());
         menubar->addAction(menuBook->menuAction());
         menubar->addAction(menuLog->menuAction());
+        menubar->addAction(menuExit->menuAction());
 
-        // File menu
-        menuFile->addAction(actionExit);
+        // Exit menu
+        menuExit->addAction(actionExit);
 
         // User menu
         menuUser->addAction(actionLogin);
@@ -148,13 +139,12 @@ public:
         menuLog->addAction(actionLogAll);
 
         retranslateUi(MainWindow);
-
         QMetaObject::connectSlotsByName(MainWindow);
-    } // setupUi
+    }
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
+        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Cyrene's Bookstore", nullptr));
         actionLogin->setText(QCoreApplication::translate("MainWindow", "Login", nullptr));
         actionLogout->setText(QCoreApplication::translate("MainWindow", "Logout", nullptr));
         actionRegister->setText(QCoreApplication::translate("MainWindow", "Register", nullptr));
@@ -169,17 +159,18 @@ public:
         actionShowFinance->setText(QCoreApplication::translate("MainWindow", "Show Finance", nullptr));
         actionReport->setText(QCoreApplication::translate("MainWindow", "Report", nullptr));
         actionLogAll->setText(QCoreApplication::translate("MainWindow", "Log All", nullptr));
-        actionExit->setText(QCoreApplication::translate("MainWindow", "Leave", nullptr)); 
-        menuFile->setTitle(QCoreApplication::translate("MainWindow", "Exit", nullptr));
+        actionExit->setText(QCoreApplication::translate("MainWindow", "Exit", nullptr));
+
         menuUser->setTitle(QCoreApplication::translate("MainWindow", "User", nullptr));
         menuBook->setTitle(QCoreApplication::translate("MainWindow", "Book", nullptr));
         menuLog->setTitle(QCoreApplication::translate("MainWindow", "Log", nullptr));
-    } // retranslateUi
+        menuExit->setTitle(QCoreApplication::translate("MainWindow", "Exit", nullptr));
+    }
 };
 
 namespace Ui {
-    class MainWindow: public Ui_MainWindow {};
-} // namespace Ui
+    class MainWindow : public Ui_MainWindow {};
+}
 
 QT_END_NAMESPACE
 

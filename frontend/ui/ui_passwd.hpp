@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'passwd.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_PASSWD_H
 #define UI_PASSWD_H
 
@@ -46,7 +38,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("PasswdDialog"));
         Dialog->resize(420, 260);
         verticalLayout = new QVBoxLayout(Dialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -136,11 +128,11 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("Dialog", "Change Password", nullptr));
-        label_userID->setText(QCoreApplication::translate("Dialog", "User ID:", nullptr));
-        label_oldPassword->setText(QCoreApplication::translate("Dialog", "Original Password:", nullptr));
-        label_newPassword->setText(QCoreApplication::translate("Dialog", "New Password:", nullptr));
-        pushButton_change->setText(QCoreApplication::translate("Dialog", "Change", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("PasswdDialog", "Change Password", nullptr));
+        label_userID->setText(QCoreApplication::translate("PasswdDialog", "User ID:", nullptr));
+        label_oldPassword->setText(QCoreApplication::translate("PasswdDialog", "Original Password:", nullptr));
+        label_newPassword->setText(QCoreApplication::translate("PasswdDialog", "New Password:", nullptr));
+        pushButton_change->setText(QCoreApplication::translate("PasswdDialog", "Change", nullptr));
     } // retranslateUi
 
 };

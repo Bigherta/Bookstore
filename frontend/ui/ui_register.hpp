@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'register.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_REGISTER_H
 #define UI_REGISTER_H
 
@@ -46,7 +38,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("RegisterDialog"));
         Dialog->resize(400, 300);
         verticalLayout = new QVBoxLayout(Dialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -137,11 +129,11 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("Dialog", "Dialog", nullptr));
-        label_userID->setText(QCoreApplication::translate("Dialog", "User ID:", nullptr));
-        label_password->setText(QCoreApplication::translate("Dialog", "Password:", nullptr));
-        label_username->setText(QCoreApplication::translate("Dialog", "Username:", nullptr));
-        pushButton->setText(QCoreApplication::translate("Dialog", "Register", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("RegisterDialog", "Register", nullptr));
+        label_userID->setText(QCoreApplication::translate("RegisterDialog", "User ID:", nullptr));
+        label_password->setText(QCoreApplication::translate("RegisterDialog", "Password:", nullptr));
+        label_username->setText(QCoreApplication::translate("RegisterDialog", "Username:", nullptr));
+        pushButton->setText(QCoreApplication::translate("RegisterDialog", "Register", nullptr));
     } // retranslateUi
 
 };

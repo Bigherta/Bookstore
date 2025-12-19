@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'showbook.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_SHOWBOOK_H
 #define UI_SHOWBOOK_H
 
@@ -48,7 +40,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("ShowDialog"));
         Dialog->resize(400, 300);
         verticalLayout = new QVBoxLayout(Dialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -153,12 +145,12 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("Dialog", "Dialog", nullptr));
-        label_ISBN->setText(QCoreApplication::translate("Dialog", "ISBN:", nullptr));
-        label_title->setText(QCoreApplication::translate("Dialog", "Title:", nullptr));
-        label_author->setText(QCoreApplication::translate("Dialog", "Author:", nullptr));
-        label_keyword->setText(QCoreApplication::translate("Dialog", "Keyword:", nullptr));
-        pushButton->setText(QCoreApplication::translate("Dialog", "Show", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("ShowDialog", "Show Books", nullptr));
+        label_ISBN->setText(QCoreApplication::translate("ShowDialog", "ISBN:", nullptr));
+        label_title->setText(QCoreApplication::translate("ShowDialog", "Title:", nullptr));
+        label_author->setText(QCoreApplication::translate("ShowDialog", "Author:", nullptr));
+        label_keyword->setText(QCoreApplication::translate("ShowDialog", "Keyword:", nullptr));
+        pushButton->setText(QCoreApplication::translate("ShowDialog", "Show", nullptr));
     } // retranslateUi
 
 };

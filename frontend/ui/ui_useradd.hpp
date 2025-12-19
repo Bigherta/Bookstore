@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'useradd.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_USERADD_H
 #define UI_USERADD_H
 
@@ -48,7 +40,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("UseraddDialog"));
         Dialog->resize(400, 300);
         verticalLayout = new QVBoxLayout(Dialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -151,12 +143,12 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("", "Dialog", nullptr));
-        label_userID->setText(QCoreApplication::translate("", "User ID:", nullptr));
-        label_password->setText(QCoreApplication::translate("", "Password:", nullptr));
-        label_privilege->setText(QCoreApplication::translate("", "Privilege:", nullptr));
-        label_username->setText(QCoreApplication::translate("", "Username:", nullptr));
-        pushButton->setText(QCoreApplication::translate("", "Add", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("UseraddDialog", "Add User", nullptr));
+        label_userID->setText(QCoreApplication::translate("UseraddDialog", "User ID:", nullptr));
+        label_password->setText(QCoreApplication::translate("UseraddDialog", "Password:", nullptr));
+        label_privilege->setText(QCoreApplication::translate("UseraddDialog", "Privilege:", nullptr));
+        label_username->setText(QCoreApplication::translate("UseraddDialog", "Username:", nullptr));
+        pushButton->setText(QCoreApplication::translate("UseraddDialog", "Add", nullptr));
     } // retranslateUi
 
 };

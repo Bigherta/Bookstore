@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'report.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_REPORT_H
 #define UI_REPORT_H
 
@@ -35,7 +27,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("ReportDialog"));
         Dialog->resize(400, 300);
         verticalLayout = new QVBoxLayout(Dialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -85,9 +77,9 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("Dialog", "Dialog", nullptr));
-        pushButton->setText(QCoreApplication::translate("Dialog", "Finance", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("Dialog", "Employee", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("ReportDialog", "Report", nullptr));
+        pushButton->setText(QCoreApplication::translate("ReportDialog", "Finance", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("ReportDialog", "Employee", nullptr));
     } // retranslateUi
 
 };

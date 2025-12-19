@@ -1,11 +1,3 @@
-/********************************************************************************
-** Form generated from reading UI file 'delete.ui'
-**
-** Created by: Qt User Interface Compiler version 5.15.13
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
-********************************************************************************/
-
 #ifndef UI_DELETE_H
 #define UI_DELETE_H
 
@@ -42,7 +34,7 @@ public:
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("Dialog"));
+            Dialog->setObjectName(QString::fromUtf8("DeleteDialog"));
         Dialog->resize(400, 200);
         verticalLayout = new QVBoxLayout(Dialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -108,9 +100,9 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("Dialog", "Dialog", nullptr));
-        label_userID->setText(QCoreApplication::translate("Dialog", "User ID:", nullptr));
-        pushButton->setText(QCoreApplication::translate("Dialog", "Delete", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("DeleteDialog", "Delete", nullptr));
+        label_userID->setText(QCoreApplication::translate("DeleteDialog", "User ID:", nullptr));
+        pushButton->setText(QCoreApplication::translate("DeleteDialog", "Delete", nullptr));
     } // retranslateUi
 
 };

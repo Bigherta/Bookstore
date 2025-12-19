@@ -44,7 +44,8 @@ private slots:
 
         // 构造 useradd 命令
         std::string command = "useradd " + userID.toStdString() + " " + password.toStdString() + " " +
-                              username.toStdString() + " " + privilege.toStdString();
+                              privilege.toStdString() + " " + username.toStdString();
+
         bool running = true;
         std::string result = parser.execute(command, userManager, Logger, running);
 
