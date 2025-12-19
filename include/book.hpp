@@ -1,6 +1,7 @@
 #pragma once
 #include <iomanip>
 #include <ostream>
+#include <sstream>
 #ifndef BOOK_HPP
 #define BOOK_HPP
 
@@ -156,17 +157,15 @@ public:
      * @param other Book 对象
      * @return std::ostream& 输出流引用
      */
-    friend std::ostream &operator<<(std::ostream &os, const Book &other)
+    void output(std::string &result)
     {
-        std::string isbn_ = other.isbn;
-        std::string name_ = other.book_name;
-        std::string author_ = other.author;
-        std::string keyword_ = other.keywords;
-        os << isbn_ << '\t' << name_ << '\t' << author_ << '\t' << keyword_ << '\t';
-        double price_val = std::stod(std::string(other.price));
-        os << std::fixed << std::setprecision(2) << price_val << '\t';
-        os << other.stock << '\n';
-        return os;
+        std::ostringstream oss;
+       
+        oss << isbn << '\t' << book_name << '\t' << author << '\t' << keywords << '\t';
+        double price_val = std::stod(std::string(price));
+        oss << std::fixed << std::setprecision(2) << price_val << '\t';
+        oss << stock << '\n';
+        result += oss.str();
     }
 };
 

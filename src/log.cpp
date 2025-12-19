@@ -1,288 +1,205 @@
-#include "../include/log.hpp"
+#include "../include/Log.hpp"
 #include <cstdio>
 #include <cstring>
 #include <iomanip>
-#include <iostream>
+#include <sstream>
 #include <string>
-
+#include "Token.hpp"
 
 // 显示财务信息
-bool log::ShowFinance(long long count_)
+bool Log::ShowFinance(std::string &result, long long count_)
 {
-    // 如果指定查询交易笔数为 0，直接输出空行，表示合法指令
+    std::ostringstream oss;
+
     if (count_ == 0)
     {
-        std::cout << '\n';
+        oss << "\n";
+        result += oss.str();
         return true;
     }
 
-    // 初始化 MemoryRiver 对象，确保可以读取日志文件
     purchase_record.initialise("purchase");
 
-    // 获取当前总交易笔数（存储在 info 位置 1）
     int cur_count;
     purchase_record.get_info(cur_count, 1);
 
-    // 如果请求查询的交易笔数大于总交易笔数，则操作非法
-    if (cur_count < count_)
-    {
+    if (count_ != -1 && cur_count < count_)
         return false;
-    }
 
-    // 获取日志文件的总字节数，用于遍历交易记录
-
-    record temp; // 用于临时存储读取的记录
+    record temp;
     int start_index = 2 * sizeof(int);
     int end_index = start_index + (cur_count - 1) * sizeof(record);
-    double inc = 0; // 累计收入
-    double exp = 0; // 累计支出
+    double inc = 0;
+    double exp = 0;
 
-    // 遍历日志文件中的每一条记录
     for (int i = 1; i <= cur_count; i++)
     {
-        // 读取记录到 temp
         purchase_record.read(temp, end_index);
-
-        // 累加收入和支出
         inc += temp.income;
         exp += temp.expense;
 
-        // 如果当前记录的 count 等于查询的 count，则输出累计金额
         if (i == count_)
         {
-            std::cout << "+ " << std::fixed << std::setprecision(2) << inc;
-            std::cout << " - " << std::fixed << std::setprecision(2) << exp;
-            std::cout << '\n';
+            oss << "+ " << std::fixed << std::setprecision(2) << inc
+                << " - " << std::fixed << std::setprecision(2) << exp << "\n";
+            result += oss.str();
             return true;
         }
         end_index -= sizeof(record);
     }
 
-    // 如果 count_ = -1，则输出所有交易的总额
     if (count_ == -1)
     {
-        std::cout << "+ " << std::fixed << std::setprecision(2) << inc;
-        std::cout << " - " << std::fixed << std::setprecision(2) << exp;
-        std::cout << '\n';
+        oss << "+ " << std::fixed << std::setprecision(2) << inc
+            << " - " << std::fixed << std::setprecision(2) << exp << "\n";
+        result += oss.str();
         return true;
     }
+
     return false;
 }
 
-// 报告财务信息：显示所有交易详情和总额
-void log::ReportFinance()
+// 报告财务信息
+void Log::ReportFinance(std::string &result)
 {
-
-    // 初始化 MemoryRiver 对象，确保可以读取日志文件
+    std::ostringstream oss;
     purchase_record.initialise("purchase");
 
-    // 获取当前总交易笔数（存储在 info 位置 1）
     int cur_count;
     purchase_record.get_info(cur_count, 1);
 
-    // 获取日志文件的总字节数，用于遍历交易记录
     if (cur_count == 0)
     {
-        std::cout << "所有交易总额为：\n";
-        std::cout << "+ 0.00 - 0.00\n";
+        oss << "所有交易总额为：\n+ 0.00 - 0.00\n";
+        result += oss.str();
         return;
     }
 
-    record temp; // 用于临时存储读取的记录
+    record temp;
     int start_index = 2 * sizeof(int);
-    int end_index = start_index + (cur_count - 1) * sizeof(record);
-    double inc = 0; // 累计收入
-    double exp = 0; // 累计支出
+    double inc = 0;
+    double exp = 0;
 
-    // 遍历日志文件中的每一条记录
     for (int i = 1; i <= cur_count; i++)
     {
-        // 读取记录到 temp
         purchase_record.read(temp, start_index);
-
-        // 累加收入和支出
         inc += temp.income;
         exp += temp.expense;
 
-        std::cout << "+ " << std::fixed << std::setprecision(2) << temp.income;
-        std::cout << " - " << std::fixed << std::setprecision(2) << temp.expense;
-        std::cout << '\n';
+        oss << "+ " << std::fixed << std::setprecision(2) << temp.income
+            << " - " << std::fixed << std::setprecision(2) << temp.expense << "\n";
 
         start_index += sizeof(record);
     }
 
-    // 最后输出所有交易的总额
-    std::cout << "所有交易总额为：\n";
-    std::cout << "+ " << std::fixed << std::setprecision(2) << inc;
-    std::cout << " - " << std::fixed << std::setprecision(2) << exp;
-    std::cout << '\n';
+    oss << "所有交易总额为：\n+ " << std::fixed << std::setprecision(2) << inc
+        << " - " << std::fixed << std::setprecision(2) << exp << "\n";
+
+    result += oss.str();
 }
 
-void log::add_trading(double income, double expense)
+// 报告员工操作
+void Log::ReportEmployee(std::string &result)
 {
-    // 初始化日志存储
-    purchase_record.initialise("purchase");
-
-    // 获取当前总交易笔数
-    int cur_count;
-    purchase_record.get_info(cur_count, 1);
-
-    // 新交易的交易编号 = 当前总交易数 + 1
-    ++cur_count;
-
-    // 更新日志文件中的总交易笔数
-    purchase_record.write_info(cur_count, 1);
-
-    // 构造新交易记录
-    record new_trade = {cur_count, income, expense};
-
-    // 将新交易记录写入日志
-    purchase_record.write(new_trade);
-}
-
-// 更改操作信息：根据权限设置操作描述
-void log::change_opt(int privilege, std::string name, std::string info, operate &opt)
-{
-    std::string info_;
-    switch (privilege)
-    {
-        case 0: {
-            info_ += "visitor ";
-            break;
-        }
-        case 1: {
-            info_ += "customer ";
-            break;
-        }
-        case 3: {
-            info_ += "worker ";
-            break;
-        }
-        case 7: {
-            info_ += "manager ";
-            break;
-        }
-    }
-    info_ += name;
-    info_ += info;
-    std::snprintf(opt.operation, sizeof(opt.operation), "%s", info_.c_str());
-    opt.privilege = privilege;
-}
-
-void log::add_operation(int privilege, std::string name, TokenType type)
-{
-    // 初始化日志存储
-    operation_record.initialise("operation");
-    operate opt;
-    switch (type)
-    {
-
-        case LOGIN: {
-            change_opt(privilege, name, " log in\n", opt);
-            break;
-        }
-        case LOGOUT: {
-            change_opt(privilege, name, " log out\n", opt);
-            break;
-        }
-        case REGISTER: {
-            change_opt(privilege, name, " register a new account\n", opt);
-            break;
-        }
-        case PASSWD: {
-            change_opt(privilege, name, " change other's password\n", opt);
-            break;
-        }
-        case USERADD: {
-            change_opt(privilege, name, " add a new user\n", opt);
-            break;
-        }
-        case DELETEUSER: {
-            change_opt(privilege, name, " delete a user\n", opt);
-            break;
-        }
-
-        case SHOW: {
-            change_opt(privilege, name, " show the books\n", opt);
-            break;
-        }
-
-        case FINANCE: {
-            change_opt(privilege, name, " show the finance\n", opt);
-            break;
-        }
-
-        case BUY: {
-            change_opt(privilege, name, " buy some books\n", opt);
-            break;
-        }
-        case SELECT: {
-            change_opt(privilege, name, " select a book\n", opt);
-            break;
-        }
-        case MODIFY: {
-            change_opt(privilege, name, " modify a book\n", opt);
-            break;
-        }
-        case IMPORT: {
-            change_opt(privilege, name, " import some books\n", opt);
-            break;
-        }
-        case REPORT: {
-            change_opt(privilege, name, " check the report\n", opt);
-            break;
-        }
-        case LOG: {
-            change_opt(privilege, name, " check the log\n", opt);
-            break;
-        }
-        case EXIT: {
-            change_opt(privilege, name, " exit\n", opt);
-            break;
-        }
-        default: {
-            change_opt(privilege, name, " invalid operation\n", opt);
-            break;
-        }
-    }
-    // 将新操作记录写入日志
-    operation_record.write(opt);
-}
-
-// 报告员工操作：显示权限为3的操作日志
-void log::ReportEmployee()
-{
+    std::ostringstream oss;
     operation_record.initialise("operation");
     int start_index = 2 * sizeof(int);
     int end_index = operation_record.end();
     operate opt;
+
     while (start_index + sizeof(operate) <= end_index)
     {
         operation_record.read(opt, start_index);
         if (opt.privilege == 3)
         {
-            std::cout << opt.operation;
+            oss << opt.operation;
         }
         start_index += sizeof(operate);
     }
+
+    result += oss.str();
 }
 
-// 显示所有日志：包括操作日志和财务日志
-void log::Log()
+// 显示所有日志
+void Log::Logger(std::string &result)
 {
-    std::cout << "以下是操作系统日志\n";
+    std::ostringstream oss;
+    oss << "以下是操作系统日志\n";
+
     operation_record.initialise("operation");
     int start_index = 2 * sizeof(int);
     int end_index = operation_record.end();
     operate opt;
+
     while (start_index + sizeof(operate) <= end_index)
     {
         operation_record.read(opt, start_index);
-
-        std::cout << opt.operation;
-
+        oss << opt.operation;
         start_index += sizeof(operate);
     }
-    std::cout << "以下是财务交易情况\n";
-    ReportFinance();
+
+    oss << "以下是财务交易情况\n";
+    result += oss.str();
+
+    ReportFinance(result);
+}
+
+// 添加交易记录
+void Log::add_trading(double income, double expense)
+{
+    purchase_record.initialise("purchase");
+
+    int cur_count;
+    purchase_record.get_info(cur_count, 1);
+    ++cur_count;
+
+    purchase_record.write_info(cur_count, 1);
+
+    record new_trade = {cur_count, income, expense};
+    purchase_record.write(new_trade);
+}
+
+// 更改操作信息
+void Log::change_opt(int privilege, std::string name, std::string info, operate &opt)
+{
+    std::string info_;
+    switch (privilege)
+    {
+        case 0: info_ += "visitor "; break;
+        case 1: info_ += "customer "; break;
+        case 3: info_ += "worker "; break;
+        case 7: info_ += "manager "; break;
+    }
+    info_ += name + info;
+    std::snprintf(opt.operation, sizeof(opt.operation), "%s", info_.c_str());
+    opt.privilege = privilege;
+}
+
+// 添加操作记录
+void Log::add_operation(int privilege, std::string name, TokenType type)
+{
+    operation_record.initialise("operation");
+    operate opt;
+
+    switch (type)
+    {
+        case LOGIN: change_opt(privilege, name, " log in\n", opt); break;
+        case LOGOUT: change_opt(privilege, name, " log out\n", opt); break;
+        case REGISTER: change_opt(privilege, name, " register a new account\n", opt); break;
+        case PASSWD: change_opt(privilege, name, " change other's password\n", opt); break;
+        case USERADD: change_opt(privilege, name, " add a new user\n", opt); break;
+        case DELETEUSER: change_opt(privilege, name, " delete a user\n", opt); break;
+        case SHOW: change_opt(privilege, name, " show the books\n", opt); break;
+        case FINANCE: change_opt(privilege, name, " show the finance\n", opt); break;
+        case BUY: change_opt(privilege, name, " buy some books\n", opt); break;
+        case SELECT: change_opt(privilege, name, " select a book\n", opt); break;
+        case MODIFY: change_opt(privilege, name, " modify a book\n", opt); break;
+        case IMPORT: change_opt(privilege, name, " import some books\n", opt); break;
+        case REPORT: change_opt(privilege, name, " check the report\n", opt); break;
+        case LOG: change_opt(privilege, name, " check the Log\n", opt); break;
+        case EXIT: change_opt(privilege, name, " exit\n", opt); break;
+        default: change_opt(privilege, name, " invalid operation\n", opt); break;
+    }
+
+    operation_record.write(opt);
 }

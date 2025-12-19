@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 #ifndef STORAGE_HPP
 #define STORAGE_HPP
 
@@ -424,7 +425,7 @@ public:
     /**
      * @brief 输出当前索引下的所有书籍信息
      */
-    void Show()
+    void Show(std::string &result)
     {
         int book_pos = 0;
         bool is_exist = false;
@@ -439,14 +440,14 @@ public:
         }
         if (!is_exist)
         {
-            std::cout << "\n";
+            result += "\n";
             return;
         }
 
         index_to_head t;
         if (!file.read(t, book_pos))
         {
-            std::cout << "\n";
+            result += "\n";
             return;
         }
 
@@ -463,7 +464,7 @@ public:
                 is_empty = false;
                 for (int i = 0; i < temp.size; i++)
                 {
-                    std::cout << temp.val[i];
+                    temp.val[i].output(result);
                 }
             }
             book.read(temp, temp.next_block);
@@ -474,13 +475,13 @@ public:
             is_empty = false;
             for (int i = 0; i < temp.size; i++)
             {
-                std::cout << temp.val[i];
+                temp.val[i].output(result);
             }
             return;
         }
         if (is_empty)
         {
-            std::cout << "\n";
+            result += "\n";
             return;
         }
     }
@@ -489,7 +490,7 @@ public:
      * @brief 输出指定 ISBN 的书籍信息
      * @param isbn 书籍 ISBN
      */
-    void SearchIsbn(const std::string &isbn)
+    void SearchIsbn(const std::string &isbn, std::string &result)
     {
         int book_pos = 0;
         bool is_exist = false;
@@ -504,14 +505,14 @@ public:
         }
         if (!is_exist)
         {
-            std::cout << '\n';
+            result += "\n";
             return;
         }
 
         index_to_head t;
         if (!file.read(t, book_pos))
         {
-            std::cout << '\n';
+            result += "\n";
             return;
         }
 
@@ -534,7 +535,7 @@ public:
             }
             else
             {
-                std::cout << *pos;
+                pos->output(result);
                 return;
             }
         }
@@ -544,17 +545,17 @@ public:
             pos = std::lower_bound(temp.val, temp.val + temp.size, Book(isbn));
         else
         {
-            std::cout << '\n';
+            result += "\n";
             return;
         }
         if (pos == temp.val + temp.size || !(*pos == Book(isbn)))
         {
-            std::cout << '\n';
+            result += "\n";
             return;
         }
         else
         {
-            std::cout << *pos;
+            pos->output(result);
             return;
         }
     }
@@ -908,7 +909,7 @@ public:
      * @return true 购买成功
      * @return false 库存不足
      */
-    bool buy_book(const std::string &book_isbn, int num, double &total_cost)
+    bool buy_book(const std::string &book_isbn, int num, double &total_cost, std::string &result)
     {
         Book copied_book = Copy(book_isbn);
         int stock = copied_book.get_stock();
@@ -916,7 +917,8 @@ public:
         if (stock < num)
             return false;
         total_cost = price * num;
-        std::cout << std::fixed << std::setprecision(2) << total_cost << '\n';
+        total_cost = std::round(total_cost * 100.0) / 100.0;
+        result = result + std::to_string(total_cost) + "\t";
         change_stock(book_isbn, stock - num);
         return true;
     }

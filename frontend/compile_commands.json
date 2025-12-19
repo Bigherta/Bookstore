@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/BookstoreFrontend_autogen/include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/../include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/dialogs -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -std=gnu++20 -fPIC -o CMakeFiles/BookstoreFrontend.dir/BookstoreFrontend_autogen/mocs_compilation.cpp.o -c /mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/BookstoreFrontend_autogen/mocs_compilation.cpp",
+  "file": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/BookstoreFrontend_autogen/mocs_compilation.cpp",
+  "output": "CMakeFiles/BookstoreFrontend.dir/BookstoreFrontend_autogen/mocs_compilation.cpp.o"
+},
+{
+  "directory": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/BookstoreFrontend_autogen/include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/../include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/dialogs -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -std=gnu++20 -fPIC -o CMakeFiles/BookstoreFrontend.dir/src/main.cpp.o -c /mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src/main.cpp",
+  "file": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src/main.cpp",
+  "output": "CMakeFiles/BookstoreFrontend.dir/src/main.cpp.o"
+},
+{
+  "directory": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/BookstoreFrontend_autogen/include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/../include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/dialogs -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -std=gnu++20 -fPIC -o CMakeFiles/BookstoreFrontend.dir/src/mainwindow.cpp.o -c /mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src/mainwindow.cpp",
+  "file": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src/mainwindow.cpp",
+  "output": "CMakeFiles/BookstoreFrontend.dir/src/mainwindow.cpp.o"
+},
+{
+  "directory": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/BookstoreFrontend_autogen/include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/../include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/dialogs -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -std=gnu++20 -fPIC -o CMakeFiles/BookstoreFrontend.dir/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/parser.cpp.o -c /mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/parser.cpp",
+  "file": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/parser.cpp",
+  "output": "CMakeFiles/BookstoreFrontend.dir/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/parser.cpp.o"
+},
+{
+  "directory": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/BookstoreFrontend_autogen/include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/../include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/dialogs -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -std=gnu++20 -fPIC -o CMakeFiles/BookstoreFrontend.dir/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/user.cpp.o -c /mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/user.cpp",
+  "file": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/user.cpp",
+  "output": "CMakeFiles/BookstoreFrontend.dir/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/user.cpp.o"
+},
+{
+  "directory": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/BookstoreFrontend_autogen/include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/../include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/dialogs -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -std=gnu++20 -fPIC -o CMakeFiles/BookstoreFrontend.dir/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/Log.cpp.o -c /mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/Log.cpp",
+  "file": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/Log.cpp",
+  "output": "CMakeFiles/BookstoreFrontend.dir/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/Log.cpp.o"
+},
+{
+  "directory": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/BookstoreFrontend_autogen/include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/../include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/dialogs -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -std=gnu++20 -fPIC -o CMakeFiles/BookstoreFrontend.dir/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/book.cpp.o -c /mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/book.cpp",
+  "file": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/book.cpp",
+  "output": "CMakeFiles/BookstoreFrontend.dir/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/book.cpp.o"
+},
+{
+  "directory": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend",
+  "command": "/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/BookstoreFrontend_autogen/include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/../include -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/src -I/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/dialogs -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -std=gnu++20 -fPIC -o CMakeFiles/BookstoreFrontend.dir/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/Token.cpp.o -c /mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/Token.cpp",
+  "file": "/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/Token.cpp",
+  "output": "CMakeFiles/BookstoreFrontend.dir/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/src/Token.cpp.o"
+}
+]

@@ -1,19 +1,14 @@
-# 1. 指定所需的 CMake 版本
 cmake_minimum_required(VERSION 3.10)
+project(BookstoreManager VERSION 1.0 LANGUAGES CXX)
 
-# 2. 定义项目名称
-project(BookstoreManager VERSION 1.0
-    LANGUAGES CXX
-)
-
-# 3. 指定 C++ 标准
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# 4. 定义源文件列表 (所有 .cpp 文件)
-# 假设所有 .cpp 文件都在 src 目录下
-set(SOURCES
-    src/main.cpp
+# 1️⃣ 找 Qt 库
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+
+# 2️⃣ 定义后端源文件
+set(BACKEND_SOURCES
     src/user.cpp
     src/book.cpp
     src/log.cpp
@@ -21,18 +16,26 @@ set(SOURCES
     src/Token.cpp
 )
 
-# 5. 添加可执行目标
-# 目标名称已更改为 'code'
-add_executable(code ${SOURCES})
-
-# 6. 配置包含目录
-# ----------------------------------------------------------------------
-# 注意：这里的目标名称已从 'bookstore_app' 更改为 'code'
-target_include_directories(code
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+# 3️⃣ 定义前端源文件
+set(FRONTEND_SOURCES
+    frontend/src/main.cpp
+    frontend/src/mainwindow.cpp
 )
-# ----------------------------------------------------------------------
 
-# 7. 链接依赖库 (如果您的项目使用了外部库，则在这里添加)
-# target_link_libraries(code PRIVATE) # 相应的目标名也应改为 'code'
+# 4️⃣ 添加可执行目标
+add_executable(BookstoreApp ${BACKEND_SOURCES} ${FRONTEND_SOURCES})
+
+# 5️⃣ 包含头文件目录
+target_include_directories(BookstoreApp
+    PRIVATE
+        include        # 后端头文件
+        frontend       # 如果前端也有独立头文件
+)
+
+# 6️⃣ 链接 Qt 库
+target_link_libraries(BookstoreApp PRIVATE Qt5::Widgets)
+
+# 7️⃣ 启用 Qt 自动 MOC (必要时)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)

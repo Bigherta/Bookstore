@@ -8,7 +8,6 @@
 #include <vector>
 #include "storage.hpp"
 
-
 class user
 {
 public:

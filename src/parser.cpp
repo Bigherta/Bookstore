@@ -1,8 +1,7 @@
 #include "../include/parser.hpp"
 #include <cctype>
-#include <iostream>
 #include "../include/book.hpp"
-#include "../include/log.hpp"
+#include "../include/Log.hpp"
 #include "../include/user.hpp"
 #include "../include/validator.hpp"
 
@@ -90,11 +89,12 @@ bool Parser::isD(std::string str) noexcept
 }
 
 // 执行指令的主函数
-void Parser::execute(const std::string &line_raw, UserManager &userManager, log &Log, bool &is_running)
+std::string Parser::execute(const std::string &line_raw, UserManager &userManager, Log &Log, bool &is_running)
 {
+    std::string result;
     std::string line = line_raw;
     if (line.empty())
-        return;
+        return result;
     while (!line.empty() && (line.back() == '\r' || line.back() == '\n'))
         line.pop_back();
 
@@ -102,11 +102,10 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
     TokenStream tokens_ = tokenize(line, is_valid);
     if (!is_valid)
     {
-        std::cout << "Invalid\n";
-        return;
+        return "Invalid\n";
     }
     if (tokens_.size() == 0)
-        return;
+        return string();
     int privilegeLevel_ = -1;
     const TokenType cmd = tokens_.get()->type;
     switch (cmd)
@@ -118,8 +117,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (tokens_.size() > 3 || tokens_.size() < 2)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
 
             std::string userID_, password_;
@@ -131,8 +129,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (!userManager.login(userID_, password_))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
@@ -144,15 +141,13 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (tokens_.size() != 1 || userManager.getCurrentUser().privilegeLevel < 1)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             int cur_privilege = userManager.getCurrentUser().privilegeLevel;
             std::string cur_name = userManager.getCurrentUser().username;
             if (!userManager.logout())
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             Log.add_operation(cur_privilege, cur_name, cmd);
             break;
@@ -165,8 +160,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (tokens_.size() != 4)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
 
             std::string userID_, password_, username_;
@@ -179,8 +173,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (!userManager.registerUser(userID_, password_, username_))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
@@ -192,8 +185,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (tokens_.size() < 3 || tokens_.size() > 4 || userManager.getCurrentUser().privilegeLevel < 1)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
 
             std::string userID_, cur_Password_, new_Password_;
@@ -208,8 +200,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             {
                 if (userManager.getCurrentUser().privilegeLevel < 7)
                 {
-                    std::cout << "Invalid\n";
-                    break;
+                    return "Invalid\n";
                 }
                 new_Password_ = tokens_.get()->text;
             }
@@ -219,8 +210,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (!userManager.passwd(userID_, cur_Password_, new_Password_))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
 
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
@@ -234,8 +224,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (tokens_.size() != 5 || userManager.getCurrentUser().privilegeLevel < 3)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             std::string userID_, password_, username_;
 
@@ -247,13 +236,11 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (temp_text.size() != 1)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             else if (temp_text[0] != '1' && temp_text[0] != '3')
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
 
             privilegeLevel_ = std::stoi(temp_text);
@@ -262,8 +249,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (!userManager.useradd(userID_, password_, privilegeLevel_, username_))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
 
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
@@ -276,8 +262,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 7)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             std::string userID_;
 
@@ -285,8 +270,7 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (!userManager.deleteUser(userID_))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
 
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
@@ -304,19 +288,17 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
                 if (userManager.getCurrentUser().privilegeLevel < 1)
                 {
-                    std::cout << "Invalid\n";
-                    break;
+                   return "Invalid\n";
                 }
                 storage<IsbnTag> storage_;
-                storage_.Show();
+                storage_.Show(result);
                 Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username,
                                   cmd);
                 break;
             }
             if (tokens_.peek() == nullptr)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             const TokenType showType = tokens_.peek()->type;
             if (showType == FINANCE)
@@ -325,32 +307,27 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
                 if (tokens_.size() < 2 || tokens_.size() > 3 || userManager.getCurrentUser().privilegeLevel < 7)
                 {
-                    std::cout << "Invalid\n";
-                    break;
+                    return "Invalid\n";
                 }
                 tokens_.get();
                 if (tokens_.peek() == nullptr)
                 {
-                    Log.ShowFinance();
+                    Log.ShowFinance(result);
                 }
                 else
                 {
                     std::string count_str = tokens_.get()->text;
                     if (count_str.size() > 10)
                     {
-                        std::cout << "Invalid\n";
-                        break;
+                        return "Invalid\n";
                     }
                     if (!Parser::isN(count_str))
-                    {
-                        std::cout << "Invalid\n";
-                        break;
+                    {return "Invalid\n";
                     }
                     long long count_ = std::stoll(count_str);
-                    if (!Log.ShowFinance(count_))
+                    if (!Log.ShowFinance(result, count_))
                     {
-                        std::cout << "Invalid\n";
-                        break;
+                       return "Invalid\n";
                     }
                 }
                 Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username,
@@ -362,15 +339,13 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
                 if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 1)
                 {
-                    std::cout << "Invalid\n";
-                    break;
+                    return "Invalid\n";
                 }
                 std::string text_ = tokens_.get()->text;
                 int column = 0;
                 if (text_[column] != '-')
                 {
-                    std::cout << "Invalid\n";
-                    break;
+                    return "Invalid\n";
                 }
                 column++;
                 int start = column;
@@ -386,50 +361,45 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                     search_value = text_.substr(column, text_.size() - column);
                     if (!Book::is_ISBN_valid(search_value))
                     {
-                        std::cout << "Invalid\n";
-                        break;
+                        return "Invalid\n";
                     }
                     storage<IsbnTag> storage_;
-                    storage_.SearchIsbn(search_value);
+                    storage_.SearchIsbn(search_value,result);
                 }
                 else if (search_param == NAME || search_param == AUTHOR)
                 {
                     if (text_[column] != '"' || text_[text_.size() - 1] != '"')
                     {
-                        std::cout << "Invalid\n";
-                        break;
+                        return "Invalid\n";
                     }
                     search_value = text_.substr(column + 1, text_.size() - column - 2);
 
                     if (!Book::is_author_or_name_valid(search_value))
                     {
-                        std::cout << "Invalid\n";
-                        break;
+                        return "Invalid\n";
                     }
                     if (search_param == NAME)
                     {
                         storage<NameTag> storage_(search_value);
-                        storage_.Show();
+                        storage_.Show(result);
                     }
                     if (search_param == AUTHOR)
                     {
                         storage<AuthorTag> storage_(search_value);
-                        storage_.Show();
+                        storage_.Show(result);
                     }
                 }
                 else if (search_param == KEYWORD)
                 {
                     if (text_[column] != '"' || text_[text_.size() - 1] != '"')
                     {
-                        std::cout << "Invalid\n";
-                        break;
+                        return "Invalid\n";
                     }
                     search_value = text_.substr(column + 1, text_.size() - column - 2);
 
                     if (search_value.empty() || search_value.size() > 60)
                     {
-                        std::cout << "Invalid\n";
-                        break;
+                        return "Invalid\n";
                     }
                     bool is_valid = true;
 
@@ -447,16 +417,14 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
                     }
                     if (!is_valid)
                     {
-                        std::cout << "Invalid\n";
-                        break;
+                        return "Invalid\n";
                     }
                     storage<KeywordTag> storage_(search_value);
-                    storage_.Show();
+                    storage_.Show(result);
                 }
                 else
                 {
-                    std::cout << "Invalid\n";
-                    break;
+                    return "Invalid\n";
                 }
 
                 Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username,
@@ -469,39 +437,33 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (tokens_.size() != 3 || userManager.getCurrentUser().privilegeLevel < 1)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             std::string isbn = tokens_.get()->text;
 
             if (!Book::is_ISBN_valid(isbn))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             storage<IsbnTag> storage_;
             if (!storage_.Find(isbn))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             std::string quantity = tokens_.get()->text;
             if (!isN(quantity))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             long long num = std::stoll(quantity);
             if (num <= 0 || num > 2147483647)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             double total_cost;
-            if (!storage_.buy_book(isbn, num, total_cost))
+            if (!storage_.buy_book(isbn, num, total_cost,result))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             Log.add_trading(total_cost, 0);
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
@@ -510,15 +472,13 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         case SELECT: {
             if (userManager.getCurrentUser().privilegeLevel < 3 || tokens_.size() != 2)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             std::string isbn_ = tokens_.get()->text;
 
             if (!Book::is_ISBN_valid(isbn_))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             storage<IsbnTag> storage_;
             if (!storage_.Find(isbn_))
@@ -536,15 +496,13 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         case MODIFY: {
             if (!userManager.is_valid_to_getSelectedbook())
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
 
             if (userManager.getCurrentUser().privilegeLevel < 3 || userManager.getSelectedbook().empty() ||
                 tokens_.size() < 2 || tokens_.size() > 6)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             std::string isbn, name, author, keyword, price;
             bool is_valid = true;
@@ -634,16 +592,14 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
             }
             if (!is_valid)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             else
             {
                 std::string ori_isbn = userManager.getSelectedbook();
                 if (!storage<IsbnTag>::modify_book(isbn, name, author, keyword, price, userManager.getSelectedbook()))
                 {
-                    std::cout << "Invalid\n";
-                    break;
+                    return "Invalid\n";
                 }
                 if (!isbn.empty())
                 {
@@ -664,39 +620,33 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         case IMPORT: {
             if (!userManager.is_valid_to_getSelectedbook())
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
 
             if (tokens_.size() != 3 || userManager.getSelectedbook().empty() ||
                 userManager.getCurrentUser().privilegeLevel < 3)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             std::string quantity = tokens_.get()->text;
             if (!isN(quantity))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             long long num = stoll(quantity);
             if (num <= 0)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             std::string total_cost = tokens_.get()->text;
             if (!isD(total_cost))
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             double total_ = std::stod(total_cost);
             if (total_ <= 0.00)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             storage<IsbnTag> storage_;
             storage_.import_book(userManager.getSelectedbook(), num);
@@ -707,22 +657,20 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         case REPORT: {
             if (tokens_.size() != 2 || userManager.getCurrentUser().privilegeLevel < 7)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             const TokenType reportType = tokens_.get()->type;
             if (reportType == FINANCE)
             {
-                Log.ReportFinance();
+                Log.ReportFinance(result);
             }
             else if (reportType == EMPLOYEE)
             {
-                Log.ReportEmployee();
+                Log.ReportEmployee(result);
             }
             else
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
@@ -731,10 +679,9 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
         case LOG: {
             if (tokens_.size() != 1 || userManager.getCurrentUser().privilegeLevel < 7)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
-            Log.Log();
+            Log.Logger(result);
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             break;
         }
@@ -742,18 +689,16 @@ void Parser::execute(const std::string &line_raw, UserManager &userManager, log 
 
             if (tokens_.size() != 1)
             {
-                std::cout << "Invalid\n";
-                break;
+                return "Invalid\n";
             }
             Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username, cmd);
             userManager.exit();
             is_running = false;
-            return;
         }
         case TEXT:
-            std::cout << "Invalid\n";
-            break;
+            return "Invalid\n";
         default:
             break;
     }
+    return result;
 }
