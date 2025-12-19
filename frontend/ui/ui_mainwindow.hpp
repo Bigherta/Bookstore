@@ -159,7 +159,7 @@ public:
         actionShowFinance->setText(QCoreApplication::translate("MainWindow", "Show Finance", nullptr));
         actionReport->setText(QCoreApplication::translate("MainWindow", "Report", nullptr));
         actionLogAll->setText(QCoreApplication::translate("MainWindow", "Log All", nullptr));
-        actionExit->setText(QCoreApplication::translate("MainWindow", "Exit", nullptr));
+        actionExit->setText(QCoreApplication::translate("MainWindow", "Confirm", nullptr));
 
         menuUser->setTitle(QCoreApplication::translate("MainWindow", "User", nullptr));
         menuBook->setTitle(QCoreApplication::translate("MainWindow", "Book", nullptr));

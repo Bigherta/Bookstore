@@ -1,5 +1,0 @@
-/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/CMakeFiles/BookstoreFrontend.dir
-/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/CMakeFiles/edit_cache.dir
-/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/CMakeFiles/rebuild_cache.dir
-/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/CMakeFiles/BookstoreFrontend_autogen_timestamp_deps.dir
-/mnt/f/程序设计/大一上/大作业/Bookstore_frontend/Bookstore/frontend/CMakeFiles/BookstoreFrontend_autogen.dir
