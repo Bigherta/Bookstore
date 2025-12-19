@@ -1,7 +1,7 @@
 #include "../include/parser.hpp"
 #include <cctype>
-#include "../include/book.hpp"
 #include "../include/Log.hpp"
+#include "../include/book.hpp"
 #include "../include/user.hpp"
 #include "../include/validator.hpp"
 
@@ -288,7 +288,7 @@ std::string Parser::execute(const std::string &line_raw, UserManager &userManage
 
                 if (userManager.getCurrentUser().privilegeLevel < 1)
                 {
-                   return "Invalid\n";
+                    return "Invalid\n";
                 }
                 storage<IsbnTag> storage_;
                 storage_.Show(result);
@@ -322,12 +322,13 @@ std::string Parser::execute(const std::string &line_raw, UserManager &userManage
                         return "Invalid\n";
                     }
                     if (!Parser::isN(count_str))
-                    {return "Invalid\n";
+                    {
+                        return "Invalid\n";
                     }
                     long long count_ = std::stoll(count_str);
                     if (!Log.ShowFinance(result, count_))
                     {
-                       return "Invalid\n";
+                        return "Invalid\n";
                     }
                 }
                 Log.add_operation(userManager.getCurrentUser().privilegeLevel, userManager.getCurrentUser().username,
@@ -364,7 +365,7 @@ std::string Parser::execute(const std::string &line_raw, UserManager &userManage
                         return "Invalid\n";
                     }
                     storage<IsbnTag> storage_;
-                    storage_.SearchIsbn(search_value,result);
+                    storage_.SearchIsbn(search_value, result);
                 }
                 else if (search_param == NAME || search_param == AUTHOR)
                 {
@@ -461,7 +462,7 @@ std::string Parser::execute(const std::string &line_raw, UserManager &userManage
                 return "Invalid\n";
             }
             double total_cost;
-            if (!storage_.buy_book(isbn, num, total_cost,result))
+            if (!storage_.buy_book(isbn, num, total_cost, result))
             {
                 return "Invalid\n";
             }

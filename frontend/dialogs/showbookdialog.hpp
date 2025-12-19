@@ -75,9 +75,13 @@ private slots:
         bool running = true;
         std::string result = parser.execute(command, userManager, Logger, running);
 
-        if (result == "Invalid\n")
+        if (result == "\n")
         {
             QMessageBox::critical(this, "Error", "No matching books found!");
+        }
+        else if (result == "Invalid\n")
+        {
+            QMessageBox::critical(this, "Error", "Too many keywords!");
         }
         else
         {
