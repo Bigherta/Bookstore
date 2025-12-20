@@ -23,9 +23,9 @@ private slots:
         QString newPassword = ui.lineEdit_newPassword->text();
 
         // 基本输入校验
-        if (userID.isEmpty() || oldPassword.isEmpty() || newPassword.isEmpty())
+        if (userID.isEmpty() || newPassword.isEmpty())
         {
-            QMessageBox::warning(this, "Warning", "All fields must be filled!");
+            QMessageBox::warning(this, "Warning", "userID and new password must be filled!");
             return;
         }
 

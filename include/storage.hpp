@@ -3,6 +3,7 @@
 #define STORAGE_HPP
 #include <cmath>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -16,7 +17,6 @@ using std::fstream;
 using std::string;
 
 class Book;
-
 /**
  * @class MemoryRiver
  * @brief 基于二进制文件的模板存储管理类，用于顺序读写对象和管理少量附加信息。
@@ -31,7 +31,8 @@ private:
     fstream file; ///< 文件流对象，用于读写二进制文件
     string file_name; ///< 文件名
     int sizeofT = sizeof(T); ///< 存储对象的字节大小
-
+    static inline std::filesystem::path base_dir = std::filesystem::absolute("data");
+    // 默认数据存储目录
 public:
     /**
      * @brief 默认构造函数
@@ -61,18 +62,21 @@ public:
     {
         if (FN != "")
             file_name = FN;
-        std::ifstream fin(file_name, std::ios::binary);
+        // 构建完整路径：data/文件名
+        std::filesystem::path full_path = base_dir / file_name;
+        std::filesystem::create_directories(full_path.parent_path()); // 确保目录存在
+        std::ifstream fin(full_path, std::ios::binary);
         bool is_exist = fin.is_open();
         fin.close();
         if (!is_exist)
         {
-            file.open(file_name, std::ios::out | std::ios::binary);
+            file.open(full_path, std::ios::out | std::ios::binary);
             int tmp = 0;
             for (int i = 0; i < info_len; ++i)
                 file.write(reinterpret_cast<char *>(&tmp), sizeof(int));
         }
         file.close();
-        file.open(file_name, std::ios::in | std::ios::out | std::ios::binary);
+        file.open(full_path, std::ios::in | std::ios::out | std::ios::binary);
     }
 
     /**

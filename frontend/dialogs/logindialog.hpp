@@ -27,12 +27,12 @@ private slots:
         QString userID = ui.lineEdit_userID->text().trimmed();
         QString password = ui.lineEdit_password->text();
 
-        if (userID.isEmpty() || password.isEmpty()) {
-            QMessageBox::warning(this, "Warning", "Please enter both user ID and password!");
+        if (userID.isEmpty()) {
+            QMessageBox::warning(this, "Warning", "Please enter user ID!");
             return;
         }
 
-        // 构造命令，例如：su -u userID -p password
+        // 构造命令
         std::string command = "su " + userID.toStdString() + " " + password.toStdString();
         bool running = true;
 
