@@ -1,7 +1,6 @@
 #pragma once
 #ifndef PARSER_HPP
 #define PARSER_HPP
-
 #include <string>
 #include <unordered_map>
 #include "Token.hpp"

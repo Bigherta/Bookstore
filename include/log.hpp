@@ -1,6 +1,5 @@
 #ifndef LOG_HPP
 #define LOG_HPP
-
 #include "storage.hpp"
 #include "Token.hpp"
 #include <string>

@@ -70,7 +70,7 @@ void Log::ReportFinance(std::string &result)
 
     if (cur_count == 0)
     {
-        oss << "所有交易总额为：\n+ 0.00 - 0.00\n";
+        oss << "Finance Report:\n+ 0.00 - 0.00\n";
         result += oss.str();
         return;
     }
@@ -92,7 +92,7 @@ void Log::ReportFinance(std::string &result)
         start_index += sizeof(record);
     }
 
-    oss << "所有交易总额为：\n+ " << std::fixed << std::setprecision(2) << inc
+    oss << "Finance Report:\n+ " << std::fixed << std::setprecision(2) << inc
         << " - " << std::fixed << std::setprecision(2) << exp << "\n";
 
     result += oss.str();
@@ -124,7 +124,7 @@ void Log::ReportEmployee(std::string &result)
 void Log::Logger(std::string &result)
 {
     std::ostringstream oss;
-    oss << "以下是操作系统日志\n";
+    oss << "System Log:\n";
 
     operation_record.initialise("operation");
     int start_index = 2 * sizeof(int);
@@ -138,7 +138,7 @@ void Log::Logger(std::string &result)
         start_index += sizeof(operate);
     }
 
-    oss << "以下是财务交易情况\n";
+    oss << "Finance Log:\n";
     result += oss.str();
 
     ReportFinance(result);

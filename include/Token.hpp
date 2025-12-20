@@ -1,7 +1,6 @@
 #pragma once
 #ifndef TOKEN_HPP
 #define TOKEN_HPP
-
 #include <memory>
 #include <string>
 #include <vector>

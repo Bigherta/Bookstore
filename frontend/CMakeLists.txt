@@ -45,6 +45,7 @@ set(DIALOG_HEADERS
     dialogs/reportdialog.hpp
     dialogs/passwddialog.hpp
     dialogs/importdialog.hpp
+    dialogs/outcomedialog.hpp
 )
 
 # 添加可执行文件

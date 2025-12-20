@@ -1,7 +1,6 @@
 #pragma once
 #ifndef USER_HPP
 #define USER_HPP
-
 #include <cstring>
 #include <string>
 #include <utility>

@@ -1,10 +1,9 @@
 #pragma once
+#ifndef BOOK_HPP
+#define BOOK_HPP
 #include <iomanip>
 #include <ostream>
 #include <sstream>
-#ifndef BOOK_HPP
-#define BOOK_HPP
-
 #include <cstring>
 #include <string>
 #include <vector>

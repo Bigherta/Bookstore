@@ -1,3 +1,6 @@
+#pragma once
+#ifndef VALIDATOR_HPP
+#define VALIDATOR_HPP
 #include <exception>
 #include <regex>
 #include <string>
@@ -345,3 +348,4 @@ auto expect(T &&value)
         return validator<DecayT>(std::forward<T>(value), false);
     }
 }
+#endif

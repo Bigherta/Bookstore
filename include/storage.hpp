@@ -1,8 +1,7 @@
 #pragma once
-#include <cmath>
 #ifndef STORAGE_HPP
 #define STORAGE_HPP
-
+#include <cmath>
 #include <cstring>
 #include <fstream>
 #include <iostream>

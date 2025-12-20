@@ -3,6 +3,7 @@
 #include "../../include/parser.hpp"
 #include "../../include/user.hpp"
 #include "../ui/ui_showbook.hpp"
+#include "outcomedialog.hpp"
 
 class ShowBookDialog : public QDialog
 {
@@ -71,7 +72,6 @@ private slots:
         else if (!keyword.isEmpty())
             command += " -keyword=\"" + keyword.toStdString() + "\"";
 
-
         bool running = true;
         std::string result = parser.execute(command, userManager, Logger, running);
 
@@ -85,10 +85,13 @@ private slots:
         }
         else
         {
-            QMessageBox::information(this, "Books", QString::fromStdString(result));
-            accept(); // 关闭对话框
+            // 弹出 OutcomeDialog
+            OutcomeDialog dlg(this);
+            dlg.fillTable(result);
+            dlg.exec(); // 模态弹出
         }
     }
+
 
 private:
     Ui::ShowBookDialog ui;
