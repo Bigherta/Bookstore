@@ -33,6 +33,7 @@ public:
     QMenu *menuLog;
     QMenu *menuExit;
     QStatusBar *statusbar;
+    QLabel *labelCoverage; // 新增 QLabel 显示图片
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -60,6 +61,33 @@ public:
         // Central widget
         centralwidget = new QWidget(MainWindow);
         MainWindow->setCentralWidget(centralwidget);
+
+        // ---- QLabel 显示封面图片 ----
+        labelCoverage = new QLabel(centralwidget);
+        QPixmap pix(":/images/coverage.png"); // 使用 qrc 路径
+        if (!pix.isNull())
+        {
+            // 获取中央区域大小
+            QSize centralSize = MainWindow->size();
+            int width = centralSize.width() * 0.7;
+            int height = centralSize.height() * 0.7;
+
+            // 缩放图片到 70% 的中央区域，保持比例
+            QPixmap scaledPix = pix.scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            labelCoverage->setPixmap(scaledPix);
+            labelCoverage->setAlignment(Qt::AlignCenter);
+            labelCoverage->setScaledContents(false); // 不让 QLabel 自动拉伸图片
+        }
+        else
+        {
+            labelCoverage->setText("Image not found!");
+            labelCoverage->setAlignment(Qt::AlignCenter);
+        }
+
+        // 使用布局保持居中
+        QVBoxLayout *layout = new QVBoxLayout(centralwidget);
+        layout->addWidget(labelCoverage, 0, Qt::AlignCenter);
+        centralwidget->setLayout(layout);
 
         // Menu bar
         menubar = new QMenuBar(MainWindow);
@@ -138,9 +166,12 @@ public:
     }
 };
 
-namespace Ui {
-    class MainWindow : public Ui_MainWindow {};
-}
+namespace Ui
+{
+    class MainWindow : public Ui_MainWindow
+    {
+    };
+} // namespace Ui
 
 QT_END_NAMESPACE
 

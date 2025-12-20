@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QWidget>
+#include <QIntValidator>
 
 QT_BEGIN_NAMESPACE
 
@@ -78,14 +79,17 @@ public:
         QMetaObject::connectSlotsByName(Dialog);
     }
 
-    void retranslateUi(QDialog *Dialog)
-    {
-        Dialog->setWindowTitle(QCoreApplication::translate("BuyDialog", "Buy Book"));
-        labelISBN->setText(QCoreApplication::translate("BuyDialog", "ISBN:"));
-        labelQuantity->setText(QCoreApplication::translate("BuyDialog", "Quantity:"));
-        lineEditQuantity->setInputMask(QStringLiteral("9999999999"));
-        pushButtonBuy->setText(QCoreApplication::translate("BuyDialog", "Buy it!"));
-    }
+    
+void retranslateUi(QDialog *Dialog)
+{
+    Dialog->setWindowTitle(QCoreApplication::translate("BuyDialog", "Buy Book"));
+    labelISBN->setText(QCoreApplication::translate("BuyDialog", "ISBN:"));
+    labelQuantity->setText(QCoreApplication::translate("BuyDialog", "Quantity:"));
+    lineEditQuantity->setValidator(new QIntValidator(1, 2147483647, lineEditQuantity));
+    lineEditQuantity->setAlignment(Qt::AlignLeft); 
+
+    pushButtonBuy->setText(QCoreApplication::translate("BuyDialog", "Buy it!"));
+}
 };
 
 namespace Ui {

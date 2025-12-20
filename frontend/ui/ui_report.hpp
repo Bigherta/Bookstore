@@ -20,11 +20,13 @@ public:
     QPushButton *pushButtonEmployee;
     QSpacerItem *rightSpacer2;
 
+    QTableWidget *tableReport; // 报表表格
+
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("ReportDialog"));
-        Dialog->resize(400, 200);
+        Dialog->resize(500, 400); // 调整窗口大小
         Dialog->setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
 
         verticalLayout = new QVBoxLayout(Dialog);
@@ -54,6 +56,12 @@ public:
         rightSpacer2 = new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Minimum);
         hLayoutEmployee->addItem(rightSpacer2);
         verticalLayout->addLayout(hLayoutEmployee);
+
+        // 报表表格
+        tableReport = new QTableWidget(Dialog);
+        tableReport->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        tableReport->setSelectionBehavior(QAbstractItemView::SelectRows);
+        verticalLayout->addWidget(tableReport);
 
         retranslateUi(Dialog);
         QMetaObject::connectSlotsByName(Dialog);

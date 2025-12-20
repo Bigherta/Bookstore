@@ -9,7 +9,9 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QSpacerItem>
+#include <QTableWidget>
 #include <QWidget>
+#include <QHeaderView>
 
 QT_BEGIN_NAMESPACE
 
@@ -20,6 +22,7 @@ public:
     QHBoxLayout *formLayout;
     QLabel *labelCount;
     QLineEdit *lineEditCount;
+    QTableWidget *tableFinance;  // 新增表格
     QHBoxLayout *buttonLayout;
     QSpacerItem *leftSpacer;
     QPushButton *pushButtonShow;
@@ -29,9 +32,8 @@ public:
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("FinanceDialog"));
-        Dialog->resize(400, 200);
+        Dialog->resize(600, 400); // 调大窗口
 
-        // Qt6 弹窗带系统边框和标题栏
         Dialog->setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
 
         verticalLayout = new QVBoxLayout(Dialog);
@@ -44,6 +46,14 @@ public:
         formLayout->addWidget(labelCount);
         formLayout->addWidget(lineEditCount);
         verticalLayout->addLayout(formLayout);
+
+        // 表格
+        tableFinance = new QTableWidget(Dialog);
+        tableFinance->setColumnCount(0);
+        tableFinance->setRowCount(0);
+        tableFinance->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        tableFinance->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        verticalLayout->addWidget(tableFinance);
 
         // 按钮布局
         buttonLayout = new QHBoxLayout();

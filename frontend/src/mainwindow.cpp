@@ -11,6 +11,7 @@
 #include "../dialogs/selectdialog.hpp"
 #include "../dialogs/showbookdialog.hpp"
 #include "../dialogs/useradddialog.hpp"
+#include "../dialogs/logdialog.hpp"
 
 MainWindow::MainWindow(Parser &p, UserManager &um, Log &l, QWidget *parent) :
     QMainWindow(parent), parser(p), userManager(um), Logger(l)
@@ -127,11 +128,7 @@ void MainWindow::onBookShow()
 void MainWindow::onBookSelect()
 {
     SelectDialog dlg(parser, userManager, Logger, this);
-    if (dlg.exec() == QDialog::Accepted)
-    {
-        QString isbn = dlg.getISBN();
-        QMessageBox::information(this, "Selected ISBN", isbn);
-    }
+    dlg.exec();
 }
 
 void MainWindow::onBookBuy()
@@ -168,6 +165,6 @@ void MainWindow::onReport()
 
 void MainWindow::onLogAll()
 {
-    std::string result = parser.execute("log", userManager, Logger, *(new bool(true)));
-    QMessageBox::information(this, QStringLiteral("系统日志"), QString::fromLocal8Bit(result.c_str()));
+    LogDialog dlg(parser, userManager, Logger, this);
+    dlg.exec(); // 弹出表格对话框显示日志
 }

@@ -38,7 +38,7 @@ private slots:
             return;
         }
 
-        QMessageBox::information(this, "Success", QString::fromStdString(result));
+        QMessageBox::information(this, "Total Cost", QString::fromStdString(result));
         accept();
     }
 

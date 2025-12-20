@@ -4,7 +4,6 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
-#include "Token.hpp"
 
 // 显示财务信息
 bool Log::ShowFinance(std::string &result, long long count_)
@@ -70,7 +69,7 @@ void Log::ReportFinance(std::string &result)
 
     if (cur_count == 0)
     {
-        oss << "Finance Report:\n+ 0.00 - 0.00\n";
+        oss << "+ 0.00 - 0.00\n";
         result += oss.str();
         return;
     }
@@ -91,10 +90,6 @@ void Log::ReportFinance(std::string &result)
 
         start_index += sizeof(record);
     }
-
-    oss << "Finance Report:\n+ " << std::fixed << std::setprecision(2) << inc
-        << " - " << std::fixed << std::setprecision(2) << exp << "\n";
-
     result += oss.str();
 }
 
