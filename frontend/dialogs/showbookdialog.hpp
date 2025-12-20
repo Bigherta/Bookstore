@@ -1,3 +1,4 @@
+#pragma once
 #include <QtWidgets>
 #include "../../include/Log.hpp"
 #include "../../include/parser.hpp"

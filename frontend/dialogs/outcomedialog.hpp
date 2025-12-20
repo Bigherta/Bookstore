@@ -27,9 +27,18 @@ public:
 
             for (int j = 0; j < columnCount; ++j)
             {
-                ui.tableWidget->setItem(i, j, new QTableWidgetItem(fields[j].trimmed()));
+                auto* item = new QTableWidgetItem(fields[j].trimmed());
+                item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter); // 左对齐
+                ui.tableWidget->setItem(i, j, item);
             }
         }
+
+        // 列宽等分
+        QHeaderView* header = ui.tableWidget->horizontalHeader();
+        header->setSectionResizeMode(QHeaderView::Stretch);
+
+        // 行高自适应内容
+        ui.tableWidget->resizeRowsToContents();
     }
 
 private:

@@ -1,16 +1,16 @@
 #pragma once
 #include <QtWidgets>
-#include "../ui/ui_log.hpp"
+#include "../../include/Log.hpp"
 #include "../../include/parser.hpp"
 #include "../../include/user.hpp"
-#include "../../include/Log.hpp"
+#include "../ui/ui_log.hpp"
 
 class LogDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit LogDialog(Parser& p, UserManager& um, Log& l, QWidget* parent = nullptr)
-        : QDialog(parent), parser(p), userManager(um), Logger(l)
+    explicit LogDialog(Parser &p, UserManager &um, Log &l, QWidget *parent = nullptr) :
+        QDialog(parent), parser(p), userManager(um), Logger(l)
     {
         ui.setupUi(this);
         showLogs();
@@ -31,7 +31,8 @@ private:
         QString type;
         while (std::getline(ss, line))
         {
-            if (line.empty()) continue;
+            if (line.empty())
+                continue;
 
             int row = ui.tableLog->rowCount();
             ui.tableLog->insertRow(row);
@@ -43,17 +44,27 @@ private:
             else if (line.find("Finance Log:") != std::string::npos)
                 type = "Finance";
 
-            ui.tableLog->setItem(row, 0, new QTableWidgetItem(type));
-            ui.tableLog->setItem(row, 1, new QTableWidgetItem(content));
+            // 创建单元格，自动换行
+            auto *typeItem = new QTableWidgetItem(type);
+            typeItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+            typeItem->setFlags(typeItem->flags() & ~Qt::ItemIsEditable);
+            ui.tableLog->setItem(row, 0, typeItem);
+
+            auto *contentItem = new QTableWidgetItem(content);
+            contentItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+            contentItem->setFlags(contentItem->flags() & ~Qt::ItemIsEditable);
+            contentItem->setData(Qt::DisplayRole, content); // 确保换行
+            ui.tableLog->setItem(row, 1, contentItem);
         }
 
-        ui.tableLog->resizeColumnsToContents();
-        ui.tableLog->horizontalHeader()->setStretchLastSection(true);
+        // 行高自适应内容
+        ui.tableLog->resizeRowsToContents();
     }
+
 
 private:
     Ui::LogDialog ui;
-    Parser& parser;
-    UserManager& userManager;
-    Log& Logger;
+    Parser &parser;
+    UserManager &userManager;
+    Log &Logger;
 };
