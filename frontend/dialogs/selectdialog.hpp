@@ -1,8 +1,9 @@
+#pragma once
 #include <QtWidgets>
-#include "../../include/Log.hpp"
+#include "../ui/ui_select.hpp"
 #include "../../include/parser.hpp"
 #include "../../include/user.hpp"
-#include "../ui/ui_select.hpp"
+#include "../../include/Log.hpp"
 
 class SelectDialog : public QDialog
 {
@@ -12,7 +13,7 @@ public:
         QDialog(parent), parser(p), userManager(um), Logger(l)
     {
         ui.setupUi(this);
-        connect(ui.pushButton_select, &QPushButton::clicked, this, &SelectDialog::onSelectClicked);
+        connect(ui.pushButtonSelect, &QPushButton::clicked, this, &SelectDialog::onSelectClicked);
     }
 
     QString getISBN() const { return isbn; }
@@ -20,25 +21,21 @@ public:
 private slots:
     void onSelectClicked()
     {
-        // 获取用户输入的 ISBN
-        isbn = ui.lineEdit_isbn->text().trimmed();
-        if (isbn.isEmpty())
-        {
-            QMessageBox::warning(this, "Warning", "ISBN cannot be empty!");
+        isbn = ui.lineEditISBN->text().trimmed();
+        if (isbn.isEmpty()) {
+            QMessageBox::warning(this,"Warning","ISBN cannot be empty!");
             return;
         }
 
-        // 构造 select 命令
         std::string command = "select " + isbn.toStdString();
         bool running = true;
-        std::string result = parser.execute(command, userManager, Logger, running);
+        std::string result = parser.execute(command,userManager,Logger,running);
 
-        if (result == "Invalid\n")
-        {
-            QMessageBox::critical(this, "Error", "Book not found or invalid!");
+        if (result == "Invalid\n") {
+            QMessageBox::critical(this,"Error","Invalid!");
             return;
         }
-        accept(); // 关闭对话框并返回 QDialog::Accepted
+        accept();
     }
 
 private:

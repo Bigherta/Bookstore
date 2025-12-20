@@ -1,3 +1,4 @@
+#pragma once
 #include <QtWidgets>
 #include "../ui/ui_report.hpp"
 #include "../../include/parser.hpp"
@@ -12,10 +13,8 @@ public:
         : QDialog(parent), parser(p), userManager(um), Logger(l)
     {
         ui.setupUi(this);
-
-        // 绑定按钮事件
-        connect(ui.pushButton, &QPushButton::clicked, this, &ReportDialog::onFinanceClicked);
-        connect(ui.pushButton_2, &QPushButton::clicked, this, &ReportDialog::onEmployeeClicked);
+        connect(ui.pushButtonFinance, &QPushButton::clicked, this, &ReportDialog::onFinanceClicked);
+        connect(ui.pushButtonEmployee, &QPushButton::clicked, this, &ReportDialog::onEmployeeClicked);
     }
 
 private slots:
@@ -25,9 +24,9 @@ private slots:
         std::string result = parser.execute(command, userManager, Logger, running);
 
         if (result == "Invalid\n") {
-            QMessageBox::critical(this, "Error", "Failed to generate finance report!");
+            QMessageBox::critical(this,"Error","Failed to generate finance report!");
         } else {
-            QMessageBox::information(this, "Finance Report", QString::fromStdString(result));
+            QMessageBox::information(this,"Finance Report",QString::fromStdString(result));
         }
     }
 
@@ -37,9 +36,9 @@ private slots:
         std::string result = parser.execute(command, userManager, Logger, running);
 
         if (result == "Invalid\n") {
-            QMessageBox::critical(this, "Error", "Failed to generate employee report!");
+            QMessageBox::critical(this,"Error","Failed to generate employee report!");
         } else {
-            QMessageBox::information(this, "Employee Report", QString::fromStdString(result));
+            QMessageBox::information(this,"Employee Report",QString::fromStdString(result));
         }
     }
 

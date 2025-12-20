@@ -1,20 +1,11 @@
-#ifndef UI_SHOWCASE_H
-#define UI_SHOWCASE_H
+#ifndef UI_OUTCOMEDIALOG_H
+#define UI_OUTCOMEDIALOG_H
 
-#include <QtCore/QVariant>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets>
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Outcome
+class Ui_OutcomeDialog
 {
 public:
     QVBoxLayout *verticalLayout;
@@ -25,19 +16,20 @@ public:
     QPushButton *closeButton;
     QSpacerItem *horizontalSpacerRight;
 
-    void setupUi(QDialog *Outcome)
+    void setupUi(QDialog *dialog)
     {
-        if (Outcome->objectName().isEmpty())
-            Outcome->setObjectName(QString::fromUtf8("Outcome"));
-        Outcome->resize(700, 500);
+        if (dialog->objectName().isEmpty())
+            dialog->setObjectName(QStringLiteral("OutcomeDialog"));
+        dialog->resize(700, 500);
 
-        verticalLayout = new QVBoxLayout(Outcome);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        // 系统边框和标题栏
+        dialog->setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
+
+        verticalLayout = new QVBoxLayout(dialog);
 
         // Title
-        labelTitle = new QLabel(Outcome);
-        labelTitle->setObjectName(QString::fromUtf8("labelTitle"));
-        labelTitle->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        labelTitle = new QLabel(dialog);
+        labelTitle->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         QFont font;
         font.setPointSize(12);
         font.setBold(true);
@@ -45,30 +37,23 @@ public:
         verticalLayout->addWidget(labelTitle);
 
         // Table
-        tableWidget = new QTableWidget(Outcome);
-        tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        tableWidget->setRowCount(6);       // 初始行数
-        tableWidget->setColumnCount(6);    // 6 列
+        tableWidget = new QTableWidget(dialog);
+        tableWidget->setRowCount(0);
+        tableWidget->setColumnCount(6);
         tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
         tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-        // 表头自适应列宽
+        tableWidget->setAlternatingRowColors(true);
         tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-        tableWidget->horizontalHeader()->setVisible(true);
-        tableWidget->verticalHeader()->setVisible(true);
-
         verticalLayout->addWidget(tableWidget);
 
         // Buttons
         buttonLayout = new QHBoxLayout();
-        buttonLayout->setObjectName(QString::fromUtf8("buttonLayout"));
-
         horizontalSpacerLeft = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
         buttonLayout->addItem(horizontalSpacerLeft);
 
-        closeButton = new QPushButton(Outcome);
-        closeButton->setObjectName(QString::fromUtf8("closeButton"));
+        closeButton = new QPushButton(dialog);
+        closeButton->setMinimumSize(QSize(100, 30));
         buttonLayout->addWidget(closeButton);
 
         horizontalSpacerRight = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -76,34 +61,33 @@ public:
 
         verticalLayout->addLayout(buttonLayout);
 
-        retranslateUi(Outcome);
+        retranslateUi(dialog);
 
         // 关闭按钮默认关闭窗口
-        QObject::connect(closeButton, &QPushButton::clicked, Outcome, &QDialog::accept);
+        QObject::connect(closeButton, &QPushButton::clicked, dialog, &QDialog::accept);
 
-        QMetaObject::connectSlotsByName(Outcome);
-    } // setupUi
+        QMetaObject::connectSlotsByName(dialog);
+    }
 
-    void retranslateUi(QDialog *Outcome)
+    void retranslateUi(QDialog *dialog)
     {
-        Outcome->setWindowTitle(QCoreApplication::translate("Outcome", "Query Result", nullptr));
-        labelTitle->setText(QCoreApplication::translate("Outcome", "Query Result", nullptr));
+        dialog->setWindowTitle(QCoreApplication::translate("OutcomeDialog", "Query Result"));
+        labelTitle->setText(QCoreApplication::translate("OutcomeDialog", "Query Result"));
         tableWidget->setHorizontalHeaderLabels(QStringList()
-            << QCoreApplication::translate("Outcome", "ISBN", nullptr)
-            << QCoreApplication::translate("Outcome", "Bookname", nullptr)
-            << QCoreApplication::translate("Outcome", "Author", nullptr)
-            << QCoreApplication::translate("Outcome", "Keywords", nullptr)
-            << QCoreApplication::translate("Outcome", "Price", nullptr)
-            << QCoreApplication::translate("Outcome", "Stock", nullptr));
-        closeButton->setText(QCoreApplication::translate("Outcome", "Close", nullptr));
-    } // retranslateUi
-
+            << QCoreApplication::translate("OutcomeDialog", "ISBN")
+            << QCoreApplication::translate("OutcomeDialog", "Bookname")
+            << QCoreApplication::translate("OutcomeDialog", "Author")
+            << QCoreApplication::translate("OutcomeDialog", "Keywords")
+            << QCoreApplication::translate("OutcomeDialog", "Price")
+            << QCoreApplication::translate("OutcomeDialog", "Stock"));
+        closeButton->setText(QCoreApplication::translate("OutcomeDialog", "Close"));
+    }
 };
 
 namespace Ui {
-    class Outcome: public Ui_Outcome {};
-} // namespace Ui
+    class OutcomeDialog : public Ui_OutcomeDialog {};
+}
 
 QT_END_NAMESPACE
 
-#endif // UI_SHOWCASE_H
+#endif // UI_OUTCOMEDIALOG_H

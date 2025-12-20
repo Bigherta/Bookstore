@@ -1,66 +1,91 @@
-#ifndef UI_IMPORT_H
-#define UI_IMPORT_H
+#ifndef UI_IMPORTDIALOG_H
+#define UI_IMPORTDIALOG_H
 
-#include <QtCore/QVariant>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
+#include <QDialog>
+#include <QApplication>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_ImportDialog
 {
 public:
-    QLabel *label_quantity;
-    QLineEdit *lineEdit_quantity;
-    QLabel *label_cost;
-    QLineEdit *lineEdit_cost;
-    QPushButton *pushButton_import;
+    QVBoxLayout *verticalLayout;
+    QHBoxLayout *quantityLayout;
+    QLabel *labelQuantity;
+    QLineEdit *lineEditQuantity;
+    QHBoxLayout *costLayout;
+    QLabel *labelCost;
+    QLineEdit *lineEditCost;
+    QHBoxLayout *buttonLayout;
+    QSpacerItem *leftSpacer;
+    QPushButton *pushButtonImport;
+    QSpacerItem *rightSpacer;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("ImportDialog"));
+            Dialog->setObjectName(QStringLiteral("ImportDialog"));
         Dialog->resize(400, 250);
-        label_quantity = new QLabel(Dialog);
-        label_quantity->setObjectName(QString::fromUtf8("label_quantity"));
-        label_quantity->setGeometry(QRect(100, 60, 57, 15));
-        lineEdit_quantity = new QLineEdit(Dialog);
-        lineEdit_quantity->setObjectName(QString::fromUtf8("lineEdit_quantity"));
-        lineEdit_quantity->setGeometry(QRect(160, 60, 113, 23));
-        lineEdit_quantity->setMaxLength(10);
-        label_cost = new QLabel(Dialog);
-        label_cost->setObjectName(QString::fromUtf8("label_cost"));
-        label_cost->setGeometry(QRect(100, 100, 57, 15));
-        lineEdit_cost = new QLineEdit(Dialog);
-        lineEdit_cost->setObjectName(QString::fromUtf8("lineEdit_cost"));
-        lineEdit_cost->setGeometry(QRect(160, 100, 113, 23));
-        lineEdit_cost->setMaxLength(13);
-        pushButton_import = new QPushButton(Dialog);
-        pushButton_import->setObjectName(QString::fromUtf8("pushButton_import"));
-        pushButton_import->setGeometry(QRect(140, 150, 80, 23));
+
+        // Qt6 弹窗带系统边框和标题栏
+        Dialog->setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
+
+        verticalLayout = new QVBoxLayout(Dialog);
+
+        // 数量布局
+        quantityLayout = new QHBoxLayout();
+        labelQuantity = new QLabel(Dialog);
+        lineEditQuantity = new QLineEdit(Dialog);
+        lineEditQuantity->setMaxLength(10);
+        quantityLayout->addWidget(labelQuantity);
+        quantityLayout->addWidget(lineEditQuantity);
+        verticalLayout->addLayout(quantityLayout);
+
+        // 价格布局
+        costLayout = new QHBoxLayout();
+        labelCost = new QLabel(Dialog);
+        lineEditCost = new QLineEdit(Dialog);
+        lineEditCost->setMaxLength(13);
+        costLayout->addWidget(labelCost);
+        costLayout->addWidget(lineEditCost);
+        verticalLayout->addLayout(costLayout);
+
+        // 按钮布局
+        buttonLayout = new QHBoxLayout();
+        leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        pushButtonImport = new QPushButton(Dialog);
+
+        buttonLayout->addItem(leftSpacer);
+        buttonLayout->addWidget(pushButtonImport);
+        buttonLayout->addItem(rightSpacer);
+        verticalLayout->addLayout(buttonLayout);
 
         retranslateUi(Dialog);
-
+        pushButtonImport->setDefault(true);
         QMetaObject::connectSlotsByName(Dialog);
-    } // setupUi
+    }
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("ImportDialog", "Import", nullptr));
-        label_quantity->setText(QCoreApplication::translate("ImportDialog", "Quantity:", nullptr));
-        label_cost->setText(QCoreApplication::translate("ImportDialog", "Cost:", nullptr));
-        pushButton_import->setText(QCoreApplication::translate("ImportDialog", "Import", nullptr));
-    } // retranslateUi
-
+        Dialog->setWindowTitle(QCoreApplication::translate("ImportDialog", "Import"));
+        labelQuantity->setText(QCoreApplication::translate("ImportDialog", "Quantity:"));
+        labelCost->setText(QCoreApplication::translate("ImportDialog", "Cost:"));
+        pushButtonImport->setText(QCoreApplication::translate("ImportDialog", "Import"));
+    }
 };
 
 namespace Ui {
     class ImportDialog: public Ui_ImportDialog {};
-} // namespace Ui
+}
 
 QT_END_NAMESPACE
 
-#endif // UI_IMPORT_H
+#endif // UI_IMPORTDIALOG_H

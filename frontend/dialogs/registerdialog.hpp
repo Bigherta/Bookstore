@@ -1,18 +1,19 @@
+#pragma once
 #include <QtWidgets>
-#include "../../include/Log.hpp"
+#include "../ui/ui_register.hpp"
 #include "../../include/parser.hpp"
 #include "../../include/user.hpp"
-#include "../ui/ui_register.hpp"
+#include "../../include/Log.hpp"
 
 class RegisterDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit RegisterDialog(Parser &p, UserManager &um, Log &l, QWidget *parent = nullptr) :
-        QDialog(parent), parser(p), userManager(um), Logger(l)
+    explicit RegisterDialog(Parser &p, UserManager &um, Log &l, QWidget *parent = nullptr)
+        : QDialog(parent), parser(p), userManager(um), Logger(l)
     {
         ui.setupUi(this);
-        connect(ui.pushButton, &QPushButton::clicked, this, &RegisterDialog::onRegisterClicked);
+        connect(ui.pushButton_register, &QPushButton::clicked, this, &RegisterDialog::onRegisterClicked);
     }
 
 private slots:
@@ -22,27 +23,26 @@ private slots:
         QString password = ui.lineEdit_password->text();
         QString username = ui.lineEdit_username->text().trimmed();
 
-        // 输入校验
-        if (userID.isEmpty() || password.isEmpty() || username.isEmpty())
+        if(userID.isEmpty() || password.isEmpty() || username.isEmpty())
         {
-            QMessageBox::warning(this, "Warning", "All fields must be filled!");
+            QMessageBox::warning(this,"Warning","All fields must be filled!");
             return;
         }
 
-        // 构造注册命令
-        std::string command =
-                "register " + userID.toStdString() + " " + password.toStdString() + " " + username.toStdString();
+        std::string command = "register " + userID.toStdString() + " "
+                              + password.toStdString() + " "
+                              + username.toStdString();
         bool running = true;
-
-        // 调用后端 parser 执行
         std::string result = parser.execute(command, userManager, Logger, running);
 
-        if (result == "Invalid\n")
+        if(result == "Invalid\n")
         {
-            QMessageBox::critical(this, "Error", "Registration failed!");
-            return;
+            QMessageBox::critical(this,"Error","Registration failed!");
         }
-        accept(); // 关闭对话框并返回 QDialog::Accepted
+        else
+        {
+            accept();
+        }
     }
 
 private:

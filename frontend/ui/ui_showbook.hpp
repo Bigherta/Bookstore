@@ -1,19 +1,16 @@
 #ifndef UI_SHOWBOOK_H
 #define UI_SHOWBOOK_H
 
-#include <QtCore/QVariant>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QTableWidget>
-
+#include <QApplication>
+#include <QDialog>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QVBoxLayout>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -21,22 +18,29 @@ class Ui_ShowDialog
 {
 public:
     QVBoxLayout *verticalLayout;
+
     QHBoxLayout *formOuterLayout;
     QSpacerItem *leftSpacer;
     QWidget *formWidget;
     QGridLayout *gridLayout;
-    QLabel *label_ISBN;
-    QLineEdit *lineEdit_ISBN;
-    QLabel *label_title;
-    QLineEdit *lineEdit_title;
-    QLabel *label_author;
-    QLineEdit *lineEdit_author;
-    QLabel *label_keyword;
-    QLineEdit *lineEdit_keyword;
+
+    QLabel *labelISBN;
+    QLineEdit *lineEditISBN; // [ISBN], 最大长度20
+
+    QLabel *labelTitle;
+    QLineEdit *lineEditTitle; // [BookName], 最大长度60
+
+    QLabel *labelAuthor;
+    QLineEdit *lineEditAuthor; // [Author], 最大长度60
+
+    QLabel *labelKeyword;
+    QLineEdit *lineEditKeyword; // [Keyword], 最大长度60
+
     QSpacerItem *rightSpacer;
+
     QHBoxLayout *buttonLayout;
     QSpacerItem *buttonSpacerLeft;
-    QPushButton *pushButton;
+    QPushButton *pushButtonShow;
     QSpacerItem *buttonSpacerRight;
 
     void setupUi(QDialog *Dialog)
@@ -44,122 +48,111 @@ public:
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QString::fromUtf8("ShowDialog"));
         Dialog->resize(400, 300);
+
         verticalLayout = new QVBoxLayout(Dialog);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+
+        // 表单区域
         formOuterLayout = new QHBoxLayout();
         formOuterLayout->setObjectName(QString::fromUtf8("formOuterLayout"));
-        leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
+        leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
         formOuterLayout->addItem(leftSpacer);
 
         formWidget = new QWidget(Dialog);
         formWidget->setObjectName(QString::fromUtf8("formWidget"));
+
         gridLayout = new QGridLayout(formWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        label_ISBN = new QLabel(formWidget);
-        label_ISBN->setObjectName(QString::fromUtf8("label_ISBN"));
 
-        gridLayout->addWidget(label_ISBN, 0, 0, 1, 1, Qt::AlignRight);
+        // ISBN
+        labelISBN = new QLabel(formWidget);
+        labelISBN->setObjectName(QString::fromUtf8("labelISBN"));
+        gridLayout->addWidget(labelISBN, 0, 0, 1, 1, Qt::AlignRight);
 
-        lineEdit_ISBN = new QLineEdit(formWidget);
-        lineEdit_ISBN->setObjectName(QString::fromUtf8("lineEdit_ISBN"));
-        lineEdit_ISBN->setMaximumSize(QSize(180, 16777215));
-        lineEdit_ISBN->setMaxLength(20);
+        lineEditISBN = new QLineEdit(formWidget);
+        lineEditISBN->setObjectName(QString::fromUtf8("lineEditISBN"));
+        lineEditISBN->setMaximumSize(QSize(180, 16777215));
+        lineEditISBN->setMaxLength(20);
+        gridLayout->addWidget(lineEditISBN, 0, 1, 1, 1);
 
-        gridLayout->addWidget(lineEdit_ISBN, 0, 1, 1, 1);
+        // Book Name
+        labelTitle = new QLabel(formWidget);
+        labelTitle->setObjectName(QString::fromUtf8("labelTitle"));
+        gridLayout->addWidget(labelTitle, 1, 0, 1, 1, Qt::AlignRight);
 
-        label_title = new QLabel(formWidget);
-        label_title->setObjectName(QString::fromUtf8("label_title"));
+        lineEditTitle = new QLineEdit(formWidget);
+        lineEditTitle->setObjectName(QString::fromUtf8("lineEditTitle"));
+        lineEditTitle->setMaximumSize(QSize(250, 16777215));
+        lineEditTitle->setMaxLength(60);
+        gridLayout->addWidget(lineEditTitle, 1, 1, 1, 1);
 
-        gridLayout->addWidget(label_title, 1, 0, 1, 1, Qt::AlignRight);
+        // Author
+        labelAuthor = new QLabel(formWidget);
+        labelAuthor->setObjectName(QString::fromUtf8("labelAuthor"));
+        gridLayout->addWidget(labelAuthor, 2, 0, 1, 1, Qt::AlignRight);
 
-        lineEdit_title = new QLineEdit(formWidget);
-        lineEdit_title->setObjectName(QString::fromUtf8("lineEdit_title"));
-        lineEdit_title->setMaximumSize(QSize(250, 16777215));
-        lineEdit_title->setMaxLength(60);
-        lineEdit_title->setInputMethodHints(Qt::ImhPreferNumbers|Qt::ImhMultiLine);
+        lineEditAuthor = new QLineEdit(formWidget);
+        lineEditAuthor->setObjectName(QString::fromUtf8("lineEditAuthor"));
+        lineEditAuthor->setMaximumSize(QSize(250, 16777215));
+        lineEditAuthor->setMaxLength(60);
+        gridLayout->addWidget(lineEditAuthor, 2, 1, 1, 1);
 
-        gridLayout->addWidget(lineEdit_title, 1, 1, 1, 1);
+        // Keyword
+        labelKeyword = new QLabel(formWidget);
+        labelKeyword->setObjectName(QString::fromUtf8("labelKeyword"));
+        gridLayout->addWidget(labelKeyword, 3, 0, 1, 1, Qt::AlignRight);
 
-        label_author = new QLabel(formWidget);
-        label_author->setObjectName(QString::fromUtf8("label_author"));
-
-        gridLayout->addWidget(label_author, 2, 0, 1, 1, Qt::AlignRight);
-
-        lineEdit_author = new QLineEdit(formWidget);
-        lineEdit_author->setObjectName(QString::fromUtf8("lineEdit_author"));
-        lineEdit_author->setMaximumSize(QSize(250, 16777215));
-        lineEdit_author->setMaxLength(60);
-        lineEdit_author->setInputMethodHints(Qt::ImhPreferNumbers|Qt::ImhMultiLine);
-
-        gridLayout->addWidget(lineEdit_author, 2, 1, 1, 1);
-
-        label_keyword = new QLabel(formWidget);
-        label_keyword->setObjectName(QString::fromUtf8("label_keyword"));
-
-        gridLayout->addWidget(label_keyword, 3, 0, 1, 1, Qt::AlignRight);
-
-        lineEdit_keyword = new QLineEdit(formWidget);
-        lineEdit_keyword->setObjectName(QString::fromUtf8("lineEdit_keyword"));
-        lineEdit_keyword->setMaximumSize(QSize(250, 16777215));
-        lineEdit_keyword->setMaxLength(60);
-        lineEdit_keyword->setInputMethodHints(Qt::ImhPreferNumbers|Qt::ImhMultiLine);
-
-        gridLayout->addWidget(lineEdit_keyword, 3, 1, 1, 1);
-
+        lineEditKeyword = new QLineEdit(formWidget);
+        lineEditKeyword->setObjectName(QString::fromUtf8("lineEditKeyword"));
+        lineEditKeyword->setMaximumSize(QSize(250, 16777215));
+        lineEditKeyword->setMaxLength(60);
+        gridLayout->addWidget(lineEditKeyword, 3, 1, 1, 1);
 
         formOuterLayout->addWidget(formWidget);
 
         rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
         formOuterLayout->addItem(rightSpacer);
-
 
         verticalLayout->addLayout(formOuterLayout);
 
+        // 按钮区域
         buttonLayout = new QHBoxLayout();
         buttonLayout->setObjectName(QString::fromUtf8("buttonLayout"));
-        buttonSpacerLeft = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
+        buttonSpacerLeft = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
         buttonLayout->addItem(buttonSpacerLeft);
 
-        pushButton = new QPushButton(Dialog);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-
-        buttonLayout->addWidget(pushButton);
+        pushButtonShow = new QPushButton(Dialog);
+        pushButtonShow->setObjectName(QString::fromUtf8("pushButtonShow"));
+        pushButtonShow->setMinimumSize(QSize(100, 30));
+        pushButtonShow->setDefault(true);
+        buttonLayout->addWidget(pushButtonShow);
 
         buttonSpacerRight = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
         buttonLayout->addItem(buttonSpacerRight);
-
 
         verticalLayout->addLayout(buttonLayout);
 
-
         retranslateUi(Dialog);
-
-        pushButton->setDefault(true);
-
-
         QMetaObject::connectSlotsByName(Dialog);
-    } // setupUi
+    }
 
     void retranslateUi(QDialog *Dialog)
     {
         Dialog->setWindowTitle(QCoreApplication::translate("ShowDialog", "Show Books", nullptr));
-        label_ISBN->setText(QCoreApplication::translate("ShowDialog", "ISBN:", nullptr));
-        label_title->setText(QCoreApplication::translate("ShowDialog", "Title:", nullptr));
-        label_author->setText(QCoreApplication::translate("ShowDialog", "Author:", nullptr));
-        label_keyword->setText(QCoreApplication::translate("ShowDialog", "Keyword:", nullptr));
-        pushButton->setText(QCoreApplication::translate("ShowDialog", "Show", nullptr));
-    } // retranslateUi
-
+        labelISBN->setText(QCoreApplication::translate("ShowDialog", "ISBN:", nullptr));
+        labelTitle->setText(QCoreApplication::translate("ShowDialog", "Title:", nullptr));
+        labelAuthor->setText(QCoreApplication::translate("ShowDialog", "Author:", nullptr));
+        labelKeyword->setText(QCoreApplication::translate("ShowDialog", "Keyword:", nullptr));
+        pushButtonShow->setText(QCoreApplication::translate("ShowDialog", "Show", nullptr));
+    }
 };
 
 namespace Ui {
     class ShowBookDialog: public Ui_ShowDialog {};
-} // namespace Ui
+}
 
 QT_END_NAMESPACE
 

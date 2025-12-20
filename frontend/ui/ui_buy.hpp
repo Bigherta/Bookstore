@@ -1,17 +1,16 @@
 #ifndef UI_BUYDIALOG_H
 #define UI_BUYDIALOG_H
 
-#include <QtCore/QVariant>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QWidget>
+#include <QDialog>
+#include <QApplication>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -23,23 +22,26 @@ public:
     QSpacerItem *leftSpacer;
     QWidget *formWidget;
     QGridLayout *gridLayout;
-    QLabel *label_isbn;
-    QLineEdit *lineEdit_isbn;
-    QLabel *label_quantity;
-    QLineEdit *lineEdit_quantity;
+    QLabel *labelISBN;
+    QLineEdit *lineEditISBN;
+    QLabel *labelQuantity;
+    QLineEdit *lineEditQuantity;
     QSpacerItem *rightSpacer;
     QHBoxLayout *buttonLayout;
     QSpacerItem *buttonSpacerLeft;
-    QPushButton *pushButton_buy;
+    QPushButton *pushButtonBuy;
     QSpacerItem *buttonSpacerRight;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("BuyDialog"));
+            Dialog->setObjectName(QStringLiteral("BuyDialog"));
         Dialog->resize(400, 250);
+        Dialog->setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
 
         verticalLayout = new QVBoxLayout(Dialog);
+
+        // 表单布局
         formOuterLayout = new QHBoxLayout();
         leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
         formOuterLayout->addItem(leftSpacer);
@@ -47,26 +49,27 @@ public:
         formWidget = new QWidget(Dialog);
         gridLayout = new QGridLayout(formWidget);
 
-        label_isbn = new QLabel(formWidget);
-        gridLayout->addWidget(label_isbn, 0, 0, 1, 1, Qt::AlignRight);
-        lineEdit_isbn = new QLineEdit(formWidget);
-        gridLayout->addWidget(lineEdit_isbn, 0, 1, 1, 1);
+        labelISBN = new QLabel(formWidget);
+        gridLayout->addWidget(labelISBN, 0, 0, 1, 1, Qt::AlignRight);
+        lineEditISBN = new QLineEdit(formWidget);
+        gridLayout->addWidget(lineEditISBN, 0, 1, 1, 1);
 
-        label_quantity = new QLabel(formWidget);
-        gridLayout->addWidget(label_quantity, 1, 0, 1, 1, Qt::AlignRight);
-        lineEdit_quantity = new QLineEdit(formWidget);
-        gridLayout->addWidget(lineEdit_quantity, 1, 1, 1, 1);
+        labelQuantity = new QLabel(formWidget);
+        gridLayout->addWidget(labelQuantity, 1, 0, 1, 1, Qt::AlignRight);
+        lineEditQuantity = new QLineEdit(formWidget);
+        gridLayout->addWidget(lineEditQuantity, 1, 1, 1, 1);
 
         formOuterLayout->addWidget(formWidget);
         rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
         formOuterLayout->addItem(rightSpacer);
         verticalLayout->addLayout(formOuterLayout);
 
+        // 按钮布局
         buttonLayout = new QHBoxLayout();
         buttonSpacerLeft = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
         buttonLayout->addItem(buttonSpacerLeft);
-        pushButton_buy = new QPushButton(Dialog);
-        buttonLayout->addWidget(pushButton_buy);
+        pushButtonBuy = new QPushButton(Dialog);
+        buttonLayout->addWidget(pushButtonBuy);
         buttonSpacerRight = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
         buttonLayout->addItem(buttonSpacerRight);
         verticalLayout->addLayout(buttonLayout);
@@ -77,11 +80,11 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("BuyDialog", "Buy Book", nullptr));
-        label_isbn->setText(QCoreApplication::translate("BuyDialog", "ISBN:", nullptr));
-        label_quantity->setText(QCoreApplication::translate("BuyDialog", "Quantity:", nullptr));
-        lineEdit_quantity->setInputMask(QCoreApplication::translate("BuyDialog", "9999999999", nullptr));
-        pushButton_buy->setText(QCoreApplication::translate("BuyDialog", "Buy it!", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("BuyDialog", "Buy Book"));
+        labelISBN->setText(QCoreApplication::translate("BuyDialog", "ISBN:"));
+        labelQuantity->setText(QCoreApplication::translate("BuyDialog", "Quantity:"));
+        lineEditQuantity->setInputMask(QStringLiteral("9999999999"));
+        pushButtonBuy->setText(QCoreApplication::translate("BuyDialog", "Buy it!"));
     }
 };
 

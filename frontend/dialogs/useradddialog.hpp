@@ -8,15 +8,20 @@ class UserAddDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit UserAddDialog(Parser &p, UserManager &um, Log &l, QWidget *parent = nullptr) :
-        QDialog(parent), parser(p), userManager(um), Logger(l)
+    explicit UserAddDialog(Parser &p, UserManager &um, Log &l, QWidget *parent = nullptr)
+        : QDialog(parent), parser(p), userManager(um), Logger(l)
     {
         ui.setupUi(this);
 
-        // 设置密码框为密码模式
+        // 密码框密码模式
         ui.lineEdit_password->setEchoMode(QLineEdit::Password);
 
-        // 绑定按钮点击事件
+        // 回车触发 Add 按钮
+        for (auto edit : {ui.lineEdit_userID, ui.lineEdit_password, ui.lineEdit_privilege, ui.lineEdit_username}) {
+            connect(edit, &QLineEdit::returnPressed, ui.pushButton, &QPushButton::click);
+        }
+
+        // 按钮点击事件
         connect(ui.pushButton, &QPushButton::clicked, this, &UserAddDialog::onAddClicked);
     }
 
@@ -28,33 +33,29 @@ private slots:
         QString privilege = ui.lineEdit_privilege->text().trimmed();
         QString username = ui.lineEdit_username->text().trimmed();
 
-        // 简单输入验证
-        if (userID.isEmpty() || password.isEmpty() || privilege.isEmpty() || username.isEmpty())
-        {
+        if (userID.isEmpty() || password.isEmpty() || privilege.isEmpty() || username.isEmpty()) {
             QMessageBox::warning(this, "Warning", "All fields must be filled!");
             return;
         }
 
-        // 限制权限输入
-        if (privilege != "1" && privilege != "3")
-        {
+        if (privilege != "1" && privilege != "3") {
             QMessageBox::warning(this, "Warning", "Privilege must be 1 (User) or 3 (Admin)!");
             return;
         }
 
-        // 构造 useradd 命令
         std::string command = "useradd " + userID.toStdString() + " " + password.toStdString() + " " +
                               privilege.toStdString() + " " + username.toStdString();
 
         bool running = true;
         std::string result = parser.execute(command, userManager, Logger, running);
 
-        if (result == "Invalid\n")
-        {
+        if (result == "Invalid\n") {
             QMessageBox::critical(this, "Error", "Failed to add user!");
             return;
         }
-        accept(); // 成功后关闭对话框
+
+        QMessageBox::information(this, "Success", "User added successfully!");
+        accept(); // 关闭对话框
     }
 
 private:

@@ -14,54 +14,44 @@ public:
     {
         ui.setupUi(this);
 
-        // 绑定按钮点击事件
-        connect(ui.pushButton, &QPushButton::clicked, this, &ShowBookDialog::onShowClicked);
+        // 回车触发按钮
+        for (auto edit: {ui.lineEditISBN, ui.lineEditTitle, ui.lineEditAuthor, ui.lineEditKeyword})
+        {
+            connect(edit, &QLineEdit::returnPressed, ui.pushButtonShow, &QPushButton::click);
+        }
 
-        // 绑定文本变化事件，实现“只能编辑一个字段”
+        // 单字段输入逻辑
         auto connectExclusive = [this](QLineEdit *edit) {
             connect(edit, &QLineEdit::textChanged, this,
                     [this, edit](const QString &text) { handleExclusiveEditing(edit, text); });
         };
+        connectExclusive(ui.lineEditISBN);
+        connectExclusive(ui.lineEditTitle);
+        connectExclusive(ui.lineEditAuthor);
+        connectExclusive(ui.lineEditKeyword);
 
-        connectExclusive(ui.lineEdit_ISBN);
-        connectExclusive(ui.lineEdit_title);
-        connectExclusive(ui.lineEdit_author);
-        connectExclusive(ui.lineEdit_keyword);
-    }
-
-    void setBookInfo(const QString &isbn, const QString &title, const QString &author, const QString &keyword)
-    {
-        ui.lineEdit_ISBN->setText(isbn);
-        ui.lineEdit_title->setText(title);
-        ui.lineEdit_author->setText(author);
-        ui.lineEdit_keyword->setText(keyword);
+        // 查询按钮
+        connect(ui.pushButtonShow, &QPushButton::clicked, this, &ShowBookDialog::onShowClicked);
     }
 
 private slots:
     void onShowClicked()
     {
-        QString isbn = ui.lineEdit_ISBN->text();
-        QString title = ui.lineEdit_title->text();
-        QString author = ui.lineEdit_author->text();
-        QString keyword = ui.lineEdit_keyword->text();
+        QString isbn = ui.lineEditISBN->text().trimmed();
+        QString title = ui.lineEditTitle->text().trimmed();
+        QString author = ui.lineEditAuthor->text().trimmed();
+        QString keyword = ui.lineEditKeyword->text().trimmed();
 
         int count = 0;
-        if (!isbn.isEmpty())
-            count++;
-        if (!title.isEmpty())
-            count++;
-        if (!author.isEmpty())
-            count++;
-        if (!keyword.isEmpty())
-            count++;
-
+        for (auto s: {isbn, title, author, keyword})
+            if (!s.isEmpty())
+                count++;
         if (count > 1)
         {
-            QMessageBox::warning(this, "Warning", "Please fill only one field!");
+            QMessageBox::warning(this, "Warning", "Please fill No more than one field!");
             return;
         }
 
-        // 构造 show 命令
         std::string command = "show";
         if (!isbn.isEmpty())
             command += " -ISBN=" + isbn.toStdString();
@@ -75,7 +65,7 @@ private slots:
         bool running = true;
         std::string result = parser.execute(command, userManager, Logger, running);
 
-        if (result == "\n")
+        if (result.empty() || result == "\n")
         {
             QMessageBox::critical(this, "Error", "No matching books found!");
         }
@@ -85,13 +75,12 @@ private slots:
         }
         else
         {
-            // 弹出 OutcomeDialog
             OutcomeDialog dlg(this);
+            dlg.setWindowTitle("Query Result");
             dlg.fillTable(result);
-            dlg.exec(); // 模态弹出
+            dlg.exec();
         }
     }
-
 
 private:
     Ui::ShowBookDialog ui;
@@ -101,23 +90,13 @@ private:
 
     void handleExclusiveEditing(QLineEdit *sender, const QString &text)
     {
-        QList<QLineEdit *> others = {ui.lineEdit_ISBN, ui.lineEdit_title, ui.lineEdit_author, ui.lineEdit_keyword};
+        QList<QLineEdit *> others = {ui.lineEditISBN, ui.lineEditTitle, ui.lineEditAuthor, ui.lineEditKeyword};
         others.removeOne(sender);
-
-        if (!text.isEmpty())
+        for (auto edit: others)
         {
-            for (QLineEdit *edit: others)
-            {
-                edit->setReadOnly(true);
-                edit->clear(); // 可选
-            }
-        }
-        else
-        {
-            for (QLineEdit *edit: others)
-            {
-                edit->setReadOnly(false);
-            }
+            edit->setReadOnly(!text.isEmpty());
+            if (!text.isEmpty())
+                edit->clear();
         }
     }
 };

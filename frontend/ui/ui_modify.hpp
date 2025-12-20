@@ -1,17 +1,7 @@
-#ifndef UI_MODIFY_H
-#define UI_MODIFY_H
+#ifndef UI_MODIFYDIALOG_H
+#define UI_MODIFYDIALOG_H
 
-#include <QtCore/QVariant>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QWidget>
+#include <QtWidgets>
 
 QT_BEGIN_NAMESPACE
 
@@ -23,142 +13,105 @@ public:
     QSpacerItem *leftSpacer;
     QWidget *formWidget;
     QGridLayout *gridLayout;
-    QLabel *label_ISBN;
-    QLineEdit *lineEdit_ISBN;
-    QLabel *label_title;
-    QLineEdit *lineEdit_title;
-    QLabel *label_author;
-    QLineEdit *lineEdit_author;
-    QLabel *label_keyword;
-    QLineEdit *lineEdit_keyword;
+    QLabel *labelISBN;
+    QLineEdit *lineEditISBN;
+    QLabel *labelTitle;
+    QLineEdit *lineEditTitle;
+    QLabel *labelAuthor;
+    QLineEdit *lineEditAuthor;
+    QLabel *labelKeyword;
+    QLineEdit *lineEditKeyword;
     QSpacerItem *rightSpacer;
     QHBoxLayout *buttonLayout;
     QSpacerItem *buttonSpacerLeft;
-    QPushButton *pushButton;
+    QPushButton *pushButtonModify;
     QSpacerItem *buttonSpacerRight;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("ModifyDialog"));
+            Dialog->setObjectName(QStringLiteral("ModifyDialog"));
         Dialog->resize(400, 300);
-        verticalLayout = new QVBoxLayout(Dialog);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        formOuterLayout = new QHBoxLayout();
-        formOuterLayout->setObjectName(QString::fromUtf8("formOuterLayout"));
-        leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
+        verticalLayout = new QVBoxLayout(Dialog);
+
+        formOuterLayout = new QHBoxLayout();
+        leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
         formOuterLayout->addItem(leftSpacer);
 
         formWidget = new QWidget(Dialog);
-        formWidget->setObjectName(QString::fromUtf8("formWidget"));
         gridLayout = new QGridLayout(formWidget);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        label_ISBN = new QLabel(formWidget);
-        label_ISBN->setObjectName(QString::fromUtf8("label_ISBN"));
 
-        gridLayout->addWidget(label_ISBN, 0, 0, 1, 1, Qt::AlignRight);
+        // ISBN
+        labelISBN = new QLabel(formWidget);
+        gridLayout->addWidget(labelISBN, 0, 0, Qt::AlignRight);
+        lineEditISBN = new QLineEdit(formWidget);
+        lineEditISBN->setMaximumSize(QSize(180, 16777215));
+        lineEditISBN->setMaxLength(20);
+        gridLayout->addWidget(lineEditISBN, 0, 1);
 
-        lineEdit_ISBN = new QLineEdit(formWidget);
-        lineEdit_ISBN->setObjectName(QString::fromUtf8("lineEdit_ISBN"));
-        lineEdit_ISBN->setMaximumSize(QSize(180, 16777215));
-        lineEdit_ISBN->setMaxLength(20);
+        // Title
+        labelTitle = new QLabel(formWidget);
+        gridLayout->addWidget(labelTitle, 1, 0, Qt::AlignRight);
+        lineEditTitle = new QLineEdit(formWidget);
+        lineEditTitle->setMaximumSize(QSize(250, 16777215));
+        lineEditTitle->setMaxLength(60);
+        gridLayout->addWidget(lineEditTitle, 1, 1);
 
-        gridLayout->addWidget(lineEdit_ISBN, 0, 1, 1, 1);
+        // Author
+        labelAuthor = new QLabel(formWidget);
+        gridLayout->addWidget(labelAuthor, 2, 0, Qt::AlignRight);
+        lineEditAuthor = new QLineEdit(formWidget);
+        lineEditAuthor->setMaximumSize(QSize(250, 16777215));
+        lineEditAuthor->setMaxLength(60);
+        gridLayout->addWidget(lineEditAuthor, 2, 1);
 
-        label_title = new QLabel(formWidget);
-        label_title->setObjectName(QString::fromUtf8("label_title"));
-
-        gridLayout->addWidget(label_title, 1, 0, 1, 1, Qt::AlignRight);
-
-        lineEdit_title = new QLineEdit(formWidget);
-        lineEdit_title->setObjectName(QString::fromUtf8("lineEdit_title"));
-        lineEdit_title->setMaximumSize(QSize(250, 16777215));
-        lineEdit_title->setMaxLength(60);
-        lineEdit_title->setInputMethodHints(Qt::ImhPreferNumbers|Qt::ImhMultiLine);
-
-        gridLayout->addWidget(lineEdit_title, 1, 1, 1, 1);
-
-        label_author = new QLabel(formWidget);
-        label_author->setObjectName(QString::fromUtf8("label_author"));
-
-        gridLayout->addWidget(label_author, 2, 0, 1, 1, Qt::AlignRight);
-
-        lineEdit_author = new QLineEdit(formWidget);
-        lineEdit_author->setObjectName(QString::fromUtf8("lineEdit_author"));
-        lineEdit_author->setMaximumSize(QSize(250, 16777215));
-        lineEdit_author->setMaxLength(60);
-        lineEdit_author->setInputMethodHints(Qt::ImhPreferNumbers|Qt::ImhMultiLine);
-
-        gridLayout->addWidget(lineEdit_author, 2, 1, 1, 1);
-
-        label_keyword = new QLabel(formWidget);
-        label_keyword->setObjectName(QString::fromUtf8("label_keyword"));
-
-        gridLayout->addWidget(label_keyword, 3, 0, 1, 1, Qt::AlignRight);
-
-        lineEdit_keyword = new QLineEdit(formWidget);
-        lineEdit_keyword->setObjectName(QString::fromUtf8("lineEdit_keyword"));
-        lineEdit_keyword->setMaximumSize(QSize(250, 16777215));
-        lineEdit_keyword->setMaxLength(60);
-        lineEdit_keyword->setInputMethodHints(Qt::ImhPreferNumbers|Qt::ImhMultiLine);
-
-        gridLayout->addWidget(lineEdit_keyword, 3, 1, 1, 1);
-
+        // Keyword
+        labelKeyword = new QLabel(formWidget);
+        gridLayout->addWidget(labelKeyword, 3, 0, Qt::AlignRight);
+        lineEditKeyword = new QLineEdit(formWidget);
+        lineEditKeyword->setMaximumSize(QSize(250, 16777215));
+        lineEditKeyword->setMaxLength(60);
+        gridLayout->addWidget(lineEditKeyword, 3, 1);
 
         formOuterLayout->addWidget(formWidget);
-
         rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
         formOuterLayout->addItem(rightSpacer);
-
-
         verticalLayout->addLayout(formOuterLayout);
 
+        // Button
         buttonLayout = new QHBoxLayout();
-        buttonLayout->setObjectName(QString::fromUtf8("buttonLayout"));
         buttonSpacerLeft = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
         buttonLayout->addItem(buttonSpacerLeft);
 
-        pushButton = new QPushButton(Dialog);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-
-        buttonLayout->addWidget(pushButton);
+        pushButtonModify = new QPushButton(Dialog);
+        buttonLayout->addWidget(pushButtonModify);
 
         buttonSpacerRight = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
         buttonLayout->addItem(buttonSpacerRight);
-
-
         verticalLayout->addLayout(buttonLayout);
 
-
         retranslateUi(Dialog);
-
-        pushButton->setDefault(true);
-
-
+        pushButtonModify->setDefault(true);
         QMetaObject::connectSlotsByName(Dialog);
-    } // setupUi
+    }
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("ModifyDialog", "Modify", nullptr));
-        label_ISBN->setText(QCoreApplication::translate("ModifyDialog", "ISBN:", nullptr));
-        label_title->setText(QCoreApplication::translate("ModifyDialog", "Title:", nullptr));
-        label_author->setText(QCoreApplication::translate("ModifyDialog", "Author:", nullptr));
-        label_keyword->setText(QCoreApplication::translate("ModifyDialog", "Keyword:", nullptr));
-        pushButton->setText(QCoreApplication::translate("ModifyDialog", "Modify", nullptr));
-    } // retranslateUi
-
+        Dialog->setWindowTitle(QCoreApplication::translate("ModifyDialog", "Modify"));
+        labelISBN->setText(QCoreApplication::translate("ModifyDialog", "ISBN:"));
+        labelTitle->setText(QCoreApplication::translate("ModifyDialog", "Title:"));
+        labelAuthor->setText(QCoreApplication::translate("ModifyDialog", "Author:"));
+        labelKeyword->setText(QCoreApplication::translate("ModifyDialog", "Keyword:"));
+        pushButtonModify->setText(QCoreApplication::translate("ModifyDialog", "Modify"));
+    }
 };
 
 namespace Ui {
-    class ModifyDialog: public Ui_ModifyDialog {};
-} // namespace Ui
+    class ModifyDialog : public Ui_ModifyDialog {};
+}
 
 QT_END_NAMESPACE
 
-#endif // UI_MODIFY_H
+#endif // UI_MODIFYDIALOG_H

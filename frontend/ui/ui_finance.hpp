@@ -1,56 +1,78 @@
-#ifndef UI_FINANCE_H
-#define UI_FINANCE_H
+#ifndef UI_FINANCEDIALOG_H
+#define UI_FINANCEDIALOG_H
 
-#include <QtCore/QVariant>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
+#include <QDialog>
+#include <QApplication>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_FinanceDialog
 {
 public:
-    QLabel *label;
-    QLineEdit *lineEdit;
-    QPushButton *pushButton;
+    QVBoxLayout *verticalLayout;
+    QHBoxLayout *formLayout;
+    QLabel *labelCount;
+    QLineEdit *lineEditCount;
+    QHBoxLayout *buttonLayout;
+    QSpacerItem *leftSpacer;
+    QPushButton *pushButtonShow;
+    QSpacerItem *rightSpacer;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("FinanceDialog"));
-        Dialog->resize(400, 300);
-        label = new QLabel(Dialog);
-        label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(90, 100, 57, 15));
-        lineEdit = new QLineEdit(Dialog);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
-        lineEdit->setGeometry(QRect(140, 100, 113, 23));
-        lineEdit->setMaxLength(10);
-        pushButton = new QPushButton(Dialog);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setGeometry(QRect(129, 160, 101, 23));
+            Dialog->setObjectName(QStringLiteral("FinanceDialog"));
+        Dialog->resize(400, 200);
+
+        // Qt6 弹窗带系统边框和标题栏
+        Dialog->setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
+
+        verticalLayout = new QVBoxLayout(Dialog);
+
+        // 表单布局
+        formLayout = new QHBoxLayout();
+        labelCount = new QLabel(Dialog);
+        lineEditCount = new QLineEdit(Dialog);
+        lineEditCount->setMaxLength(10);
+        formLayout->addWidget(labelCount);
+        formLayout->addWidget(lineEditCount);
+        verticalLayout->addLayout(formLayout);
+
+        // 按钮布局
+        buttonLayout = new QHBoxLayout();
+        leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        pushButtonShow = new QPushButton(Dialog);
+
+        buttonLayout->addItem(leftSpacer);
+        buttonLayout->addWidget(pushButtonShow);
+        buttonLayout->addItem(rightSpacer);
+        verticalLayout->addLayout(buttonLayout);
 
         retranslateUi(Dialog);
-
+        pushButtonShow->setDefault(true);
         QMetaObject::connectSlotsByName(Dialog);
-    } // setupUi
+    }
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("FinanceDialog", "Show Finance", nullptr));
-        label->setText(QCoreApplication::translate("FinanceDialog", "Count:", nullptr));
-        pushButton->setText(QCoreApplication::translate("FinanceDialog", "Show Finance", nullptr));
-    } // retranslateUi
-
+        Dialog->setWindowTitle(QCoreApplication::translate("FinanceDialog", "Show Finance"));
+        labelCount->setText(QCoreApplication::translate("FinanceDialog", "Count:"));
+        pushButtonShow->setText(QCoreApplication::translate("FinanceDialog", "Show Finance"));
+    }
 };
 
 namespace Ui {
     class FinanceDialog: public Ui_FinanceDialog {};
-} // namespace Ui
+}
 
 QT_END_NAMESPACE
 
-#endif // UI_FINANCE_H
+#endif // UI_FINANCEDIALOG_H

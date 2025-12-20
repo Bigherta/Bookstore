@@ -15,35 +15,33 @@ public:
         ui.setupUi(this);
 
         // 默认按 Enter 键触发登录
-        ui.pushButton->setDefault(true);
+        ui.pushButtonLogin->setDefault(true);
 
         // 绑定按钮点击事件
-        connect(ui.pushButton, &QPushButton::clicked, this, &LoginDialog::onLoginClicked);
+        connect(ui.pushButtonLogin, &QPushButton::clicked, this, &LoginDialog::onLoginClicked);
     }
 
 private slots:
     void onLoginClicked()
     {
-        QString userID = ui.lineEdit_userID->text().trimmed();
-        QString password = ui.lineEdit_password->text();
+        QString userID = ui.lineEditUserID->text().trimmed();
+        QString password = ui.lineEditPassword->text();
 
         if (userID.isEmpty()) {
             QMessageBox::warning(this, "Warning", "Please enter user ID!");
             return;
         }
 
-        // 构造命令
         std::string command = "su " + userID.toStdString() + " " + password.toStdString();
         bool running = true;
 
-        // 调用后端 parser 执行
         std::string result = parser.execute(command, userManager, Logger, running);
 
         if (result == "Invalid\n") {
             QMessageBox::critical(this, "Login Failed", "Invalid user ID or password!");
             return;
         }
-        accept(); // 关闭对话框，返回 QDialog::Accepted
+        accept();
     }
 
 private:

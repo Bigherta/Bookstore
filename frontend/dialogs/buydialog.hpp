@@ -1,3 +1,4 @@
+#pragma once
 #include <QtWidgets>
 #include "../../include/Log.hpp"
 #include "../../include/parser.hpp"
@@ -8,18 +9,18 @@ class BuyDialog : public QDialog
 {
     Q_OBJECT
 public:
-    BuyDialog(Parser &p, UserManager &um, Log &l, QWidget *parent = nullptr) :
-        QDialog(parent), parser(p), userManager(um), Logger(l)
+    explicit BuyDialog(Parser &p, UserManager &um, Log &l, QWidget *parent = nullptr)
+        : QDialog(parent), parser(p), userManager(um), Logger(l)
     {
         ui.setupUi(this);
-        connect(ui.pushButton_buy, &QPushButton::clicked, this, &BuyDialog::onBuyClicked);
+        connect(ui.pushButtonBuy, &QPushButton::clicked, this, &BuyDialog::onBuyClicked);
     }
 
 private slots:
     void onBuyClicked()
     {
-        QString isbn = ui.lineEdit_isbn->text();
-        QString quantity = ui.lineEdit_quantity->text();
+        QString isbn = ui.lineEditISBN->text();
+        QString quantity = ui.lineEditQuantity->text();
 
         if (isbn.isEmpty() || quantity.isEmpty())
         {
@@ -36,12 +37,9 @@ private slots:
             QMessageBox::critical(this, "Error", "Operation not valid!");
             return;
         }
-        else
-        {
 
-            QMessageBox::information(this, "Success", QString::fromStdString(result));
-            accept();
-        }
+        QMessageBox::information(this, "Success", QString::fromStdString(result));
+        accept();
     }
 
 private:

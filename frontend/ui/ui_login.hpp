@@ -1,17 +1,16 @@
-#ifndef UI_LOGIN_H
-#define UI_LOGIN_H
+#ifndef UI_LOGINDIALOG_H
+#define UI_LOGINDIALOG_H
 
-#include <QtCore/QVariant>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QWidget>
+#include <QDialog>
+#include <QApplication>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -19,119 +18,94 @@ class Ui_LoginDialog
 {
 public:
     QVBoxLayout *verticalLayout;
-    QHBoxLayout *gridOuterLayout;
-    QSpacerItem *horizontalSpacerLeft;
+    QHBoxLayout *formOuterLayout;
+    QSpacerItem *leftSpacer;
     QWidget *formWidget;
     QGridLayout *gridLayout;
-    QLabel *label_userID;
-    QLineEdit *lineEdit_userID;
-    QLabel *label_password;
-    QLineEdit *lineEdit_password;
-    QSpacerItem *horizontalSpacerRight;
+    QLabel *labelUserID;
+    QLineEdit *lineEditUserID;
+    QLabel *labelPassword;
+    QLineEdit *lineEditPassword;
+    QSpacerItem *rightSpacer;
     QHBoxLayout *buttonLayout;
     QSpacerItem *buttonSpacerLeft;
-    QPushButton *pushButton;
+    QPushButton *pushButtonLogin;
     QSpacerItem *buttonSpacerRight;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("LoginDialog"));
+            Dialog->setObjectName(QStringLiteral("LoginDialog"));
         Dialog->resize(400, 200);
-        verticalLayout = new QVBoxLayout(Dialog);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        gridOuterLayout = new QHBoxLayout();
-        gridOuterLayout->setObjectName(QString::fromUtf8("gridOuterLayout"));
-        horizontalSpacerLeft = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        gridOuterLayout->addItem(horizontalSpacerLeft);
+        // 系统边框和标题栏
+        Dialog->setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
+
+        verticalLayout = new QVBoxLayout(Dialog);
+
+        // 表单外层布局
+        formOuterLayout = new QHBoxLayout();
+        leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        formOuterLayout->addItem(leftSpacer);
 
         formWidget = new QWidget(Dialog);
-        formWidget->setObjectName(QString::fromUtf8("formWidget"));
         gridLayout = new QGridLayout(formWidget);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        label_userID = new QLabel(formWidget);
-        label_userID->setObjectName(QString::fromUtf8("label_userID"));
 
-        gridLayout->addWidget(label_userID, 0, 0, 1, 1, Qt::AlignRight | Qt::AlignVCenter);
+        labelUserID = new QLabel(formWidget);
+        gridLayout->addWidget(labelUserID, 0, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-        lineEdit_userID = new QLineEdit(formWidget);
-        lineEdit_userID->setObjectName(QString::fromUtf8("lineEdit_userID"));
-        lineEdit_userID->setMaximumSize(QSize(200, 16777215));
-        lineEdit_userID->setAlignment(Qt::AlignHCenter);
-        lineEdit_userID->setMaxLength(30);
+        lineEditUserID = new QLineEdit(formWidget);
+        lineEditUserID->setMaximumSize(QSize(200, 16777215));
+        lineEditUserID->setAlignment(Qt::AlignHCenter);
+        lineEditUserID->setMaxLength(30);
+        gridLayout->addWidget(lineEditUserID, 0, 1);
 
-        gridLayout->addWidget(lineEdit_userID, 0, 1, 1, 1);
+        labelPassword = new QLabel(formWidget);
+        gridLayout->addWidget(labelPassword, 1, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-        label_password = new QLabel(formWidget);
-        label_password->setObjectName(QString::fromUtf8("label_password"));
+        lineEditPassword = new QLineEdit(formWidget);
+        lineEditPassword->setMaximumSize(QSize(200, 16777215));
+        lineEditPassword->setEchoMode(QLineEdit::Password);
+        lineEditPassword->setAlignment(Qt::AlignHCenter);
+        lineEditPassword->setMaxLength(30);
+        gridLayout->addWidget(lineEditPassword, 1, 1);
 
-        gridLayout->addWidget(label_password, 1, 0, 1, 1, Qt::AlignRight | Qt::AlignVCenter);
+        formOuterLayout->addWidget(formWidget);
+        rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        formOuterLayout->addItem(rightSpacer);
+        verticalLayout->addLayout(formOuterLayout);
 
-        lineEdit_password = new QLineEdit(formWidget);
-        lineEdit_password->setObjectName(QString::fromUtf8("lineEdit_password"));
-        lineEdit_password->setMaximumSize(QSize(200, 16777215));
-        lineEdit_password->setEchoMode(QLineEdit::Password);
-        lineEdit_password->setAlignment(Qt::AlignHCenter);
-        lineEdit_password->setMaxLength(30);
-
-        gridLayout->addWidget(lineEdit_password, 1, 1, 1, 1);
-
-
-        gridOuterLayout->addWidget(formWidget);
-
-        horizontalSpacerRight = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridOuterLayout->addItem(horizontalSpacerRight);
-
-
-        verticalLayout->addLayout(gridOuterLayout);
-
+        // 按钮布局
         buttonLayout = new QHBoxLayout();
-        buttonLayout->setObjectName(QString::fromUtf8("buttonLayout"));
         buttonSpacerLeft = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
         buttonLayout->addItem(buttonSpacerLeft);
 
-        pushButton = new QPushButton(Dialog);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-
-        buttonLayout->addWidget(pushButton);
+        pushButtonLogin = new QPushButton(Dialog);
+        buttonLayout->addWidget(pushButtonLogin);
 
         buttonSpacerRight = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
         buttonLayout->addItem(buttonSpacerRight);
-
-
         verticalLayout->addLayout(buttonLayout);
 
-
         retranslateUi(Dialog);
-
-        pushButton->setDefault(true);
-
-
+        pushButtonLogin->setDefault(true);
         QMetaObject::connectSlotsByName(Dialog);
-    } // setupUi
+    }
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("LoginDialog", "Log In", nullptr));
-
-        label_userID->setText(QCoreApplication::translate("LoginDialog", "userID:", nullptr));
-        label_password->setText(QCoreApplication::translate("LoginDialog", "password:", nullptr));
-        pushButton->setText(QCoreApplication::translate("LoginDialog", "Log In", nullptr));
+        Dialog->setWindowTitle(QCoreApplication::translate("LoginDialog", "Log In"));
+        labelUserID->setText(QCoreApplication::translate("LoginDialog", "User ID:"));
+        labelPassword->setText(QCoreApplication::translate("LoginDialog", "Password:"));
+        pushButtonLogin->setText(QCoreApplication::translate("LoginDialog", "Log In"));
     }
 };
 
-namespace Ui
-{
-    class LoginDialog : public Ui_LoginDialog
-    {
-    };
-} // namespace Ui
+namespace Ui {
+    class LoginDialog: public Ui_LoginDialog {};
+}
 
 QT_END_NAMESPACE
 
-#endif // UI_LOGIN_H
+#endif // UI_LOGINDIALOG_H

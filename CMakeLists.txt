@@ -4,7 +4,8 @@ project(BookstoreApp LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+# Qt6
+find_package(Qt6 COMPONENTS Widgets REQUIRED)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
@@ -46,4 +47,4 @@ add_executable(BookstoreApp
     ${DIALOG_HEADERS}
 )
 
-target_link_libraries(BookstoreApp Qt5::Widgets)
+target_link_libraries(BookstoreApp Qt6::Widgets)

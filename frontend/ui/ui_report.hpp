@@ -1,13 +1,7 @@
-#ifndef UI_REPORT_H
-#define UI_REPORT_H
+#ifndef UI_REPORTDIALOG_H
+#define UI_REPORTDIALOG_H
 
-#include <QtCore/QVariant>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets>
 
 QT_BEGIN_NAMESPACE
 
@@ -15,79 +9,68 @@ class Ui_ReportDialog
 {
 public:
     QVBoxLayout *verticalLayout;
+
     QHBoxLayout *hLayoutFinance;
     QSpacerItem *leftSpacer1;
-    QPushButton *pushButton;
+    QPushButton *pushButtonFinance;
     QSpacerItem *rightSpacer1;
+
     QHBoxLayout *hLayoutEmployee;
     QSpacerItem *leftSpacer2;
-    QPushButton *pushButton_2;
+    QPushButton *pushButtonEmployee;
     QSpacerItem *rightSpacer2;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QString::fromUtf8("ReportDialog"));
-        Dialog->resize(400, 300);
-        verticalLayout = new QVBoxLayout(Dialog);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        hLayoutFinance = new QHBoxLayout();
-        hLayoutFinance->setObjectName(QString::fromUtf8("hLayoutFinance"));
-        leftSpacer1 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+            Dialog->setObjectName(QStringLiteral("ReportDialog"));
+        Dialog->resize(400, 200);
+        Dialog->setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
 
+        verticalLayout = new QVBoxLayout(Dialog);
+
+        // 财务报表按钮
+        hLayoutFinance = new QHBoxLayout();
+        leftSpacer1 = new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Minimum);
         hLayoutFinance->addItem(leftSpacer1);
 
-        pushButton = new QPushButton(Dialog);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setMinimumSize(QSize(80, 23));
+        pushButtonFinance = new QPushButton(Dialog);
+        pushButtonFinance->setMinimumSize(QSize(120, 35));
+        hLayoutFinance->addWidget(pushButtonFinance);
 
-        hLayoutFinance->addWidget(pushButton);
-
-        rightSpacer1 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
+        rightSpacer1 = new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Minimum);
         hLayoutFinance->addItem(rightSpacer1);
-
-
         verticalLayout->addLayout(hLayoutFinance);
 
+        // 员工报表按钮
         hLayoutEmployee = new QHBoxLayout();
-        hLayoutEmployee->setObjectName(QString::fromUtf8("hLayoutEmployee"));
-        leftSpacer2 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
+        leftSpacer2 = new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Minimum);
         hLayoutEmployee->addItem(leftSpacer2);
 
-        pushButton_2 = new QPushButton(Dialog);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
-        pushButton_2->setMinimumSize(QSize(80, 23));
+        pushButtonEmployee = new QPushButton(Dialog);
+        pushButtonEmployee->setMinimumSize(QSize(120, 35));
+        hLayoutEmployee->addWidget(pushButtonEmployee);
 
-        hLayoutEmployee->addWidget(pushButton_2);
-
-        rightSpacer2 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
+        rightSpacer2 = new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Minimum);
         hLayoutEmployee->addItem(rightSpacer2);
-
-
         verticalLayout->addLayout(hLayoutEmployee);
 
-
         retranslateUi(Dialog);
-
         QMetaObject::connectSlotsByName(Dialog);
-    } // setupUi
+    }
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QCoreApplication::translate("ReportDialog", "Report", nullptr));
-        pushButton->setText(QCoreApplication::translate("ReportDialog", "Finance", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("ReportDialog", "Employee", nullptr));
-    } // retranslateUi
-
+        Dialog->setWindowTitle(QCoreApplication::translate("ReportDialog","Report"));
+        pushButtonFinance->setText(QCoreApplication::translate("ReportDialog","Finance"));
+        pushButtonEmployee->setText(QCoreApplication::translate("ReportDialog","Employee"));
+    }
 };
 
 namespace Ui {
     class ReportDialog: public Ui_ReportDialog {};
-} // namespace Ui
+}
 
 QT_END_NAMESPACE
 
-#endif // UI_REPORT_H
+#endif // UI_REPORTDIALOG_H
