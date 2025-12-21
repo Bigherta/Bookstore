@@ -2,6 +2,7 @@
 #define UI_MODIFYDIALOG_H
 
 #include <QtWidgets>
+#include <QDoubleValidator>
 
 QT_BEGIN_NAMESPACE
 
@@ -21,6 +22,8 @@ public:
     QLineEdit *lineEditAuthor;
     QLabel *labelKeyword;
     QLineEdit *lineEditKeyword;
+    QLabel *labelPrice;
+    QLineEdit *lineEditPrice;
     QSpacerItem *rightSpacer;
     QHBoxLayout *buttonLayout;
     QSpacerItem *buttonSpacerLeft;
@@ -31,7 +34,7 @@ public:
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("ModifyDialog"));
-        Dialog->resize(400, 300);
+        Dialog->resize(400, 370); // 调整高度以适应价格字段
 
         verticalLayout = new QVBoxLayout(Dialog);
 
@@ -75,6 +78,20 @@ public:
         lineEditKeyword->setMaxLength(60);
         gridLayout->addWidget(lineEditKeyword, 3, 1);
 
+        // Price
+        labelPrice = new QLabel(formWidget);
+        gridLayout->addWidget(labelPrice, 4, 0, Qt::AlignRight);
+        lineEditPrice = new QLineEdit(formWidget);
+        lineEditPrice->setMaximumSize(QSize(100, 16777215));
+        lineEditPrice->setMaxLength(13); // 最大字符数
+
+        // 价格输入验证器：非负实数，任意小数位
+        QDoubleValidator *priceValidator = new QDoubleValidator(0.0, 9999999999999.0, 340, lineEditPrice);
+        priceValidator->setNotation(QDoubleValidator::StandardNotation);
+        lineEditPrice->setValidator(priceValidator);
+
+        gridLayout->addWidget(lineEditPrice, 4, 1);
+
         formOuterLayout->addWidget(formWidget);
         rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
         formOuterLayout->addItem(rightSpacer);
@@ -104,6 +121,7 @@ public:
         labelTitle->setText(QCoreApplication::translate("ModifyDialog", "Title:"));
         labelAuthor->setText(QCoreApplication::translate("ModifyDialog", "Author:"));
         labelKeyword->setText(QCoreApplication::translate("ModifyDialog", "Keyword:"));
+        labelPrice->setText(QCoreApplication::translate("ModifyDialog", "Price:"));
         pushButtonModify->setText(QCoreApplication::translate("ModifyDialog", "Modify"));
     }
 };

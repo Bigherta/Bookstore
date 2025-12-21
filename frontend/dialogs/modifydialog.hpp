@@ -23,18 +23,34 @@ private slots:
         QString title = ui.lineEditTitle->text().trimmed();
         QString author = ui.lineEditAuthor->text().trimmed();
         QString keyword = ui.lineEditKeyword->text().trimmed();
+        QString price = ui.lineEditPrice->text().trimmed();  
 
-        if (isbn.isEmpty() && title.isEmpty() && author.isEmpty() && keyword.isEmpty())
+        // 检查至少有一个字段被修改
+        if (isbn.isEmpty() && title.isEmpty() && author.isEmpty() && keyword.isEmpty() && price.isEmpty())
         {
             QMessageBox::warning(this, "Warning", "Cannot be empty!");
             return;
         }
 
+        // 构造命令
         std::string command = "modify";
         if (!isbn.isEmpty()) command += " -ISBN=" + isbn.toStdString();
         if (!title.isEmpty()) command += " -name=\"" + title.toStdString() + "\"";
         if (!author.isEmpty()) command += " -author=\"" + author.toStdString() + "\"";
         if (!keyword.isEmpty()) command += " -keyword=\"" + keyword.toStdString() + "\"";
+
+        // 如果价格非空，校验合法性后加入命令
+        if (!price.isEmpty())
+        {
+            bool ok;
+            double priceVal = price.toDouble(&ok);
+            if (!ok || priceVal < 0)
+            {
+                QMessageBox::critical(this, "Error", "Price must be a non-negative number!");
+                return;
+            }
+            command += " -price=" + std::to_string(priceVal);
+        }
 
         bool running = true;
         std::string result = parser.execute(command, userManager, Logger, running);
