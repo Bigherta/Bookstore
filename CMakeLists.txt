@@ -1,14 +1,28 @@
-cmake_minimum_required(VERSION 3.10)
-project(BookstoreApp LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.16)
 
+project(BookstoreApp
+    VERSION 1.0
+    LANGUAGES CXX
+)
+
+# ---------------------------
+# C++ 标准
+# ---------------------------
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Qt6 COMPONENTS Widgets REQUIRED)
-
+# ---------------------------
+# Qt 自动工具
+# ---------------------------
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+
+# ---------------------------
+# 查找 Qt6
+# ---------------------------
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 # ---------------------------
 # 源文件
@@ -16,6 +30,7 @@ set(CMAKE_AUTORCC ON)
 set(SOURCES
     frontend/src/main.cpp
     frontend/src/mainwindow.cpp
+
     src/parser.cpp
     src/user.cpp
     src/Log.cpp
@@ -26,7 +41,9 @@ set(SOURCES
 # ---------------------------
 # 带 Q_OBJECT 的头文件
 # ---------------------------
-set(DIALOG_HEADERS
+set(HEADERS
+    frontend/src/mainwindow.hpp
+
     frontend/dialogs/registerdialog.hpp
     frontend/dialogs/deletedialog.hpp
     frontend/dialogs/buydialog.hpp
@@ -41,25 +58,43 @@ set(DIALOG_HEADERS
     frontend/dialogs/importdialog.hpp
     frontend/dialogs/outcomedialog.hpp
     frontend/dialogs/logdialog.hpp
-    frontend/src/mainwindow.hpp
 )
 
 # ---------------------------
 # Qt 资源文件
 # ---------------------------
-set(IMAGE_QRC "${CMAKE_CURRENT_SOURCE_DIR}/images.qrc")
-qt6_add_resources(RESOURCES ${IMAGE_QRC})
+qt6_add_resources(RESOURCES
+    images.qrc
+)
 
 # ---------------------------
-# 创建可执行文件
+# 创建 Windows GUI 可执行文件（关键！）
 # ---------------------------
-add_executable(BookstoreApp ${SOURCES})
-target_sources(BookstoreApp PRIVATE ${DIALOG_HEADERS} ${RESOURCES})
+add_executable(BookstoreApp
+    WIN32
+    ${SOURCES}
+    ${HEADERS}
+    ${RESOURCES}
+)
 
+# ---------------------------
+# 头文件搜索路径
+# ---------------------------
 target_include_directories(BookstoreApp PRIVATE
     include
+    src
     frontend/src
     frontend/dialogs
 )
 
-target_link_libraries(BookstoreApp PRIVATE Qt6::Widgets)
+# ---------------------------
+# 链接 Qt 库
+# ---------------------------
+target_link_libraries(BookstoreApp PRIVATE
+    Qt6::Widgets
+)
+
+# ---------------------------
+# Qt6 规范收尾（可选但推荐）
+# ---------------------------
+qt_finalize_executable(BookstoreApp)
