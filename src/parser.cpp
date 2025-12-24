@@ -1,9 +1,9 @@
 #include "../include/parser.hpp"
-#include <cctype>
 #include "../include/Log.hpp"
 #include "../include/book.hpp"
 #include "../include/user.hpp"
 #include "../include/validator.hpp"
+#include <cctype>
 
 
 // 将字符串匹配成对应的枚举类

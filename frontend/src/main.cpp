@@ -1,6 +1,6 @@
 #include <QApplication>
 #include "mainwindow.hpp"
-#include "../../include/Parser.hpp"
+#include "../../include/parser.hpp"
 #include "../../include/user.hpp"
 #include "../../include/Log.hpp"
 

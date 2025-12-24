@@ -1,9 +1,9 @@
 #include "../include/book.hpp"
+#include "../include/validator.hpp"
 #include <cstring>
 #include <string>
 #include <unordered_set>
 #include <vector>
-#include "../include/validator.hpp"
 
 
 int utf8_char_len(unsigned char ch)
@@ -139,7 +139,7 @@ bool is_chinese_valid(std::string str)
     }
     return true;
 }
-// 判断ISBN是否合法（'|' 分隔）
+// 判断ISBN是否合法
 bool Book::is_ISBN_valid(const std::string &ISBN)
 {
     try
@@ -154,7 +154,7 @@ bool Book::is_ISBN_valid(const std::string &ISBN)
     return true;
 }
 
-// 判断书名或作者名是否合法（'|' 分隔）
+// 判断书名或作者名是否合法
 bool Book::is_author_or_name_valid(const std::string &author_or_name) { return is_chinese_valid(author_or_name); }
 
 // 判断关键词是否合法（'|' 分隔）

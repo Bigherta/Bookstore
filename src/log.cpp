@@ -1,6 +1,5 @@
 #include "../include/Log.hpp"
 #include <cstdio>
-#include <cstring>
 #include <iomanip>
 #include <sstream>
 #include <string>

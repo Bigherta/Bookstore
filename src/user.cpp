@@ -1,10 +1,8 @@
 #include "../include/user.hpp"
-#include <cassert>
-#include <cctype>
+#include "../include/validator.hpp"
 #include <cstdio>
 #include <cstring>
 #include <string>
-#include "../include/validator.hpp"
 
 UserManager::UserManager()
 {
@@ -130,7 +128,6 @@ bool UserManager::passwd(const std::string &userID_, const std::string &cur_Pass
 {
 
     // 检查密码合法性(如果提供旧密码)
-
     if (!user::is_ID_or_passwd_valid(new_Password_))
         return false;
     if (!user::is_ID_or_passwd_valid(cur_Password_) && !cur_Password_.empty())

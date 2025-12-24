@@ -2,7 +2,6 @@
 #ifndef BOOK_HPP
 #define BOOK_HPP
 #include <iomanip>
-#include <ostream>
 #include <sstream>
 #include <cstring>
 #include <string>

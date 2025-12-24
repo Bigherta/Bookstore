@@ -1,6 +1,8 @@
 #pragma once
 #ifndef STORAGE_HPP
 #define STORAGE_HPP
+#include "book.hpp"
+#include "parser.hpp"
 #include <cmath>
 #include <cstring>
 #include <filesystem>
@@ -9,8 +11,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "book.hpp"
-#include "parser.hpp"
+#include <string_view>
 
 
 using std::fstream;
@@ -172,18 +173,10 @@ struct index_to_head
     }
 };
 
-struct IsbnTag
-{
-};
-struct NameTag
-{
-};
-struct AuthorTag
-{
-};
-struct KeywordTag
-{
-};
+struct IsbnTag{};
+struct NameTag{};
+struct AuthorTag{};
+struct KeywordTag{};
 
 template<typename Tag>
 struct StorageTraits;
@@ -191,29 +184,29 @@ struct StorageTraits;
 template<>
 struct StorageTraits<IsbnTag>
 {
-    static constexpr const char *index_file = "isbn_index";
-    static constexpr const char *book_file = "isbn_book";
+    inline static constexpr std::string_view index_file = "isbn_index";
+    inline static constexpr std::string_view book_file = "isbn_book";
 };
 
 template<>
 struct StorageTraits<NameTag>
 {
-    static constexpr const char *index_file = "name_index";
-    static constexpr const char *book_file = "name_book";
+    inline static constexpr std::string_view index_file = "name_index";
+    inline static constexpr std::string_view book_file = "name_book";
 };
 
 template<>
 struct StorageTraits<AuthorTag>
 {
-    static constexpr const char *index_file = "author_index";
-    static constexpr const char *book_file = "author_book";
+    inline static constexpr std::string_view index_file = "author_index";
+    inline static constexpr std::string_view book_file = "author_book";
 };
 
 template<>
 struct StorageTraits<KeywordTag>
 {
-    static constexpr const char *index_file = "keyword_index";
-    static constexpr const char *book_file = "keyword_book";
+    inline static constexpr std::string_view index_file = "keyword_index";
+    inline static constexpr std::string_view book_file = "keyword_book";
 };
 
 

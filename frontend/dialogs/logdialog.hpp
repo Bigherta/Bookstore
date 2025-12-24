@@ -37,7 +37,7 @@ private:
             int row = ui.tableLog->rowCount();
             ui.tableLog->insertRow(row);
 
-            // 简单按“System Log:” 或 “Finance Log:”开头判断类型
+            // 按“System Log:” 或 “Finance Log:”开头判断类型
             QString content = QString::fromLocal8Bit(line.c_str());
             if (line.find("System Log:") != std::string::npos)
                 type = "System";
