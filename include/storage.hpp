@@ -11,7 +11,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <string_view>
 
 
 using std::fstream;
@@ -184,29 +183,29 @@ struct StorageTraits;
 template<>
 struct StorageTraits<IsbnTag>
 {
-    inline static constexpr std::string_view index_file = "isbn_index";
-    inline static constexpr std::string_view book_file = "isbn_book";
+    inline static const std::string index_file = "isbn_index";
+    inline static const std::string book_file = "isbn_book";
 };
 
 template<>
 struct StorageTraits<NameTag>
 {
-    inline static constexpr std::string_view index_file = "name_index";
-    inline static constexpr std::string_view book_file = "name_book";
+    inline static const std::string index_file = "name_index";
+    inline static const std::string book_file = "name_book";
 };
 
 template<>
 struct StorageTraits<AuthorTag>
 {
-    inline static constexpr std::string_view index_file = "author_index";
-    inline static constexpr std::string_view book_file = "author_book";
+    inline static const std::string index_file = "author_index";
+    inline static const std::string book_file = "author_book";
 };
 
 template<>
 struct StorageTraits<KeywordTag>
 {
-    inline static constexpr std::string_view index_file = "keyword_index";
-    inline static constexpr std::string_view book_file = "keyword_book";
+    inline static const std::string index_file = "keyword_index";
+    inline static const std::string book_file = "keyword_book";
 };
 
 

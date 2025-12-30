@@ -5,28 +5,16 @@ project(BookstoreApp
     LANGUAGES CXX
 )
 
-# ---------------------------
-# C++ 标准
-# ---------------------------
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# ---------------------------
-# Qt 自动工具
-# ---------------------------
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-# ---------------------------
-# 查找 Qt6
-# ---------------------------
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
-# ---------------------------
-# 源文件
-# ---------------------------
 set(SOURCES
     frontend/src/main.cpp
     frontend/src/mainwindow.cpp
@@ -38,9 +26,6 @@ set(SOURCES
     src/Token.cpp
 )
 
-# ---------------------------
-# 带 Q_OBJECT 的头文件
-# ---------------------------
 set(HEADERS
     frontend/src/mainwindow.hpp
 
@@ -60,16 +45,10 @@ set(HEADERS
     frontend/dialogs/logdialog.hpp
 )
 
-# ---------------------------
-# Qt 资源文件
-# ---------------------------
 qt6_add_resources(RESOURCES
     images.qrc
 )
 
-# ---------------------------
-# 创建 Windows GUI 可执行文件（关键！）
-# ---------------------------
 add_executable(BookstoreApp
     WIN32
     ${SOURCES}
@@ -77,9 +56,6 @@ add_executable(BookstoreApp
     ${RESOURCES}
 )
 
-# ---------------------------
-# 头文件搜索路径
-# ---------------------------
 target_include_directories(BookstoreApp PRIVATE
     include
     src
@@ -87,14 +63,8 @@ target_include_directories(BookstoreApp PRIVATE
     frontend/dialogs
 )
 
-# ---------------------------
-# 链接 Qt 库
-# ---------------------------
 target_link_libraries(BookstoreApp PRIVATE
     Qt6::Widgets
 )
 
-# ---------------------------
-# Qt6 规范收尾（可选但推荐）
-# ---------------------------
 qt_finalize_executable(BookstoreApp)
