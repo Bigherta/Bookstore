@@ -3,6 +3,25 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <ctime>
+
+static std::string get_current_time()
+{
+    std::time_t now = std::time(nullptr);
+    std::tm *lt = std::localtime(&now);
+
+    std::ostringstream oss;
+    oss << "[" 
+        << (1900 + lt->tm_year) << "-"
+        << std::setw(2) << std::setfill('0') << (lt->tm_mon + 1) << "-"
+        << std::setw(2) << std::setfill('0') << lt->tm_mday << " "
+        << std::setw(2) << std::setfill('0') << lt->tm_hour << ":"
+        << std::setw(2) << std::setfill('0') << lt->tm_min << ":"
+        << std::setw(2) << std::setfill('0') << lt->tm_sec
+        << "] ";
+
+    return oss.str();
+}
 
 // 显示财务信息
 bool Log::ShowFinance(std::string &result, long long count_)
@@ -154,9 +173,14 @@ void Log::add_trading(double income, double expense)
 }
 
 // 更改操作信息
-void Log::change_opt(int privilege, std::string name, std::string info, operate &opt)
+void Log::change_opt(int privilege, std::string name, std::string operation, operate &opt)
 {
     std::string info_;
+
+    // 时间戳
+    info_ += get_current_time();
+
+    // role
     switch (privilege)
     {
         case 0: info_ += "visitor "; break;
@@ -164,10 +188,14 @@ void Log::change_opt(int privilege, std::string name, std::string info, operate 
         case 3: info_ += "worker "; break;
         case 7: info_ += "manager "; break;
     }
-    info_ += name + info;
+
+    // 名字 + 操作
+    info_ += name + operation;
+
     std::snprintf(opt.operation, sizeof(opt.operation), "%s", info_.c_str());
     opt.privilege = privilege;
 }
+
 
 // 添加操作记录
 void Log::add_operation(int privilege, std::string name, TokenType type)

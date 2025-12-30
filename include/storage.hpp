@@ -1,9 +1,8 @@
 #pragma once
 #ifndef STORAGE_HPP
 #define STORAGE_HPP
-#include "book.hpp"
-#include "parser.hpp"
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
@@ -11,6 +10,28 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "book.hpp"
+#include "parser.hpp"
+
+inline std::filesystem::path get_appdata_base_dir()
+{
+#ifdef _WIN32
+    const char *appdata = std::getenv("APPDATA");
+    if (appdata)
+        return std::filesystem::path(appdata) / "CyreneBookstore" / "data";
+    else
+        return std::filesystem::current_path() / "CyreneBookstore" / "data";
+#elif __APPLE__ || __linux__
+    const char *home = std::getenv("HOME");
+    if (home)
+        return std::filesystem::path(home) / "CyreneBookstore" / "data";
+    else
+        return std::filesystem::current_path() / "CyreneBookstore" / "data";
+#else
+    return std::filesystem::current_path() / "CyreneBookstore" / "data";
+#endif
+}
+
 
 
 using std::fstream;
@@ -31,7 +52,7 @@ private:
     fstream file; ///< 文件流对象，用于读写二进制文件
     string file_name; ///< 文件名
     int sizeofT = sizeof(T); ///< 存储对象的字节大小
-    static inline std::filesystem::path base_dir = std::filesystem::absolute("data");
+    static inline std::filesystem::path base_dir = get_appdata_base_dir();
     // 默认数据存储目录
 public:
     /**
@@ -172,10 +193,18 @@ struct index_to_head
     }
 };
 
-struct IsbnTag{};
-struct NameTag{};
-struct AuthorTag{};
-struct KeywordTag{};
+struct IsbnTag
+{
+};
+struct NameTag
+{
+};
+struct AuthorTag
+{
+};
+struct KeywordTag
+{
+};
 
 template<typename Tag>
 struct StorageTraits;
