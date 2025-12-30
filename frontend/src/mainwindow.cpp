@@ -49,9 +49,9 @@ void MainWindow::updateActionsByPrivilege()
     privilege = userManager.getCurrentUser().privilegeLevel;
 
     // --- User Menu ---
-    ui.actionUserAdd->setEnabled(privilege == 7);
+    ui.actionUserAdd->setEnabled(privilege >= 3);
     ui.actionUserDelete->setEnabled(privilege == 7);
-    ui.actionRegister->setEnabled(privilege >= 0);
+    ui.actionRegister->setEnabled(true);
     ui.actionPasswd->setEnabled(privilege >= 1);
     ui.actionLogin->setEnabled(true);
     ui.actionLogout->setEnabled(privilege >= 1);
